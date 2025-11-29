@@ -1,24 +1,6 @@
-# 追加で作らないといけないプロンプトは何か？
-
-【done】## 1. ExecPlan の一段前に「機能仕様レイヤ」を導入する
-・その spec を前提に、コーディングエージェントが ExecPlan（EPIC-XXX-YYY.md） を作る
-→ここだけ指示するプロンプトを作る。ExecPlan の一段前の作業工程として追加。
-「spec を参照して ExecPlan を生成してください。」
-→ 「PLANS.md の修正」と「specify.md の修正」で /speckit.specify が使えるようになった。ディレクトリ構造も決めた。
-
-【done】## 3. Specification Quality Checklist を Harness の品質ゲートに昇格
-・FEATURE_DIR/checklists/requirements.md
-→これは /speckit.specify コマンド実行で、自動的に生成されるが、保証がないのでより確実性を高めるという意味。
-→ scripts/validate_spec.sh を作成した。
-
-【done】## 4. Clarify エージェントを「要件初期化エージェント」として採用
-・これはREADMEの手順書として残しておく。
-→「/speckit.specify  →  /speckit.clarify  の手順で実行してください」
-ただ、 clarify の提案が、前提条件を書いてもらわないと何の話なのか分からない。
-推奨度付き選択肢くんの方が分かりやすいので、少し clarify のプロンプトを調整した方が良いかも。
-→ plans/README.md に書いた
-
-
+# to do
+- スクリプト周りをダウンロードして、このプロジェクト用に調整。特にPATHは変更する必要あるかも。
+- Speckit の 残りのプロンプトの調整
 
 
 ## 方針
