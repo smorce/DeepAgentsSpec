@@ -38,6 +38,7 @@ harness/
   「いつ・何が起きたか」を全リポジトリ横断で追うための時間軸ログ。
 
 * `feature_list.json` は以下を追跡します：
+
   * エピック（EPIC-*** ID）とそれに対応する ExecPlan のパス。
   * 機能（F-*** ID）とそれに対応する spec/checklist のパス。
 
@@ -194,7 +195,6 @@ plans/
 
 * 各エピックディレクトリ直下の `exec-plan.md` に存在します。
 * `PLANS.md` のルールに正確に従う必要があります。
-  * `PLANS.md` とは、AIエージェントが長時間・複雑なタスクを実行するために使われる「実行計画（ExecPlan）」のテンプレート文書です。
 * **生きたドキュメント**です：進捗があったり、決定が下されたり、予期せぬ事態が見つかるたびに更新されます。
 
 ### 3.2 必須セクション
@@ -232,6 +232,7 @@ plans/
 3. `harness/feature_list.json` で定義されているエピックの `exec-plan.md` を開く。
 4. ExecPlan 全体を上から下まで読む。
 5. `Plan of Work` (作業計画) と `Concrete Steps` (具体的なステップ) に従い、以下を更新する：
+
    * `Progress`
    * `Surprises & Discoveries`
    * `Decision Log`
@@ -244,8 +245,8 @@ plans/
 
 機能仕様書は、**2段階のフロー**で作成および改善されます：
 
-1. `/speckit.specify` — 機能仕様書の作成/更新。
-2. `/speckit.clarify` — 曖昧さの解決と欠落している決定事項の記入。
+1. `/speckit.specify` — 機能仕様書の作成/更新（spec + checklist の生成）。
+2. `/speckit.clarify` — 曖昧さの解消と欠落している決定事項の記入（spec を書き換え）。
 
 > 注: `/speckit.*` コマンドは、このリポジトリではなく、周囲の環境（チャットツールなど）によって提供されます。
 > このリポジトリのファイルレイアウトは、ツールがここで説明されている通りに動作することを前提としています。
@@ -277,18 +278,115 @@ plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checkli
 * 実装の詳細ではなく、**WHAT（何）**と**WHY（なぜ）**に焦点を当てる。
 * ユーザーシナリオ、機能要件、成功基準を含める。
 * `[NEEDS CLARIFICATION: ...]` マーカーの使用は控えめにする（最大3つ）。
+  → 後段の `/speckit.clarify` がここを優先的に解消します。
+
+チェックリスト (`requirements.md`) は **空のチェックボックスのまま**生成されます。
+実際にチェックを埋め、品質ゲートを通すのは Clarify / 人間レビュー / `scripts/validate_spec.sh` の役割です。
 
 ### 4.2 `/speckit.clarify` (要件の明確化、人間主導)
 
-明確化作業は**人間によって手動で実行**されます（完全自動ではありません）：
-1. 機能の `spec.md` に `[NEEDS CLARIFICATION: ...]` マーカーがあるか確認する。
-2. その機能に対して `/speckit.clarify` を実行する。
-3. エージェントが、推奨度と理由をつけて選択肢を提示します。（推奨度：⭐の5段階評価）。質問は最大3つまでとする。選択肢を提示するときは、常に考えられる選択肢を5～7個リストアップし、有力な2～4個に絞り込みます。
-4. 人間が回答を選択し、`spec.md` を編集する：
-   * 各 `[NEEDS CLARIFICATION: ...]` を、選択した回答に基づいた平易な文章に置き換える。
-   * 周囲のテキストを整理する。
+Clarify は **要件初期化エージェント**として、次の2種類の曖昧さを解消します：
 
-`[NEEDS CLARIFICATION]` マーカーがなくなるまで繰り返します。
+1. `/speckit.specify` が埋め込んだ **`[NEEDS CLARIFICATION: ...]` マーカー**。
+2. Taxonomy ベースのスキャンで見つかる、仕様書の「穴」（機能・データ・UX・非機能・外部連携・エッジケースなど）。
+
+明確化作業は**人間によって手動で実行**されます（完全自動ではありません）：
+
+1. 対象の機能の `spec.md` を開き、ざっと内容を把握します。
+   `[NEEDS CLARIFICATION: ...]` マーカーがどこにあるかも確認します。
+
+2. その機能に対して `/speckit.clarify` を実行します。Clarify の内部では：
+
+   * `scripts/*/check-prerequisites.*` を通じて `FEATURE_SPEC` / `FEATURE_DIR` が特定されます。
+   * `spec.md` を読み込み、
+
+     * 明示的な `[NEEDS CLARIFICATION]` マーカー、
+     * taxonomy（機能、データモデル、UX、非機能、外部連携、エッジケース、制約など）
+       をもとに曖昧さの「候補リスト」を作ります。
+   * その中から **最大 5 個** の高インパクトな質問をキューに積みます：
+
+     * 優先度は `[NEEDS CLARIFICATION]` マーカー ＞ 高インパクトな taxonomy の穴。
+
+3. Clarify は質問を **1つずつ** 提示します：
+
+   1. まず、その質問が
+      - **どの曖昧さ／どんな決定を解消しようとしているのか**
+      - それが **なぜ重要か**（スコープやセキュリティ、UX、データモデル、運用リスクなどにどう効くか）
+      
+      を 1〜2 行で説明します。  
+      → 「この質問に答えると何がスッキリするのか」が先に分かるようにします。
+
+   2. 次に、その問いに対する **候補となる解決策を 5〜7 個** 洗い出し、それぞれに対して：
+
+      - 短いラベル（Answer）
+      - 推奨度（⭐1〜⭐5 の 5 段階）
+      - 簡単な理由（なぜその評価なのか）
+
+      を付けます。
+
+      - ⭐⭐⭐⭐⭐ … 強く推奨（このプロジェクトでは最有力）
+      - ⭐⭐⭐⭐ … 推奨（とても良いが、いくつかトレードオフあり）
+      - ⭐⭐⭐ … 妥当だが明確なトレードオフあり
+      - ⭐⭐ … あまり推奨しない（特定の事情があるときのみ）
+      - ⭐ … 原則として避けたい
+
+      この 5〜7 個の候補の中から、**2〜4 個の「有力候補」**（多くは ⭐⭐⭐⭐ 以上）を特定し、そのうち 1 つを **最有力の推奨案** として扱います。
+
+      表示形式のイメージ：
+
+      - まず最有力候補を 1 行で明示します：
+
+        `**Recommended:** Option B (⭐⭐⭐⭐⭐) - <なぜこれが一番良さそうかを 1〜2 文で>`
+
+      - そのあと、すべての候補（5〜7 個）を含む Markdown テーブルを出します：
+
+        | Option | Answer                                   | Recommendation | Rationale                                  |
+        |--------|------------------------------------------|----------------|--------------------------------------------|
+        | A      | <Option A description>                  | ⭐⭐⭐⭐          | <なぜ強い候補か>                           |
+        | B      | <Option B description>                  | ⭐⭐⭐⭐⭐         | <なぜ最有力か>                             |
+        | C      | <Option C description>                  | ⭐⭐⭐           | <どんなトレードオフがあるか>               |
+        | D      | <Option D description>                  | ⭐⭐            | <なぜ弱い選択肢か>                         |
+        | E      | <Option E description>                  | ⭐             | <なぜ基本的に避けたいか>                   |
+        | Short  | Provide a different short answer (<=5 words) | —        | 上記にない独自案を短く指定したい場合用     |
+
+        - `Short` 行は「5語以内の自由記述」を受け付けるための枠です。
+        - 全体として、**候補数（A〜E + Short を含めて 5〜7 個）** に収まるようにします。
+
+   3. 人間（プロダクトオーナー／テックリードなど）は、次のいずれかの形で回答します：
+
+      - 最有力案を採用する場合：
+        - `"yes"` または `"recommended"` と返す  
+          → テーブルの中で **Recommended:** と明示された Option（例：B）を採用したものとして扱います。
+      - 別の候補を選ぶ場合：
+        - `"A"`, `"B"`, `"C"` … といった **Option のアルファベット**を返す  
+          → 対応する行の Answer を採用します。
+      - 独自案を指定する場合：
+        - 5語以内の短いテキストで回答します（例： `"Email only"`, `"Admin only"`, など）  
+          → テーブルの `Short` 行を選んだものとして扱い、その内容を最終回答とします。
+
+      回答が曖昧な場合（複数候補にまたがる、意味が取りづらいなど）は、Clarify 側が**同じ質問の中で**短く確認を行います（この確認は「別の質問」としてカウントしません）。
+
+4. 人間の回答を受け取るたびに Clarify は：
+
+   * 関連する `[NEEDS CLARIFICATION: ...]` マーカーがあれば、それを削除し、周囲の文章を **自然な形に書き換え** ます。
+   * taxonomy 起点の質問であれば、該当セクション（機能要件、データモデル、成功基準、エッジケースなど）を直接更新します。
+   * **`## Clarifications` セクションは作りません**。
+     仕様書は「最初から正しく書かれていた」ように読める状態にします。
+
+5. Clarify は 1 セッションあたり最大 5 問まで質問し、
+   質問ごとに spec を保存していきます（atomic overwrite を想定）。
+
+6. セッション終了時、Clarify は：
+
+   * このセッションで解消した質問数（/NEEDS CLARIFICATION マーカー数）。
+   * どのセクションを更新したか（Functional Requirements / Data Model / Success Criteria など）。
+   * まだ残っている `[NEEDS CLARIFICATION]`（あれば）。
+   * taxonomy ベースのカバレッジ（Resolved / Deferred / Clear / Outstanding）
+     をまとめて報告し、
+   * 次のステップとして `/speckit.plan` へ進んでよいか、あるいはもう一度 Clarify / 手動修正を挟むべきかを提案します。
+
+> Clarify はあくまで「仕様書の穴を減らすための前処理」です。
+> 最終的な品質ゲートは `scripts/validate_spec.sh` とチェックリストの完了で担保します。
 
 ---
 
@@ -304,12 +402,7 @@ plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checkli
 plans/.../<EPIC-ID>/features/<FEATURE-ID>/checklists/requirements.md
 ```
 
-このファイルは `/speckit.specify` によって作成され、以下のような品質チェック項目が記述されています：
-* 実装の詳細が含まれていないこと。
-* 要件がテスト可能で曖昧でないこと。
-* 成功基準が測定可能で、特定の技術に依存していないこと。
-* エッジケースが特定されていること。
-* 依存関係と前提条件がリストされていること。
+このファイルは `/speckit.specify` によって作成され、Clarify / 手動編集 / レビューを通じて 1 つずつチェックが埋められていきます。
 
 ### 5.2 バリデータの実行
 
@@ -366,10 +459,16 @@ FAILED の場合：
 ### 6.1 人間向け (プロダクト / テックリード)
 
 **新規または変更された機能**の場合：
+
 1. `harness/feature_list.json` に機能エントリを追加/更新する：
+
    * `id`, `epic_id`, `title`, `spec_path`, `checklist_path`。
 2. 自然言語の説明を添えて `/speckit.specify` を実行する。
-3. `/speckit.clarify` を使用して、すべての `[NEEDS CLARIFICATION]` マーカーを解消する。
+3. `/speckit.clarify` を実行し：
+
+   * `[NEEDS CLARIFICATION]` マーカーが解消されていくこと、
+   * taxonomy ベースの高インパクトな穴（非機能やエッジケースなど）が埋められていくこと
+     を確認する。
 4. 機能のチェックリストがパスするまで `scripts/validate_spec.sh` を実行する。
 5. エピックの `exec-plan.md` の `Related Features / Specs (関連フィーチャ ID 一覧)` にこの機能がリストされていることを確認する。
 
@@ -378,20 +477,29 @@ FAILED の場合：
 エピックが割り当てられた場合：
 
 1. `docs/onboarding.md`（このファイル）を読む。
-2. `PLANS.md` を完全にを読む。
+2. `PLANS.md` を完全に読む。
 3. `harness/feature_list.json` を読み込み、以下を行う：
+
    * エピックを見つける (`epic_id`, `exec_plan_path`)。
    * 関連する機能とその spec/checklist を確認する。
-4. エピックの `exec-plan.md` を開く。
-5. `Related Features / Specs` を確認する：
+4. 各関連機能について：
+
+   * `spec.md` が存在するか、
+   * 必要に応じて Clarify が済んでいるか（曖昧さが許容範囲か）、
+   * `scripts/validate_spec.sh` が PASS しているか
+     を確認する。
+5. エピックの `exec-plan.md` を開く。
+6. `Related Features / Specs` を確認する：
+
    * 各機能の仕様書が存在し、品質チェック済みであることを確認する。
    * 仕様書やチェックリストが欠落または不完全な場合は、停止してこれをブロッキング課題として表面化させる。
-6. ExecPlan に従って実装する：
+7. ExecPlan に従って実装する：
+
    * 停止するポイントごとに `Progress` を更新する。
    * 自明でない設計上の選択は `Decision Log` に記録する。
    * 予期しない動作は `Surprises & Discoveries` に記録する。
    * `Validation and Acceptance` の記述に従ってテストを追加・実行する。
-7. すべてを **安全、冪等、かつ再現可能** に保つ。
+8. すべてを **安全、冪等、かつ再現可能** に保つ。
 
 ---
 
@@ -400,10 +508,12 @@ FAILED の場合：
 1. ✅ `docs/onboarding.md`（このファイル）を読む。
 2. ✅ `PLANS.md` を読む。
 3. ✅ `harness/feature_list.json` を検査して以下を特定する：
+
    * ターゲットとなるエピック (`epic_id`, `exec_plan_path`)。
    * 関連する機能 (`spec_path`, `checklist_path`)。
-4. ✅ 関連する機能仕様書が存在し、`scripts/validate_spec.sh` をパスすることを確認する。
-5. ✅ エピックの `exec-plan.md` を開き、すべてのセクションを更新しながらそれに従う。
+4. ✅ 関連する機能仕様書が存在し、必要に応じて `/speckit.clarify` が実行されていることを確認する。
+5. ✅ `scripts/validate_spec.sh` を使って該当機能のチェックリストがパスすることを確認する（計画・実装の前提）。
+6. ✅ エピックの `exec-plan.md` を開き、すべてのセクションを更新しながらそれに従う。
 
 これらの前提条件のいずれかが欠けている場合、**パスや構造を推測しないでください**。
 その代わり、欠落している成果物を `harness/AI-Agent-progress.txt` または ExecPlan の `Progress` / `Surprises & Discoveries` に記録し、人間の入力を待つために停止してください。
