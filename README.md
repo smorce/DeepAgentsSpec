@@ -262,13 +262,6 @@ services/, tests/, scripts/
   （ExecPlan に従って、実際のコード・テスト・スクリプトが変更される）
 ```
 
-
-
-
-
-
-
-
 ---
 
 ## 1. 最上位レイアウト（全体構成）
@@ -301,7 +294,7 @@ harness/
 ```
 
 * `AI-Agent-progress.txt` は **中央ログ** です。
-  「時間軸のログ」（セッション横断で何がいつ起きたか）
+  「いつ・何が起きたか」を全リポジトリ横断で追うための時間軸ログ。
 
 * `feature_list.json` は以下を追跡します：
   * エピック（EPIC-*** ID）とそれに対応する ExecPlan のパス。
@@ -423,7 +416,7 @@ plans/
 
 ### 2.2 機能 (F-***)
 
-* **単一の一貫した振る舞い**、またはユーザー価値のスライスです（例：「サインアップページの基本UI」）。
+* **ひとつのまとまった動作や、ユーザーにとって意味のある小さな価値**を提供する単位です（例：「サインアップページの基本UI」など、利用者が実際に体験できる機能のひと切れ）。
 * 独自の **機能仕様書 (feature spec)** と **品質チェックリスト** を持ちます。
 * `epic_id` を介してエピックにリンクされます。
 
@@ -447,7 +440,7 @@ plans/
 }
 ```
 
-**仕様書は機能単位 (per-feature)**、ExecPlan はエピック単位 (per-epic) です。
+* 仕様書は機能単位 (per-feature)、ExecPlan はエピック単位 (per-epic) です。
 
 ---
 
@@ -459,6 +452,7 @@ plans/
 
 * 各エピックディレクトリ直下の `exec-plan.md` に存在します。
 * `PLANS.md` のルールに正確に従う必要があります。
+  * `PLANS.md` とは、AIエージェントが長時間・複雑なタスクを実行するために使われる「実行計画（ExecPlan）」のテンプレート文書です。
 * **生きたドキュメント**です：進捗があったり、決定が下されたり、予期せぬ事態が見つかるたびに更新されます。
 
 ### 3.2 必須セクション
@@ -496,7 +490,6 @@ plans/
 3. `harness/feature_list.json` で定義されているエピックの `exec-plan.md` を開く。
 4. ExecPlan 全体を上から下まで読む。
 5. `Plan of Work` (作業計画) と `Concrete Steps` (具体的なステップ) に従い、以下を更新する：
-
    * `Progress`
    * `Surprises & Discoveries`
    * `Decision Log`
@@ -517,14 +510,12 @@ plans/
 
 ### 4.1 `/speckit.specify` (機能仕様書の作成 / 更新)
 
-* 入力：自然言語による機能説明（`/speckit.specify` の後のテキスト）。
+* 入力：自然言語による機能説明（`/speckit.specify` の後のテキスト）。何を構築しようとしているのか、そしてなぜ構築しようとしているのかを可能な限り明確に記述してください。この時点では技術スタックに焦点を当てないでください。
 * 動作（概念）：
-
   * ブランチ用の短い名前（2〜4語）を生成（例：`user-onboarding`）。
   * 数値プレフィックス（`N`）を選択し、ブランチ `N-short-name` を作成/チェックアウト。
   * `scripts/bash/create-new-feature.sh` または `scripts/powershell/create-new-feature.ps1` を実行。
   * 以下を作成または更新：
-
     * その機能用の `spec.md`。
     * その機能用の `checklists/requirements.md`。
   * 正しい場所は `harness/feature_list.json` (`spec_path`, `checklist_path`) から取得されます。
@@ -548,9 +539,8 @@ plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checkli
 
 1. 機能の `spec.md` に `[NEEDS CLARIFICATION: ...]` マーカーがあるか確認する。
 2. その機能に対して `/speckit.clarify` を実行する。
-3. 明確化エージェントが、A/B/C/Custom の回答選択肢付きの質問を最大3つ提案する。
+3. エージェントが、推奨度と理由をつけて選択肢を提示します。（推奨度：⭐の5段階評価）。質問は最大3つまでとする。選択肢を提示するときは、常に考えられる選択肢を5～7個リストアップし、有力な2～4個に絞り込みます。
 4. 人間が回答を選択し、`spec.md` を編集する：
-
    * 各 `[NEEDS CLARIFICATION: ...]` を、選択した回答に基づいた平易な文章に置き換える。
    * 周囲のテキストを整理する。
 
@@ -635,7 +625,6 @@ FAILED の場合：
 **新規または変更された機能**の場合：
 
 1. `harness/feature_list.json` に機能エントリを追加/更新する：
-
    * `id`, `epic_id`, `title`, `spec_path`, `checklist_path`。
 2. 自然言語の説明を添えて `/speckit.specify` を実行する。
 3. `/speckit.clarify` を使用して、すべての `[NEEDS CLARIFICATION]` マーカーを解消する。
@@ -649,16 +638,13 @@ FAILED の場合：
 1. `README.md`（このファイル）を読む。
 2. `PLANS.md` を完全にを読む。
 3. `harness/feature_list.json` を読み込み、以下を行う：
-
    * エピックを見つける (`epic_id`, `exec_plan_path`)。
    * 関連する機能とその spec/checklist を確認する。
 4. エピックの `exec-plan.md` を開く。
 5. `Related Features / Specs` を確認する：
-
    * 各機能の仕様書が存在し、品質チェック済みであることを確認する。
    * 仕様書やチェックリストが欠落または不完全な場合は、停止してこれをブロッキング課題として表面化させる。
 6. ExecPlan に従って実装する：
-
    * 停止するポイントごとに `Progress` を更新する。
    * 自明でない設計上の選択は `Decision Log` に記録する。
    * 予期しない動作は `Surprises & Discoveries` に記録する。
@@ -672,7 +658,6 @@ FAILED の場合：
 1. ✅ `README.md`（このファイル）を読む。
 2. ✅ `PLANS.md` を読む。
 3. ✅ `harness/feature_list.json` を検査して以下を特定する：
-
    * ターゲットとなるエピック (`epic_id`, `exec_plan_path`)。
    * 関連する機能 (`spec_path`, `checklist_path`)。
 4. ✅ 関連する機能仕様書が存在し、`scripts/validate_spec.sh` をパスすることを確認する。
