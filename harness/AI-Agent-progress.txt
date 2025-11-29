@@ -1,0 +1,3 @@
+# AI Agent Progress Log
+
+# Entries appended with timestamp and summary in future sessions.
