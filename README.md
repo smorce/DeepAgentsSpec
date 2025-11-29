@@ -39,6 +39,26 @@ scripts/validate_spec.sh を作成してください。これは未チェック�
 一方、エピック全体の見取り図や優先順位は、ExecPlan 側の Progress / Plan of Work / Context and Orientation でまとめて持てばよいので、
 「エピックの視点」は ExecPlan に寄せ、仕様の細かさはフィーチャ側に寄せるという分担がきれいにハマる。
 
+### メリット
+speckit 側：
+- 「どのフィーチャの spec / checklist を編集すべきか」を
+- features[].spec_path / features[].checklist_path から機械的に決定可能。
+
+ExecPlan 側：
+- epics[].exec_plan_path だけ見れば「このエピック全体の計画書」に飛べる。
+- ExecPlan 内から features の ID（F-XXX-YYY）を列挙して参照できる。
+
+エージェント：
+- 「今 F-USER-001 をやっている」＝
+  - 見る spec: features[F-USER-001].spec_path
+  - 直す checklist: features[F-USER-001].checklist_path
+  - 所属するエピックの計画: epics[epic_id].exec_plan_path
+というシンプルな 3 つの参照で済む。
+
+
+
+
+
 
 
 # 長期間実行されるエージェントのための効果的なハーネス
