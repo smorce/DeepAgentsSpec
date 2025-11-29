@@ -21,6 +21,7 @@ NON-NEGOTIABLE REQUIREMENTS:
 * Every ExecPlan must enable a complete novice to implement the feature end-to-end without prior knowledge of this repo.
 * Every ExecPlan must produce a demonstrably working behavior, not merely code changes to "meet a definition".
 * Every ExecPlan must define every term of art in plain language or do not use it.
+* Every ExecPlan that is associated with feature-level specifications must explicitly list those features (by their IDs and spec paths) in the `Related Features / Specs (関連フィーチャ ID 一覧)` section so that a novice can locate all relevant feature specs.
  
 Purpose and intent come first. Begin by explaining, in a few sentences, why the work matters from a user's perspective: what someone can do after this change that they could not do before, and how to see it working. Then guide the reader through the exact steps to achieve that outcome, including what to edit, what to run, and what they should observe.
  
@@ -40,7 +41,7 @@ Self-containment and plain language are paramount. If you introduce a phrase tha
  
 Avoid common failure modes. Do not rely on undefined jargon. Do not describe "the letter of a feature" so narrowly that the resulting code compiles but does nothing meaningful. Do not outsource key decisions to the reader. When ambiguity exists, resolve it in the plan itself and explain why you chose that path. Err on the side of over-explaining user-visible effects and under-specifying incidental implementation details.
  
-Anchor the plan with observable outcomes. State what the user can do after implementation, the commands to run, and the outputs they should see. Acceptance should be phrased as behavior a human can verify ("after starting the server, navigating to [http://localhost:8080/health](http://localhost:8080/health) returns HTTP 200 with body OK") rather than internal attributes ("added a HealthCheck struct"). If a change is internal, explain how its impact can still be demonstrated (for example, by running tests that fail before and pass after, and by showing a scenario that uses the new behavior).
+Anchor the plan with observable outcomes. State what the user can do after implementation, the commands to run, and the outputs they should see. Acceptance should be phrased as behavior a human can verify ("after starting the server, navigating to http://localhost:8080/health returns HTTP 200 with body OK") rather than internal attributes ("added a HealthCheck struct"). If a change is internal, explain how its impact can still be demonstrated (for example, by running tests that fail before and pass after, and by showing a scenario that uses the new behavior).
  
 Specify repository context explicitly. Name files with full repository-relative paths, name functions and modules precisely, and describe where new files should be created. If touching multiple areas, include a short orientation paragraph that explains how those parts fit together so a novice can navigate confidently. When running commands, show the working directory and exact command line. When outcomes depend on environment, state the assumptions and provide alternatives when reasonable.
  
@@ -60,6 +61,7 @@ Each milestone must be independently verifiable and incrementally implement the 
  
 * ExecPlans are living documents. As you make key design decisions, update the plan to record both the decision and the thinking behind it. Record all decisions in the `Decision Log` section.
 * ExecPlans must contain and maintain a `Progress` section, a `Surprises & Discoveries` section, a `Decision Log`, and an `Outcomes & Retrospective` section. These are not optional.
+* For ExecPlans that are linked to feature-level specifications, they must also contain and maintain a `Related Features / Specs (関連フィーチャ ID 一覧)` section that lists all relevant feature IDs (for example `F-USER-001`) and the paths to their spec files.
 * When you discover optimizer behavior, performance tradeoffs, unexpected bugs, or inverse/unapply semantics that shaped your approach, capture those observations in the `Surprises & Discoveries` section with short evidence snippets (test output is ideal).
 * If you change course mid-implementation, document why in the `Decision Log` and reflect the implications in `Progress`. Plans are guides for the next contributor as much as checklists for you.
 * At completion of a major task or the full plan, write an `Outcomes & Retrospective` entry summarizing what was achieved, what remains, and lessons learned.
@@ -82,6 +84,18 @@ If PLANS.md file is checked into the repo, reference the path to that file here 
 ## Purpose / Big Picture
  
 Explain in a few sentences what someone gains after this change and how they can see it working. State the user-visible behavior you will enable.
+ 
+## Related Features / Specs (関連フィーチャ ID 一覧)
+ 
+List all feature-level specifications that this ExecPlan covers so a novice can find them quickly. Use the feature IDs and spec paths from `harness/feature_list.json` and the repository layout.
+ 
+For each related feature, include at least:
+ 
+- The feature ID (for example: `F-USER-001`).
+- A short, human-readable title.
+- The full repository-relative path to the spec file (for example: `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`).
+ 
+You may also note the current status if relevant (for example: planned, in-progress, complete).
  
 ## Progress
  
@@ -145,8 +159,8 @@ In crates/foo/planner.rs, define:
     pub trait Planner {
         fn plan(&self, observed: &Observed) -> Vec<Action>;
     }
-```
- 
+````
+
 If you follow the guidance above, a single, stateless agent -- or a human novice -- can read your ExecPlan from top to bottom and produce a working, observable result. That is the bar: SELF-CONTAINED, SELF-SUFFICIENT, NOVICE-GUIDING, OUTCOME-FOCUSED.
- 
+
 When you revise a plan, you must ensure your changes are comprehensively reflected across all sections, including the living document sections, and you must write a note at the bottom of the plan describing the change and the reason why. ExecPlans must describe not just the what but the why for almost everything.
