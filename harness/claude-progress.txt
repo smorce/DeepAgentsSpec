@@ -1,0 +1,6 @@
+# Long-running Agent Progress Log
+# Each session appends a short summary in plain text.
+# Suggested format:
+# YYYY-MM-DDThh:mm:ssZ | agent-id | epic-ids | feature-ids | summary
+2025-01-01T00:00:00Z | initializer-agent | EPIC-SYS-001-FOUNDATION | F-SYS-001 | Repository scaffold created, PLANS.md and initial ExecPlans added.
+

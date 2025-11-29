@@ -1,0 +1,64 @@
+{
+  "epics": [
+    {
+      "id": "EPIC-SYS-001-FOUNDATION",
+      "title": "System foundation and scaffolding",
+      "category": "system",
+      "services": ["api-gateway", "user-service", "billing-service"],
+      "exec_plan_path": "plans/system/EPIC-SYS-001-foundation.md"
+    },
+    {
+      "id": "EPIC-API-001-ROUTING",
+      "title": "API gateway basic routing",
+      "category": "service:api-gateway",
+      "services": ["api-gateway"],
+      "exec_plan_path": "plans/services/api-gateway/EPIC-API-001-routing.md"
+    },
+    {
+      "id": "EPIC-USER-001-ONBOARDING",
+      "title": "User onboarding flow",
+      "category": "service:user-service",
+      "services": ["api-gateway", "user-service"],
+      "exec_plan_path": "plans/services/user-service/EPIC-USER-001-onboarding.md"
+    }
+  ],
+  "features": [
+    {
+      "id": "F-SYS-001",
+      "epic_id": "EPIC-SYS-001-FOUNDATION",
+      "title": "Repository scaffold initialized",
+      "description": "Repository layout, harness, and baseline tests are in place.",
+      "services": ["api-gateway", "user-service", "billing-service"],
+      "status": "failing",
+      "tags": ["foundation", "infrastructure"]
+    },
+    {
+      "id": "F-API-001",
+      "epic_id": "EPIC-API-001-ROUTING",
+      "title": "Basic health check endpoint",
+      "description": "GET /health returns HTTP 200 with body 'OK'.",
+      "services": ["api-gateway"],
+      "status": "failing",
+      "tags": ["backend", "api"]
+    },
+    {
+      "id": "F-USER-001",
+      "epic_id": "EPIC-USER-001-ONBOARDING",
+      "title": "Signup page basic UI",
+      "description": "User can open /signup and see the signup form.",
+      "services": ["api-gateway"],
+      "status": "failing",
+      "tags": ["frontend", "user-flow"]
+    },
+    {
+      "id": "F-USER-002",
+      "epic_id": "EPIC-USER-001-ONBOARDING",
+      "title": "Signup API endpoint",
+      "description": "POST /api/users creates a user and returns 201.",
+      "services": ["api-gateway", "user-service"],
+      "status": "failing",
+      "tags": ["backend", "api"]
+    }
+  ]
+}
+

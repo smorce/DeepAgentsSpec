@@ -1,0 +1,5 @@
+service:
+  name: api-gateway
+  port: 8080
+  log_level: info
+

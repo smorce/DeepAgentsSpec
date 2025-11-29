@@ -1,0 +1,5 @@
+service:
+  name: user-service
+  port: 8081
+  database_url: postgres://user:pass@db/userdb
+
