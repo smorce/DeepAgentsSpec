@@ -57,6 +57,9 @@ ExecPlan 側：
 
 
 
+/speckit.specify の「SPEC_FILE の出力先」を features/F-XXX-YYY/spec.md 前提に書き換える
+
+ExecPlan テンプレート（PLANS.md）に「関連フィーチャ ID 一覧」セクションを追加する
 
 
 
@@ -93,6 +96,7 @@ PLANS.md は実装する機能や変更内容を、初心者でも理解でき�
 - 物理構造：全体アーキテクチャ → 各マイクロサービス
 - 論理構造：共通の feature_list.json ＋ エピックごとの ExecPlan
 - 設計履歴：ExecPlan の Decision Log を一次情報、docs/decisions.md を索引
+「spec はフィーチャ単位」＋「ExecPlan はエピック単位」
 ```
 project-root/                               # リポジトリのルート
 ├── PLANS.md                                # ExecPlan の規約ドキュメント（Codex Execution Plans）
@@ -105,39 +109,67 @@ project-root/                               # リポジトリのルート
 │
 ├── harness/                                # 長期間実行エージェント用ハーネス（横断的なメタ情報）
 │   ├── init.sh                             # リポジトリ全体の初期化・テスト起動スクリプト
-│   ├── AI-Agent-progress.txt                 # セッション横断の進捗ログ（人間可読）
-│   ├── feature_list.json                   # 全エピック・全機能の共通マスタ（ExecPlan と紐付く）
+│   ├── AI-Agent-progress.txt               # セッション横断の進捗ログ（人間可読）
+│   ├── feature_list.json                   # エピック／フィーチャのマスタ + spec/ExecPlan パスの対応表
 │   └── harness-config.yaml                 # ハーネスの設定（サービス一覧・スクリプトパスなど）
 │
-├── plans/                                  # エピック単位の ExecPlan 置き場
-│   ├── README.md                           # ExecPlan 運用ルール（PLANS.md へのポインタなど）
+├── plans/                                  # エピック単位の「計画・仕様」置き場
+│   ├── README.md                           # ExecPlan / spec 運用ルール（PLANS.md へのポインタなど）
 │   │
-│   ├── system/                             # システム全体にまたがるエピック用 ExecPlan
-│   │   └── EPIC-SYS-001-foundation.md      # 例: 基盤整備エピックの ExecPlan
+│   ├── system/                             # システム全体にまたがるエピック用
+│   │   └── EPIC-SYS-001-foundation/        # 例: 基盤整備エピックのディレクトリ（EPIC ごとに 1 フォルダ）
+│   │       ├── exec-plan.md                # エピック全体の ExecPlan（PLANS.md 準拠の実行計画）
+│   │       │                               #   → タスク分解・進捗・Decision Log などはここで管理
+│   │       └── features/                   # このエピック配下の「フィーチャ仕様」をまとめる
+│   │           └── F-SYS-001/              # 例: "Repository scaffold initialized" フィーチャ
+│   │               ├── spec.md             # フィーチャ単位の仕様書（/speckit.specify の出力先）
+│   │               └── checklists/         # フィーチャ仕様の品質ゲート用チェックリスト
+│   │                   └── requirements.md # Specification Quality Checklist
 │   │
-│   └── services/                           # 各マイクロサービス別のエピック用 ExecPlan
+│   └── services/                           # 各マイクロサービス別のエピック用
 │       ├── api-gateway/                    # api-gateway サービスに関するエピック群
-│       │   └── EPIC-API-001-routing.md     # 例: ルーティング周りの ExecPlan
+│       │   └── EPIC-API-001-routing/       # 例: ルーティング周りのエピックディレクトリ
+│       │       ├── exec-plan.md            # このエピック全体の ExecPlan
+│       │       └── features/               # このエピックに属するフィーチャ仕様を集約
+│       │           └── F-API-001/          # 例: "Basic health check endpoint"
+│       │               ├── spec.md         # GET /health の仕様など、ユーザー価値レベルで記述
+│       │               └── checklists/
+│       │                   └── requirements.md
+│       │
 │       ├── user-service/                   # user-service に関するエピック群
-│       │   └── EPIC-USER-001-onboarding.md # 例: ユーザーオンボーディングの ExecPlan
+│       │   └── EPIC-USER-001-onboarding/   # 例: ユーザーオンボーディングのエピックディレクトリ
+│       │       ├── exec-plan.md            # オンボーディング全体の ExecPlan（複数フィーチャを束ねる）
+│       │       └── features/
+│       │           ├── F-USER-001/         # "Signup page basic UI"
+│       │           │   ├── spec.md         # /signup 画面 UI の仕様
+│       │           │   └── checklists/
+│       │           │       └── requirements.md
+│       │           └── F-USER-002/         # "Signup API endpoint"
+│       │               ├── spec.md         # POST /api/users の仕様
+│       │               └── checklists/
+│       │                   └── requirements.md
+│       │
 │       └── billing-service/                # billing-service に関するエピック群
-│           └── EPIC-BILL-001-invoice.md    # 例: 請求書発行の ExecPlan
+│           └── EPIC-BILL-001-invoice/      # 例: 請求書発行のエピックディレクトリ
+│               ├── exec-plan.md            # 請求書発行エピックの ExecPlan
+│               └── features/               # （将来追加されるフィーチャの仕様書置き場）
+│                   └── ...                 # F-BILL-001 などを同様に追加
 │
 ├── services/                               # 各マイクロサービスの実装
-│   ├── api-gateway/                        # API Gateway サービス
+│   ├── api-gateway/
 │   │   ├── README.md                       # このサービス固有の説明・起動方法など
 │   │   ├── service-architecture.md         # このサービス内部の構成・依存関係
 │   │   ├── src/                            # サービス本体のソースコード
-│   │   ├── tests/                          # このサービス専用のテスト群
+│   │   ├── tests/
 │   │   │   ├── unit/                       # ユニットテスト
 │   │   │   └── integration/                # サービス単体の結合テスト
-│   │   ├── scripts/                        # サービス専用の補助スクリプト
-│   │   │   ├── run_unit_tests.sh           # このサービスのユニットテスト実行
-│   │   │   └── run_integration_tests.sh    # このサービスの結合テスト実行
-│   │   ├── Dockerfile                      # コンテナビルド用定義
-│   │   └── service-config.example.yaml     # 設定ファイルのサンプル
+│   │   ├── scripts/
+│   │   │   ├── run_unit_tests.sh
+│   │   │   └── run_integration_tests.sh
+│   │   ├── Dockerfile
+│   │   └── service-config.example.yaml
 │   │
-│   ├── user-service/                       # ユーザー管理サービス（構成は api-gateway と同様）
+│   ├── user-service/
 │   │   ├── README.md
 │   │   ├── service-architecture.md
 │   │   ├── src/
@@ -148,7 +180,7 @@ project-root/                               # リポジトリのルート
 │   │   ├── Dockerfile
 │   │   └── service-config.example.yaml
 │   │
-│   └── billing-service/                    # 課金／請求サービス（構成は同様）
+│   └── billing-service/
 │       ├── README.md
 │       ├── service-architecture.md
 │       ├── src/
@@ -160,15 +192,15 @@ project-root/                               # リポジトリのルート
 │       └── service-config.example.yaml
 │
 ├── tests/                                  # システム全体視点のテスト
-│   └── e2e/                                # エンドツーエンドテスト（複数サービスをまたぐ）
+│   └── e2e/
 │       ├── scenarios/                      # ユーザストーリー単位の E2E シナリオ
 │       ├── helpers/                        # E2E で使う共通ヘルパー・ユーティリティ
-│       └── puppeteer.config.js             # Puppeteer 等ブラウザ自動化ツールの設定
+│       └── puppeteer.config.js
 │
 ├── scripts/                                # リポジトリ横断で使う共通スクリプト
-│   ├── run_all_unit_tests.sh               # 全サービス分のユニットテスト一括実行
-│   ├── run_all_e2e_tests.sh                # 全体の E2E テスト一括実行
-│   └── format_or_lint.sh                   # コード整形・Lint の一括実行
+│   ├── run_all_unit_tests.sh
+│   ├── run_all_e2e_tests.sh
+│   └── format_or_lint.sh
 │
 └── docs/                                   # ドキュメント類
     ├── onboarding.md                       # 新規メンバー／エージェント向け導入ガイド

@@ -5,21 +5,21 @@
       "title": "System foundation and scaffolding",
       "category": "system",
       "services": ["api-gateway", "user-service", "billing-service"],
-      "exec_plan_path": "plans/system/EPIC-SYS-001-foundation.md"
+      "exec_plan_path": "plans/system/EPIC-SYS-001-foundation/exec-plan.md"
     },
     {
       "id": "EPIC-API-001-ROUTING",
       "title": "API gateway basic routing",
       "category": "service:api-gateway",
       "services": ["api-gateway"],
-      "exec_plan_path": "plans/services/api-gateway/EPIC-API-001-routing.md"
+      "exec_plan_path": "plans/services/api-gateway/EPIC-API-001-routing/exec-plan.md"
     },
     {
       "id": "EPIC-USER-001-ONBOARDING",
       "title": "User onboarding flow",
       "category": "service:user-service",
       "services": ["api-gateway", "user-service"],
-      "exec_plan_path": "plans/services/user-service/EPIC-USER-001-onboarding.md"
+      "exec_plan_path": "plans/services/user-service/EPIC-USER-001-onboarding/exec-plan.md"
     }
   ],
   "features": [
@@ -30,7 +30,13 @@
       "description": "Repository layout, harness, and baseline tests are in place.",
       "services": ["api-gateway", "user-service", "billing-service"],
       "status": "failing",
-      "tags": ["foundation", "infrastructure"]
+      "tags": ["foundation", "infrastructure"],
+
+      // /speckit.specify のスコープ
+      "spec_path": "plans/system/EPIC-SYS-001-foundation/features/F-SYS-001/spec.md",
+
+      // /speckit.specify のスコープ
+      "checklist_path": "plans/system/EPIC-SYS-001-foundation/features/F-SYS-001/checklists/requirements.md"
     },
     {
       "id": "F-API-001",
@@ -39,7 +45,10 @@
       "description": "GET /health returns HTTP 200 with body 'OK'.",
       "services": ["api-gateway"],
       "status": "failing",
-      "tags": ["backend", "api"]
+      "tags": ["backend", "api"],
+
+      "spec_path": "plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/spec.md",
+      "checklist_path": "plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md"
     },
     {
       "id": "F-USER-001",
@@ -48,7 +57,10 @@
       "description": "User can open /signup and see the signup form.",
       "services": ["api-gateway"],
       "status": "failing",
-      "tags": ["frontend", "user-flow"]
+      "tags": ["frontend", "user-flow"],
+
+      "spec_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md",
+      "checklist_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md"
     },
     {
       "id": "F-USER-002",
@@ -57,8 +69,10 @@
       "description": "POST /api/users creates a user and returns 201.",
       "services": ["api-gateway", "user-service"],
       "status": "failing",
-      "tags": ["backend", "api"]
+      "tags": ["backend", "api"],
+
+      "spec_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/spec.md",
+      "checklist_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md"
     }
   ]
 }
-
