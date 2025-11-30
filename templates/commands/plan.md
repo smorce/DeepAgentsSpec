@@ -12,6 +12,7 @@ handoffs:
     prompt: >
       Create an implementation checklist for this feature based on the IMPL_PLAN, research.md, data-model.md,
       contracts/, and quickstart.md. Focus on concrete, verifiable steps that a coding agent can execute.
+    send: true
 scripts:
   sh: scripts/bash/setup-plan.sh --json
   ps: scripts/powershell/setup-plan.ps1 -Json
@@ -42,6 +43,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    Derive:
 
    * `FEATURE_CHECKLIST` = `${SPECS_DIR}/checklists/requirements.md`
+   * `PLAN_CHECKLIST`    = `${SPECS_DIR}/checklists/PlanQualityGate.md`
    * `FEATURE_ID` as the leaf directory name of `SPECS_DIR` (typically `F-XXX-YYY`)
    * `EPIC_DIR` as the parent directory of the `features` directory that contains `SPECS_DIR`
      (i.e. two levels up from `SPECS_DIR`)
@@ -77,13 +79,17 @@ You **MUST** consider the user input before proceeding (if not empty).
 3. **Load context (feature + epic)**
 
    * Read `FEATURE_SPEC`.
+
    * Read `/memory/constitution.md`.
+
    * Load the IMPL_PLAN template (already copied to `IMPL_PLAN` by the setup script).
+
    * If `EPIC_DESIGN_INDEX` exists, read it as **epic-level design context**:
 
      * Shared entities and contracts across multiple features.
      * Cross-feature invariants and constraints.
      * Any prior decisions that affect this feature.
+
    * If `EPIC_DESIGN_INDEX` does not exist:
 
      * You may create `${EPIC_DIR}/design/index.md` later in this workflow if you introduce shared concepts.
@@ -96,9 +102,13 @@ You **MUST** consider the user input before proceeding (if not empty).
 
      * Use `FEATURE_SPEC` and (if present) `EPIC_DESIGN_INDEX` as primary inputs.
      * Mark all unknowns as `NEEDS CLARIFICATION`.
+
    * Fill **Constitution Check** using `/memory/constitution.md`.
+
    * Evaluate gates; return an ERROR if any violations are not explicitly justified.
+
    * **Phase 0**: Generate `${SPECS_DIR}/research.md` and resolve all `NEEDS CLARIFICATION`.
+
    * **Phase 1**:
 
      * Generate `${SPECS_DIR}/data-model.md`, `${SPECS_DIR}/contracts/`, and `${SPECS_DIR}/quickstart.md`.
@@ -106,21 +116,50 @@ You **MUST** consider the user input before proceeding (if not empty).
 
        * A short entry for this feature (`FEATURE_ID`, title, and links to the design artifacts).
        * Any shared entities / endpoints / invariants that affect other features in the same epic.
+
    * **Phase 1**: Update agent context by running the appropriate `{AGENT_SCRIPT}`.
+
    * Re-evaluate the **Constitution Check** after the design artifacts and epic design index have been updated.
 
-5. **Stop and report**
+5. **Plan quality checklist (PlanQualityGate.md initialization)**
+
+   After the IMPL_PLAN and design artifacts have been brought into a consistent state:
+
+   * Ensure `${SPECS_DIR}/checklists/` exists; create it if missing.
+
+   * If `${PLAN_CHECKLIST}` does **not** exist:
+
+     * Create `${PLAN_CHECKLIST}`.
+     * Populate it with the **Plan quality checklist template** defined in
+       [Plan quality checklist template (PlanQualityGate.md)](#plan-quality-checklist-template-planmd),
+       replacing placeholders (`<FEATURE-ID>`, `<EPIC-ID>`, `<scope>`, etc.) with actual values for this feature.
+
+   * If `${PLAN_CHECKLIST}` **already exists`**:
+
+     * Do **not** overwrite it wholesale.
+     * You may normalize headings or append missing sections from the template,
+       but you must preserve any existing check states (`- [x]` / `- [ ]`).
+
+   * The Plan quality gate is designed to validate this `${PLAN_CHECKLIST}` with `scripts/validate_plan.sh` or similar.
+     The responsibility of `/speckit.plan` execution is to "prepare the skeleton";
+     filling in the checks is done by humans or subsequent agents.
+
+6. **Stop and report**
 
    The command ends after Phase 2 planning (as defined by the IMPL_PLAN template). Report:
 
    * `BRANCH`
+
    * `IMPL_PLAN` path
+
    * Generated feature-level artifacts:
 
      * `${SPECS_DIR}/research.md`
      * `${SPECS_DIR}/data-model.md`
      * `${SPECS_DIR}/contracts/`
      * `${SPECS_DIR}/quickstart.md`
+     * `${PLAN_CHECKLIST}` (if created or updated)
+
    * Epic-level artifact (if touched or created):
 
      * `${EPIC_DESIGN_INDEX}`
@@ -172,10 +211,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 1. **Extract entities from the feature spec** into `${SPECS_DIR}/data-model.md`:
 
    * Entity names, fields, and relationships.
+
    * Validation rules derived from:
 
      * `FEATURE_SPEC`
      * `requirements.md` (the spec checklist)
+
    * State transitions, if applicable (e.g. signup → email_verified).
 
 2. **Generate API contracts** from functional requirements:
@@ -245,17 +286,78 @@ You **MUST** consider the user input before proceeding (if not empty).
 * Updated `${EPIC_DESIGN_INDEX}`
 * Updated agent-specific context file
 
+---
+
+## Plan quality checklist template (PlanQualityGate.md)
+
+When creating `${PLAN_CHECKLIST}` for the first time, use the following skeleton.
+Replace placeholders such as `<FEATURE-ID>`, `<EPIC-ID>`, `<scope>` with concrete values.
+
+```markdown
+# Plan Quality Checklist: <FEATURE-ID>
+
+対象フィーチャ:
+- ID: <FEATURE-ID>
+- Epic: <EPIC-ID>
+- Impl plan: `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/impl-plan.md`
+
+## A. Plan 本体の構造
+
+- [ ] `impl-plan.md` が存在し、この FEATURE-ID と対応する spec へのリンクが明記されている。
+- [ ] 必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking）が埋まっており、ダミーや空欄が残っていない。
+- [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` 相当のプレースホルダが残っていない。
+
+## B. Technical Context / Constitution Check
+
+- [ ] Technical Context の各項目が、このフィーチャの実際の実装方針を具体的に表している。
+- [ ] Constitution Check に適用するゲート条件と、その満たし方が記述されている。
+- [ ] 満たせないゲートがある場合、Complexity Tracking に理由と却下した代替案が明記されている。
+
+## C. プロジェクト構造 / 影響範囲
+
+- [ ] 採用する Project Structure が 1 つだけ選ばれており、不要なテンプレート構造が削除されている。
+- [ ] 列挙されたディレクトリ/ファイルパスがリポジトリルートからの正しいパスである。
+- [ ] このフィーチャが触る既存モジュールやサービスの位置と役割が明記されている。
+
+## D. 研究・設計成果物との整合性
+
+- [ ] `research.md` が存在し、主要な不明点ごとに「Decision / Rationale / Alternatives considered」が書かれている。
+- [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+- [ ] `contracts/` 配下に、このフィーチャで追加・変更される契約が置かれている（形式はプロジェクト標準に従う）。
+- [ ] `quickstart.md` が存在し、このフィーチャだけを試す手順が書かれている。
+- [ ] `impl-plan.md` と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない。
+
+## E. Epic design index / 他フィーチャとの関係
+
+- [ ] エピック配下に `design/index.md` が存在する場合、`impl-plan.md` の Artifacts/Notes からそのパスと役割が参照されている。
+- [ ] 共有エンティティや共有 API がある場合、その所有者と他フィーチャとの関係が `design/index.md` または `impl-plan.md` のいずれかで明示されている。
+
+## F. Plan から Tasks へのブレイクダウン準備
+
+- [ ] Plan of Work / Concrete Steps を読むだけで、`/speckit.tasks` が「どのファイルにどのような変更タスクを切るか」を機械的に列挙できる具体性になっている。
+- [ ] Validation / Acceptance に、この Plan 完了時の具体的な成功条件（コマンド・HTTP リクエストなど）が書かれている。
+- [ ] Idempotence / Recovery に、途中失敗時のやり直しや既存環境への影響最小化方針が触れられている。
+```
+
+---
+
 ## Key rules
 
 * Use paths that are absolute from the **repo root** (e.g. `plans/...`, `services/...`, `scripts/...`), not `./` or `../`.
+
 * Treat `FEATURE_SPEC` and `requirements.md` as the **source of truth** for feature behaviour; this plan must not override them.
+
 * Do **not** proceed past Phase 0/1 if:
 
   * Any `NEEDS CLARIFICATION` remains unresolved, or
   * The spec quality gate fails, or
   * Constitution checks fail without explicit, written justification.
+
 * Keep `${EPIC_DESIGN_INDEX}` focused on **cross-feature context** and pointers:
 
   * Avoid duplicating full content of feature-level artifacts.
   * Use short summaries and links instead.
+
+* Ensure `${PLAN_CHECKLIST}` exists and follows the provided template before handing off to `/speckit.tasks` or any Task quality gate.
+
 * When a major gate passes or fails, prefer to log a short, timestamped line in `harness/AI-Agent-progress.txt`.
