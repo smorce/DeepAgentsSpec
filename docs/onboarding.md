@@ -508,7 +508,6 @@ FAILED の場合：
 1. ✅ `docs/onboarding.md`（このファイル）を読む。
 2. ✅ `PLANS.md` を読む。
 3. ✅ `harness/feature_list.json` を検査して以下を特定する：
-
    * ターゲットとなるエピック (`epic_id`, `exec_plan_path`)。
    * 関連する機能 (`spec_path`, `checklist_path`)。
 4. ✅ 関連する機能仕様書が存在し、必要に応じて `/speckit.clarify` が実行されていることを確認する。
