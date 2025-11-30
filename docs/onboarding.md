@@ -71,7 +71,8 @@ plans/
             contracts/                  # この機能に紐づく API 契約（Phase 1）
             quickstart.md               # 実装者向けのクイックスタート（Phase 1）
             checklists/
-              requirements.md           # 仕様品質チェックリスト
+              requirements.md           # 仕様品質チェックリスト（Spec 品質ゲート）
+              PlanQualityGate.md        # Plan 品質チェックリスト（Plan 品質ゲート）
 
     user-service/
       EPIC-USER-001-onboarding/
@@ -88,6 +89,7 @@ plans/
             quickstart.md
             checklists/
               requirements.md
+              PlanQualityGate.md
           F-USER-002/
             spec.md
             impl-plan.md
@@ -97,6 +99,7 @@ plans/
             quickstart.md
             checklists/
               requirements.md
+              PlanQualityGate.md
 
     billing-service/
       EPIC-BILL-001-invoice/
@@ -146,13 +149,20 @@ plans/
   plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/impl-plan.md
   ```
 
-* **Spec checklist (仕様チェックリスト)**: 機能ごとに1つ、常に以下の場所に配置されます：
+* **Spec checklist (仕様チェックリスト)**: 機能ごとに1つ、常に以下の場所に配置されます（仕様品質ゲート用）：
 
   ```text
   plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/checklists/requirements.md
   ```
 
-これらのパスの**信頼できる情報源（Source of Truth）**は `harness/feature_list.json` です。
+* **Plan checklist (Plan 品質チェックリスト)**: 機能ごとに 0〜1 個、Plan 品質ゲート用に持つことを想定します：
+
+  ```text
+  plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/checklists/PlanQualityGate.md
+  ```
+
+これらのパスの **信頼できる情報源（Source of Truth）** は `harness/feature_list.json` です
+（必要になれば、将来的に `plan_checklist_path` を追加することもできます）。
 
 ### 1.3 `services/`, `tests/`, `scripts/`, `docs/` (概要)
 
@@ -164,7 +174,8 @@ plans/
   この設計における重要なスクリプト：
 
   ```text
-  scripts/validate_spec.sh          # 仕様品質チェックリスト・バリデータ
+  scripts/validate_spec.sh          # 仕様品質チェックリスト・バリデータ（Spec 品質ゲート）
+  scripts/validate_plan.sh          # Plan 品質チェックリスト・バリデータ（Plan 品質ゲート）
   scripts/bash/setup-plan.sh        # フィーチャ単位の impl-plan セットアップ
   scripts/powershell/setup-plan.ps1 # 同上（Windows 環境向け）
   ```
@@ -203,6 +214,7 @@ plans/
   * 原則として **features/ を持ちません**。
   * システム全体の方針・アーキテクチャ・サービス間の境界などを扱い、
     実装に直結する feature は `plans/services/...` 配下のエピックにぶら下がります。
+
 * `plans/services/...`（サービスレベルのエピック）:
 
   * `features/` 配下に実際の feature（spec/impl-plan/...）を持ちます。
@@ -226,9 +238,13 @@ plans/
 
 ### 2.2 機能 (F-***)
 
-* **ひとつのまとまった動作や、ユーザーにとって意味のある小さな価値**を提供する単位です（例：「サインアップページの基本 UI」「メール認証 API」など、利用者が実際に体験できる機能のひと切れ）。
+* **ひとつのまとまった動作や、ユーザーにとって意味のある小さな価値**を提供する単位です
+  （例：「サインアップページの基本 UI」「メール認証 API」など、利用者が実際に体験できる機能のひと切れ）。
+
 * 独自の **機能仕様書 (feature spec)** と **品質チェックリスト** を持ちます。
+
 * `/speckit.plan` フローを通じて、必要に応じて **機能ごとの実装計画 (impl-plan.md) と設計成果物（research/data-model/contracts/quickstart）** が生成されます。
+
 * `epic_id` を介してエピックにリンクされます。
 
 > 原則として、feature は **services スコープのエピック (`plans/services/...`)** に属します。
@@ -274,7 +290,7 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 ### 3.2 必須セクション
 
-すべての ExecPlan は、少なくとも以下を**含み、維持しなければなりません**：
+すべての ExecPlan は、少なくとも以下を **含み、維持しなければなりません**：
 
 * `Purpose / Big Picture` (目的 / 全体像)
 * `Related Features / Specs (関連フィーチャ ID 一覧)`
@@ -373,10 +389,10 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 > この表は「このエピックのどこに何があるか」を一覧するためのものです。
 
-| Feature ID | Title                                | Spec Path                                                     | Impl Plan                         | Data Model                        | Contracts Dir                     | Quickstart                        |
-|-----------|--------------------------------------|---------------------------------------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
-| F-USER-001 | Signup page basic UI                | `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md` | `.../impl-plan.md` | `.../data-model.md` | `.../contracts/` | `.../quickstart.md` |
-| F-USER-002 | Email verification flow             | `...`                                                         | `...`                             | `...`                             | `...`                             | `...`                             |
+| Feature ID  | Title                            | Spec Path                                                     | Impl Plan           | Data Model          | Contracts Dir       | Quickstart          |
+|-------------|----------------------------------|---------------------------------------------------------------|---------------------|---------------------|---------------------|---------------------|
+| F-USER-001  | Signup page basic UI            | `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md` | `.../impl-plan.md` | `.../data-model.md` | `.../contracts/`    | `.../quickstart.md` |
+| F-USER-002  | Email verification flow         | `...`                                                         | `...`               | `...`               | `...`               | `...`               |
 
 （system エピックの場合は、ここに **直接 feature を列挙せず**、  
 関連する service エピックや feature へのリンクを載せても構いません）
@@ -387,10 +403,10 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 > 「このエピック全体で使われる重要なエンティティ」と「どの feature が責任を持つか」を整理します。
 
-| Entity        | Owning Feature ID | Services involved              | Notes                                           |
-|---------------|-------------------|--------------------------------|-------------------------------------------------|
-| User          | F-USER-001        | user-service, api-gateway      | Core user record, used across onboarding flows. |
-| VerificationToken | F-USER-002   | user-service                   | Tied to email verification only.                |
+| Entity           | Owning Feature ID | Services involved         | Notes                                               |
+|------------------|-------------------|---------------------------|-----------------------------------------------------|
+| User             | F-USER-001        | user-service, api-gateway | Core user record, used across onboarding flows.     |
+| VerificationToken| F-USER-002        | user-service              | Tied to email verification only.                    |
 
 ---
 
@@ -398,10 +414,10 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 > このエピック内で重要な API / メッセージ / イベントと、その所有者をまとめます。
 
-| Contract / Endpoint                  | Owner Feature | Path / Topic                          | Consumers                   | Notes                               |
-|--------------------------------------|--------------|---------------------------------------|-----------------------------|-------------------------------------|
-| `POST /signup`                       | F-USER-001   | api-gateway → user-service            | Web frontend                | Creates a new pending user.         |
-| `POST /verify-email`                | F-USER-002   | api-gateway → user-service            | Web frontend, mobile client | Finalizes user activation.          |
+| Contract / Endpoint       | Owner Feature | Path / Topic                          | Consumers                   | Notes                     |
+|---------------------------|--------------|---------------------------------------|-----------------------------|---------------------------|
+| `POST /signup`           | F-USER-001   | api-gateway → user-service            | Web frontend                | Creates a new pending user. |
+| `POST /verify-email`     | F-USER-002   | api-gateway → user-service            | Web frontend, mobile client | Finalizes user activation.  |
 
 ---
 
@@ -456,15 +472,20 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 * 入力：自然言語による機能説明（`/speckit.specify` の後のテキスト）。
   何を構築しようとしているのか、そしてなぜ構築しようとしているのかを可能な限り明確に記述してください。この時点では技術スタックに焦点を当てないでください。
+
 * 動作（概念）：
 
   * ブランチ用の短い名前（2〜4語）を生成（例：`user-onboarding`）。
+
   * 数値プレフィックス（`N`）を選択し、ブランチ `N-short-name` を作成/チェックアウト。
+
   * `scripts/bash/create-new-feature.sh` または `scripts/powershell/create-new-feature.ps1` を実行。
+
   * 以下を作成または更新：
 
     * その機能用の `spec.md`。
     * その機能用の `checklists/requirements.md`。
+
   * 正しい場所は `harness/feature_list.json` (`spec_path`, `checklist_path`) から取得されます。
 
 結果として生成されるファイルの例：
@@ -476,22 +497,23 @@ plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checkli
 
 仕様書は以下を満たす必要があります：
 
-* 実装の詳細ではなく、**WHAT（何）**と**WHY（なぜ）**に焦点を当てる。
+* 実装の詳細ではなく、**WHAT（何）** と **WHY（なぜ）** に焦点を当てる。
 * ユーザーシナリオ、機能要件、成功基準を含める。
 * `[NEEDS CLARIFICATION: ...]` マーカーの使用は控えめにする（最大3つ）。
   → 後段の `/speckit.clarify` がここを優先的に解消します。
 
-チェックリスト (`requirements.md`) は **空のチェックボックスのまま**生成されます。
+チェックリスト (`requirements.md`) は **空のチェックボックスのまま** 生成されます。
 実際にチェックを埋め、品質ゲートを通すのは Clarify / 手動レビュー / `scripts/validate_spec.sh` の役割です。
 
 ### 4.2 `/speckit.clarify` (要件の明確化、人間主導)
 
-Clarify は **要件初期化エージェント**として、次の2種類の曖昧さを解消します：
+Clarify は **要件初期化エージェント** として、次の2種類の曖昧さを解消します：
 
 1. `/speckit.specify` が埋め込んだ **`[NEEDS CLARIFICATION: ...]` マーカー**。
-2. Taxonomy ベースのスキャンで見つかる、仕様書の「穴」（機能・データ・UX・非機能・外部連携・エッジケースなど）。
+2. Taxonomy ベースのスキャンで見つかる、仕様書の「穴」
+   （機能・データ・UX・非機能・外部連携・エッジケース・制約など）。
 
-明確化作業は**人間によって手動で実行**されます（完全自動ではありません）：
+明確化作業は **人間によって手動で実行** されます（完全自動ではありません）：
 
 1. 対象の機能の `spec.md` を開き、ざっと内容を把握します。
    `[NEEDS CLARIFICATION: ...]` マーカーがどこにあるかも確認します。
@@ -504,6 +526,7 @@ Clarify は **要件初期化エージェント**として、次の2種類の曖
 
      * 明示的な `[NEEDS CLARIFICATION]` マーカー、
      * taxonomy（機能、データモデル、UX、非機能、外部連携、エッジケース、制約など）
+
        をもとに曖昧さの「候補リスト」を作ります。
 
    * その中から **最大 5 個** の高インパクトな質問をキューに積みます：
@@ -560,16 +583,18 @@ Clarify は **要件初期化エージェント**として、次の2種類の曖
 
         * `"yes"` または `"recommended"` と返す
           → テーブルの中で **Recommended:** と明示された Option（例：B）を採用したものとして扱います。
+
       * 別の候補を選ぶ場合：
 
         * `"A"`, `"B"`, `"C"` … といった **Option のアルファベット**を返す
           → 対応する行の Answer を採用します。
+
       * 独自案を指定する場合：
 
         * 5語以内の短いテキストで回答します（例： `"Email only"`, `"Admin only"`, など）
           → テーブルの `Short` 行を選んだものとして扱い、その内容を最終回答とします。
 
-      回答が曖昧な場合（複数候補にまたがる、意味が取りづらいなど）は、Clarify 側が**同じ質問の中で**短く確認を行います（この確認は「別の質問」としてカウントしません）。
+      回答が曖昧な場合（複数候補にまたがる、意味が取りづらいなど）は、Clarify 側が **同じ質問の中で** 短く確認を行います（この確認は「別の質問」としてカウントしません）。
 
 4. 人間の回答を受け取るたびに Clarify は：
 
@@ -587,7 +612,9 @@ Clarify は **要件初期化エージェント**として、次の2種類の曖
    * どのセクションを更新したか（Functional Requirements / Data Model / Success Criteria など）。
    * まだ残っている `[NEEDS CLARIFICATION]`（あれば）。
    * taxonomy ベースのカバレッジ（Resolved / Deferred / Clear / Outstanding）
-     をまとめて報告し、
+
+   をまとめて報告し、
+
    * 次のステップとして `/speckit.plan` へ進んでよいか、あるいはもう一度 Clarify / 手動修正を挟むべきかを提案します。
 
 > Clarify はあくまで「仕様書の穴を減らすための前処理」です。
@@ -597,7 +624,8 @@ Clarify は **要件初期化エージェント**として、次の2種類の曖
 
 ## 5. 仕様品質ゲート (`scripts/validate_spec.sh`)
 
-機能が「計画 / 実装の準備完了」と見なされる前に、**仕様品質チェックリスト (Specification Quality Checklist)** に合格する必要があります。
+機能が「計画 / 実装の準備完了」と見なされる前に、
+**仕様品質チェックリスト (Specification Quality Checklist)** に合格する必要があります。
 
 ### 5.1 チェックリストの場所
 
@@ -659,9 +687,134 @@ FAILED の場合：
 
 ---
 
-## 6. 推奨ワークフロー
+## 6. Plan 品質ゲート (`checklists/PlanQualityGate.md` + `scripts/validate_plan.sh`)
 
-### 6.1 人間向け (プロダクト / テックリード)
+仕様品質ゲートを通過したあと、
+**Plan（impl-plan + 設計成果物）** を Tasks にブレイクダウンする前に「Plan 品質ゲート」を通します。
+
+### 6.1 Plan チェックリストの場所
+
+各機能に対して（必要に応じて）：
+
+```text
+plans/.../<EPIC-ID>/features/<FEATURE-ID>/checklists/PlanQualityGate.md
+```
+
+このファイルは、`/speckit.plan` によって生成された `impl-plan.md` と
+それに紐づく設計成果物（`research.md`, `data-model.md`, `contracts/`, `quickstart.md`）を前提に、
+
+* Plan が十分に具体的か
+* 関連する設計ファイルが揃っているか
+* `impl-plan.md` と設計ファイルが矛盾していないか
+
+をチェックするためのものです。
+
+**ひな型イメージ（抜粋）：**
+
+```markdown
+# Plan Quality Checklist: <FEATURE-ID>
+
+対象フィーチャ:
+- ID: <FEATURE-ID>
+- Epic: <EPIC-ID>
+- Impl plan: `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/impl-plan.md`
+
+## A. Plan 本体の構造
+
+- [ ] `impl-plan.md` が存在し、この FEATURE-ID と対応する spec へのリンクが明記されている。
+- [ ] 必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking 相当）が埋まっており、ダミーや空欄が残っていない。
+- [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` 相当のプレースホルダが残っていない。
+
+## B. Technical Context / Constitution Check
+
+- [ ] Technical Context の各項目が、このフィーチャの実際の実装方針を具体的に表している。
+- [ ] Constitution Check に適用するゲート条件と、その満たし方が記述されている。
+- [ ] 満たせないゲートがある場合、Complexity Tracking に理由と却下した代替案が明記されている。
+
+## C. プロジェクト構造 / 影響範囲
+
+- [ ] 採用する Project Structure が 1 つだけ選ばれており、不要なテンプレート構造が削除されている。
+- [ ] 列挙されたディレクトリ/ファイルパスがリポジトリルートからの正しいパスである。
+- [ ] このフィーチャが触る既存モジュールやサービスの位置と役割が明記されている。
+
+## D. 研究・設計成果物との整合性
+
+- [ ] `research.md` が存在し、主要な不明点ごとに Decision / Rationale / Alternatives considered が書かれている。
+- [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+- [ ] `contracts/` 配下に、このフィーチャで追加・変更される契約が置かれている（形式はプロジェクト標準に従う）。
+- [ ] `quickstart.md` が存在し、このフィーチャだけを試す手順が書かれている。
+- [ ] `impl-plan.md` と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない。
+
+## E. Epic design index / 他フィーチャとの関係
+
+- [ ] エピック配下に `design/index.md` が存在する場合、`impl-plan.md` の Artifacts/Notes からそのパスと役割が参照されている。
+- [ ] 共有エンティティや共有 API がある場合、その所有者と他フィーチャとの関係が `design/index.md` または `impl-plan.md` のいずれかで明示されている。
+
+## F. Plan から Tasks へのブレイクダウン準備
+
+- [ ] Plan of Work / Concrete Steps を読むだけで、`/speckit.tasks` が「どのファイルにどのような変更タスクを切るか」を機械的に列挙できる具体性になっている。
+- [ ] Validation / Acceptance に、この Plan 完了時の具体的な成功条件（コマンド・HTTP リクエストなど）が書かれている。
+- [ ] Idempotence / Recovery に、途中失敗時のやり直しや既存環境への影響最小化方針が触れられている。
+```
+
+### 6.2 Plan バリデータの実行 (`scripts/validate_plan.sh`)
+
+`requirements.md` と同様に、Plan 用のチェックリスト `PlanQualityGate.md` も自動検証できます。
+
+リポジトリルートから実行します：
+
+```bash
+# すべてのフィーチャの Plan チェックリストを検証
+scripts/validate_plan.sh
+
+# 特定のフィーチャのみを検証
+scripts/validate_plan.sh \
+  plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+```
+
+想定される動作（設計方針）：
+
+* 各 `PlanQualityGate.md` をスキャンして、未チェックの項目 (`- [ ] ...`) がないか確認します。
+
+* 各チェックリストファイルについて、ログエントリを `harness/AI-Agent-progress.txt` に書き込みます：
+
+  * **PASSED (合格)** の例：
+
+    ```text
+    [2025-10-01 13:05Z] plan quality check: PASSED
+    target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+    ```
+
+  * **FAILED (不合格)** の例：
+
+    ```text
+    [2025-10-01 13:05Z] plan quality check: FAILED
+    target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+    incomplete items:
+      - line 23: - [ ] impl-plan.md に NEEDS CLARIFICATION 相当のマーカーが残っていない
+      - line 41: - [ ] data-model.md が存在し、spec と整合している
+    ```
+
+* 終了コード：
+
+  * `0` — すべてチェック済み（Plan 品質ゲート PASSED）。
+  * `1` — 少なくとも1つの Plan チェックリストに未チェック項目があるか、ファイルが存在しない。
+
+FAILED の場合：
+
+1. その機能の `impl-plan.md` と `PlanQualityGate.md`（必要に応じて `research.md` 等も）を開く。
+2. Plan / 設計成果物を修正する（不足している設計項目を補うなど）。
+3. 満たされた各チェックリスト項目を `- [x]` にマークする。
+4. パスするまで `scripts/validate_plan.sh` を再実行する。
+
+**Plan 品質ゲートを通過した Plan のみが `/speckit.tasks` に渡される**
+という運用を徹底することで、「Task レベルに落としたあとで Plan の穴が見つかる」ことを避けます。
+
+---
+
+## 7. 推奨ワークフロー
+
+### 7.1 人間向け (プロダクト / テックリード)
 
 **新規または変更された機能**の場合：
 
@@ -675,9 +828,11 @@ FAILED の場合：
 
    * `[NEEDS CLARIFICATION]` マーカーが解消されていくこと、
    * taxonomy ベースの高インパクトな穴（非機能やエッジケースなど）が埋められていくこと
-     を確認する。
+
+   を確認する。
 
 4. 機能のチェックリストがパスするまで `scripts/validate_spec.sh` を実行する。
+   → **ここまでで 仕様品質ゲート を通過**。
 
 5. エピックの `exec-plan.md` の `Related Features / Specs (関連フィーチャ ID 一覧)` にこの機能がリストされていることを確認する。
 
@@ -687,7 +842,16 @@ FAILED の場合：
    * 主に扱うエンティティ・API
    * 既存フィーチャとの依存関係があれば簡単な説明
 
-### 6.2 AIコーディングエージェント向け (実装作業)
+7. `/speckit.plan` を実行して `impl-plan.md` および関連設計成果物（`research.md`, `data-model.md`, `contracts/`, `quickstart.md`）を生成・更新する。
+
+8. `checklists/PlanQualityGate.md` を使って Plan の品質を確認し、必要に応じて `impl-plan.md` / 設計ファイルを修正する。
+
+9. `scripts/validate_plan.sh` を実行し、Plan 品質ゲートを通過させる。
+   → ここまでで `specify → clarify → (仕様品質ゲート) → Plan → (Plan 品質ゲート)` が完了。
+
+10. Plan が固まったら、`/speckit.tasks` にハンドオフし、Tasks / Task品質ゲート / Implement へ進む。
+
+### 7.2 AIコーディングエージェント向け (実装作業)
 
 エピックが割り当てられた場合：
 
@@ -705,16 +869,21 @@ FAILED の場合：
    * `spec.md` が存在するか、
    * 必要に応じて Clarify が済んでいるか（曖昧さが許容範囲か）、
    * `scripts/validate_spec.sh` が PASS しているか
-     → **impl-plan を生成する前提条件** になります。
+
+     → **impl-plan を生成する前提条件** になります（仕様品質ゲートの通過）。
 
 5. エピックの `exec-plan.md` を開く。
 
 6. もし存在すれば、同じエピック配下の `design/index.md` を開き、
    フィーチャ間の関係と共有コンテキストを把握する。
 
-7. 個々のフィーチャに対して `/speckit.plan` を実行し、`impl-plan.md` および関連設計成果物（research/data-model/contracts/quickstart）を生成・更新する。
+7. 個々のフィーチャに対して `/speckit.plan` を実行し、`impl-plan.md` および関連設計成果物（`research.md` / `data-model.md` / `contracts/` / `quickstart.md`）を生成・更新する。
 
-8. エピックの `exec-plan.md` に従って実装する：
+8. `checklists/PlanQualityGate.md` の各項目を満たすように Plan と設計ファイルを整え、
+   `scripts/validate_plan.sh` を実行して Plan 品質ゲートを通過させる。
+   → ここまでで Tasks へのハンドオフが安全に行える状態になります。
+
+9. エピックの `exec-plan.md` に従って実装する：
 
    * 停止するポイントごとに `Progress` を更新する。
    * 自明でない設計上の選択は `Decision Log` に記録する。
@@ -722,22 +891,33 @@ FAILED の場合：
    * `Validation and Acceptance` の記述に従ってテストを追加・実行する。
    * 複数フィーチャにまたがる設計変更があれば `design/index.md` を更新する。
 
-9. すべてを **安全、冪等、かつ再現可能** に保つ。
+10. すべてを **安全、冪等、かつ再現可能** に保つ。
 
 ---
 
-## 7. クイックチェックリスト (新しいセッションを開始するエージェント向け)
+## 8. クイックチェックリスト (新しいセッションを開始するエージェント向け)
 
 1. ✅ `docs/onboarding.md`（このファイル）を読む。
+
 2. ✅ `PLANS.md` を読む。
+
 3. ✅ `harness/feature_list.json` を検査して以下を特定する：
+
    * ターゲットとなるエピック (`epic_id`, `exec_plan_path`)。
    * 関連する機能 (`spec_path`, `checklist_path`)。
+
 4. ✅ 関連する機能仕様書が存在し、必要に応じて `/speckit.clarify` が実行されていることを確認する。
-5. ✅ `scripts/validate_spec.sh` を使って該当機能のチェックリストがパスすることを確認する（計画・実装の前提）。
+
+5. ✅ `scripts/validate_spec.sh` を使って該当機能のチェックリストがパスすることを確認する（Plan 生成・実装の前提）。
+
 6. ✅ エピックの `exec-plan.md` を開き、すべてのセクションを更新しながらそれに従う。
+
 7. ✅ エピック配下に `design/index.md` があれば内容を確認し、
    変更に伴い必要なら更新する（無ければ、クロスフィーチャな設計が出てきたタイミングで作成を検討する）。
+
+8. ✅ フィーチャ単位で `/speckit.plan` を実行し、`impl-plan.md` と設計成果物を揃える。
+
+9. ✅ `checklists/PlanQualityGate.md` を埋め、`scripts/validate_plan.sh` で Plan 品質ゲートを通過させてから Tasks 生成に進む。
 
 これらの前提条件のいずれかが欠けている場合、**パスや構造を推測しないでください**。
 その代わり、欠落している成果物を `harness/AI-Agent-progress.txt` または ExecPlan の `Progress` / `Surprises & Discoveries` に記録し、人間の入力を待つために停止してください。

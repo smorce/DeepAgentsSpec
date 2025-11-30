@@ -2,16 +2,17 @@
 - スクリプト周り(scripts/)をダウンロードして、このプロジェクト用に調整。特にPATHは変更する必要あるかも。
   - common.sh
   - create-new-feature.sh
-  - setup-plan.sh
+  - 【修正不要だった】setup-plan.sh
   - update-claude-md.sh
 - 以下もPATHなどの調整が必要かも
-  - plan-template.md
-  - spec-template.md
+  - 【done】plan-template.md
+  - 【done】spec-template.md
   - tasks-template.md
 - Speckit の 残りのプロンプトの調整。 clarify は以下のようにしたい。
     推奨度と理由をつけて選択肢を提示します。（推奨度：⭐の5段階評価）。質問は最大3つまでとする。選択肢を提示するときは、常に考えられる選択肢を5～7個リストアップし、有力な2～4個に絞り込みます。
       - clarify の修正できたけど、このあとのPLANとかでPATHが変更になったら再度調整する部分が出てくるので注意。(IMPL_PLAN / TASKS / plan.md / tasks.md まわりは、今のところ既存ロジックをそのまま維持した。後から調整するかも)
       - なので、全体が調整できたあとに、再度スクリプト内のPATHを見直す
+  - Plan周りはdone
 - 指示用プロンプトの調整
   - AGENTS.md, constitution.md も調整。TDD スタイル を維持しながら、このディレクトリ構造に合わせたい。さらに、全体アーキテクチャ → マイクロサービス という構造にしたいので、architecture/ の作成や全体アーキテクチャの ExecPlan の作成、マイクロサービスの Spec や ExecPlan を作るように指示したい。技術スタックはCloudflareやNeon等にしたい。
 - Jujutsu のアンイストールが完了した。Jules が並列実装に対応したため、不要になった。ローカルに Jules のメモあり。
@@ -74,7 +75,7 @@
 
 ## speckit.plan とは？
 - **plan は「フィーチャ単位」**で持つ（今の setup-plan.sh 設計に合わせる）
-- **エピック単位では「軽量 design/index.md」**で、フィーチャ間のつながりや共有コンテキストを管理する → インデックスの追加
+- **エピック単位では「軽量 design/index.md」**で、フィーチャ間のつながりや共有コンテキストを管理する → インデックスの追加した
 
 
 
@@ -203,8 +204,20 @@ services/, tests/, scripts/
 ```
 
 ## 品質ゲート
-- Spec Kit は「specify → clarify → (仕様品質ゲート: checklist) → Plan → (Plan品質ゲート) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
+- Spec Kit は「specify → clarify → (仕様品質ゲート: checklist, scripts/validate_spec.sh) → Plan → (Plan品質ゲート) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
 - /plan は Plan を作るだけ。タスク分解は /speckit.tasks、実装は /speckit.implement に流すのが基本ラインです。
+- /speckit.plan で生成されるものは以下。以下をPlan品質ゲートでチェックする
+  - impl-plan.md
+  - research.md
+  - data-model.md
+  - contracts/
+  - quickstart.md
+
+- Plan品質ゲートのステップ
+  - AIエージェントのレビューで 各フィーチャの `checklists/PlanQualityGate.md` を埋める
+
+
+
 
 ## ワークフロー
 ====== 全体の確認 ===============
