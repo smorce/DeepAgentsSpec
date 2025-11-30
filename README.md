@@ -202,7 +202,12 @@ services/, tests/, scripts/
   （ExecPlan に従って、実際のコード・テスト・スクリプトが変更される）
 ```
 
+## 全体チェーン
+
+ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
+
 ## 品質ゲート
+
 - Spec Kit は「specify → clarify → (仕様品質ゲート: scripts/validate_spec.sh) → Plan → (Plan品質ゲート: scripts/validate_plan.sh) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
 - /plan は Plan を作るだけ。タスク分解は /speckit.tasks、実装は /speckit.implement に流すのが基本ラインです。
 - /speckit.plan で生成されるものは以下。以下をPlan品質ゲートでチェックする
@@ -213,9 +218,10 @@ services/, tests/, scripts/
   - quickstart.md
 
 - Plan品質ゲートのステップ
-  - AIエージェントのレビューで 各フィーチャの `checklists/PlanQualityGate.md` を埋める
+  - AIエージェントのレビューで 各フィーチャの `checklists/PlanQualityGate.md` を埋める。/plan コマンド実行で自動的に PlanQualityGate.md が作成される。
 
-
+/speckit.plan … フィーチャごとの impl-plan と設計 artifacts を作る
+/speckit.tasks … その impl-plan ＋設計 artifacts から「実行タスク」を起こす
 
 
 ## ワークフロー
@@ -232,9 +238,9 @@ services/, tests/, scripts/
 1. specify
 2. clarify
 3. checklist
-4. plan         ← ここまで終わった
-5. tasks        ExecPlan で管理したからプロンプト調整？  ← 次はここを作業する
-6. analyze      成果物間の整合性チェック（推奨オプション）
+4. plan         
+5. tasks        ← ここまで終わった
+6. analyze      成果物間の整合性チェック（推奨オプション）  ← 次はここを作業する
 7. implement
 8. review
 
