@@ -245,3 +245,13 @@ services/, tests/, scripts/
 を最初に参照してください。
 
 以降のセッションでは、README を毎回読み直す必要はなく、`docs/onboarding.md` と各 ExecPlan / spec を見れば十分です。
+
+## SpecialThanks
+
+- https://github.com/github/spec-kit
+
+- https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+
+- https://note.com/smorce/n/nf836fdeff03d
+
+- https://www.philschmid.de/agents-2.0-deep-agents
