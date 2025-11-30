@@ -1,153 +1,3 @@
-# to do
-- スクリプト周り(scripts/)をダウンロードして、このプロジェクト用に調整。特にPATHは変更する必要あるかも。
-  - common.sh
-  - create-new-feature.sh
-  - 【修正不要だった】setup-plan.sh
-  - update-claude-md.sh
-- 以下もPATHなどの調整が必要かも
-  - 【done】plan-template.md
-  - 【done】spec-template.md
-  - tasks-template.md
-- Speckit の 残りのプロンプトの調整。 clarify は以下のようにしたい。
-    推奨度と理由をつけて選択肢を提示します。（推奨度：⭐の5段階評価）。質問は最大3つまでとする。選択肢を提示するときは、常に考えられる選択肢を5～7個リストアップし、有力な2～4個に絞り込みます。
-      - clarify の修正できたけど、このあとのPLANとかでPATHが変更になったら再度調整する部分が出てくるので注意。(IMPL_PLAN / TASKS / plan.md / tasks.md まわりは、今のところ既存ロジックをそのまま維持した。後から調整するかも)
-      - なので、全体が調整できたあとに、再度スクリプト内のPATHを見直す
-  - Plan周り(品質ゲート含む)はdone
-- 指示用プロンプトの調整
-  - AGENTS.md, constitution.md も調整。TDD スタイル を維持しながら、このディレクトリ構造に合わせたい。さらに、全体アーキテクチャ → マイクロサービス という構造にしたいので、architecture/ の作成や全体アーキテクチャの ExecPlan の作成、マイクロサービスの Spec や ExecPlan を作るように指示したい。技術スタックはCloudflareやNeon等にしたい。
-- Jujutsu のアンイストールが完了した。Jules が並列実装に対応したため、不要になった。ローカルに Jules のメモあり。
-  - Jules を使う場合は Issueドリブンになるのでローカルメモ管理方式ではない。Github Copilot も Issueドリブンの仕様になっているのでそれで良いかも。
-- 各ステップをゲート制にするために、ゲートを合格しているか確認する用のスクリプトまたはプロンプトを用意する。合格なら次のステップに行けるようにする。
-- 毎回このディレクトリ構造になるように、スクリプトを作ってそれを実行すれば、この構造になるなスクリプトを用意したい。
-- checklist の対応
-  - 【done】テンプレートを配置(templates/checklist)
-  - スクリプトを作成。実行するとテンプレートからチェックリストを持ってきて、各マイクロサービスのフォルダに配置させるやつ。
-  - 所定のフォルダに配置されたら、あくまでも汎用的なリストになっているため、エージェントに今回のプロジェクトの仕様にないチェック項目は削除させ、必要なものだけ残させる。
-  - マイクロサービスの実装が完了するごとにチェックリストを走らせる。その代わり、全体アーキテクチャに対してのチェックは不要。
-
-
-
-## speckit.checklist とは？
-ソフトウェア開発における「機能の要件定義（仕様書）」が適切に書かれているかを検証するためのチェックリストを作成させるためのルールセットです。
-つまり、開発者がコードを書く前や、仕様レビューの段階で、「この仕様書で開発を進めて大丈夫か？」を判断するための品質保証ツールとして機能するように設計された品質チェックゲート。
-通常は speckit.plan の前に実行します。speckit.checklist は、「仕様書（spec.md）が曖昧でないか？」「考慮漏れがないか？」をチェックするためのものです。「コードが正しいか」を確認するものではなく、「仕様書が詳しいか」を確認するリストを作るためのもの。
-コードレビューは最後にやる。
-
-使い方例:
-```
-/speckit.checklist 目的:
-- マイクロサービスアーキテクチャの要件定義に漏れがないか確認したい。
-- 特に「データ整合性」「分散トレーシング」「耐障害性」「オブザーバビリティ」「通信とAPI契約」の要件が spec.md に具体的に定義されているか厳しくチェックしてください。
-
----
-
-/speckit.checklist 目的:
-- セキュリティの要件定義に漏れがないか確認したい。
-- 現時点では個人&ローカル開発メインであるため、最小セットでチェックしてください。
-- 大規模なチェックは不要ですがバックエンド、データ保護、APIに関する項目はspec.md に具体的に定義されているか厳しくチェックしてください。
-
----
-
-アプリケーションにLLMを搭載する場合は下記も実施。
-
-/speckit.checklist 目的:
-- LLMアプリケーションの要件定義に漏れがないか確認したい。
-- 以下の「参照ガイドライン」にある各項目について、「そのアーキテクチャや運用方針が設計として spec.md に明記されているか」 厳しくチェックしてください。
-
-- LLMの責務範囲（「思考」と「ツール実行」の分離など）がSpecに定義されているか。
-- プロンプトのコード化、ディレクトリ構成、バージョン管理方針が定義されているか。
-- 履歴の圧縮戦略（要約・抽出・切断）が具体的に定義されているか。
-- LLM出力のパース失敗時のフォールバックや、型・権限のバリデーション方針が定義されているか。
-- ステートレスな設計原則（サーバーメモリに依存しない）が明記されているか。
-- 処理の中断・再開APIのインターフェース設計が含まれているか。
-- ヒューマン・イン・ザ・ループ（人間への確認・通知）が必要な場合、そのフローとツール定義が存在するか。
-- エージェントの実行ループ（思考→ツール→更新）のロジックと、リトライ/バックオフ戦略が定義されているか。
-- ツール実行エラーや例外をコンテキストにどうフィードバックするかの戦略（要約して再試行など）が定義されているか。
-- エージェントの責務は適切に分割されているか（1エージェントの想定ターン数やSub-Agent化の方針）。
-- 同時実行時の整合性制御（楽観ロックなど）の方針が定義されているか。
-```
-
-- 正式な品質ゲートはすでに specify の requirements.md ＋ scripts/validate_spec.sh に決まっているので、
-/speckit.checklist はその「上に乗るオプション機能」として修正した。
-→ 「ドメイン別の追加チェック（ux.md, api.md, security.md など）」に特化して調整。
-
-
-## speckit.plan とは？
-- **plan は「フィーチャ単位」**で持つ（今の setup-plan.sh 設計に合わせる）
-- **エピック単位では「軽量 design/index.md」**で、フィーチャ間のつながりや共有コンテキストを管理する → インデックスの追加した
-- 実行すると自動的に PlanQualityGate.md が作られる
-
-
-### エピックの中に複数のフィーチャが紐づく場合、フィーチャ同士で連携するケースもありえますか？
-これは 「ありえる」どころか、むしろ普通に起こる前提で考えてよさそうです。
-例：
-  F-USER-001: signup UI
-  F-USER-002: email verification
-  → 仕様的にも実装的にも相互に前提関係・依存が出るのが自然
-
-この「フィーチャ同士の関係」「どちらが先か」「どこで統合されるか」を説明するのは、exec-plan.md（エピック単位の Plan）と architecture/ の役割で、
-plan.md（implementation plan）は **「1フィーチャを具体的にどう実装するか」**にフォーカスさせるのが分担として綺麗です。
-
-1フィーチャ = 1つの spec + checklist + impl-plan + 周辺設計（research.md など）
-→ ドキュメントは 細かく分かれるが、それぞれが小さいので読みやすい。
-ドキュメントのボリュームは大きくなるけど、Jules の実行単位としてはこれくらい小さくしないと安定しないかもしれない。
-フィーチャ同士の連携や優先度、依存関係はエピック側が俯瞰して管理すればよい。
-
-## 方針
-- 作業環境
-  - PowerShell ではなく WSL で作業しないとちゃんとプロンプトを読み込んでくれないので、ターミナルでは WSL を起動する。
-- 結論から言うと、この speckit の性質と「長期間動くエージェント＋ブランチ運用」を考えると、仕様書 spec はフィーチャ単位で作るほうがエージェントはかなり扱いやすいです。
-ただし「エピック単位の視点」は ExecPlan 側でちゃんと持つ、という役割分担にするとバランスが良いです。
-/speckit.specify は「1 回のコマンド＝1 個の機能説明＝1 個のブランチ」という動きなので、
-1 ブランチ ↔ 1 フィーチャ ↔ 1 spec.md ↔ 1 checklist
-という対応にすると、エージェント側のメンタルモデルがシンプルになる。
-長期間動くエージェントにとっては：
-- 小さめの spec（1 フィーチャ分）だと、「毎回少しだけ進めて成果物を残す」単位が明確
-- ブランチと spec が 1 対 1 なので、「今どの spec を編集すべきか」で迷わない
-一方、エピック全体の見取り図や優先順位は、ExecPlan 側の Progress / Plan of Work / Context and Orientation でまとめて持てばよいので、
-「エピックの視点」は ExecPlan に寄せ、仕様の細かさはフィーチャ側に寄せるという分担がきれいにハマる。
-
-### メリット
-speckit 側：
-- 「どのフィーチャの spec / checklist を編集すべきか」を
-- features[].spec_path / features[].checklist_path から機械的に決定可能。
-
-ExecPlan 側：
-- epics[].exec_plan_path だけ見れば「このエピック全体の計画書」に飛べる。
-- ExecPlan 内から features の ID（F-XXX-YYY）を列挙して参照できる。
-
-エージェント：
-- 「今 F-USER-001 をやっている」＝
-  - 見る spec: features[F-USER-001].spec_path
-  - 直す checklist: features[F-USER-001].checklist_path
-  - 所属するエピックの計画: epics[epic_id].exec_plan_path
-というシンプルな 3 つの参照で済む。
-
-
-## done
-- PLANS.md の修正
-- specify.md の修正(これでコマンドが使えるようになった)
-- 以下、チェックリスト周りの調整
-  - checklist.md
-  - checklist-template.md
-- 以下、仕様周りの調整
-  - specify.md
-  - spec-template.md
-- Speckit リポジトリのチェックリストが4つくらいあったので、それも取り入れたい。
-- 以下、プラン周りの調整
-  - plan.md
-  - plan-template.md
-  - setup-plan.sh (調整は不要だったので元のまま)
-  - setup-plan.ps1 (調整は不要だったので元のまま)
-  - PLANS.md の修正が必要になったので修正 (design/index.md の内容を追加)
-- システム全体のアーキテクチャまで細かいドキュメントは不要だったため、オンボーディングの修正
-  - 「システムレベルは exec-plan + design/index.md に絞る」
-  - 「「細かい設計・plan・research などはサービス単位の feature に全部寄せる」
-
-
-
----
-
 # 長期稼働型 AI エージェント
 
 このリポジトリは、**長期稼働するAIコーディングエージェントと人間が協働するため**に設計されています。
@@ -206,6 +56,9 @@ services/, tests/, scripts/
 
 ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 
+- /speckit.plan … フィーチャごとの impl-plan と設計 artifacts を作る
+- /speckit.tasks … その impl-plan ＋設計 artifacts から「実行タスク」を起こす
+
 ## 品質ゲート
 
 - Spec Kit は「specify → clarify → (仕様品質ゲート: scripts/validate_spec.sh) → Plan → (Plan品質ゲート: scripts/validate_plan.sh) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
@@ -220,30 +73,6 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 - Plan品質ゲートのステップ
   - AIエージェントのレビューで 各フィーチャの `checklists/PlanQualityGate.md` を埋める。/plan コマンド実行で自動的に PlanQualityGate.md が作成される。
 
-/speckit.plan … フィーチャごとの impl-plan と設計 artifacts を作る
-/speckit.tasks … その impl-plan ＋設計 artifacts から「実行タスク」を起こす
-
-
-## ワークフロー
-====== 全体の確認 ===============
-1. AGENTS.md の読み込み
-1. ルートディレクトリの `README.md` を確認
-1. constitution.md ← これは必要なタイミングで読み込んでもらえば良い？
-1. `docs/onboarding.md`を確認
-1. PLANS.mdを確認  ← オンボーディングの中で指示している
-====== 詳細の確認 ===============
-1. 自分の担当範囲を確認
-
-============================
-1. specify
-2. clarify
-3. checklist
-4. plan         
-5. tasks        ← ここまで終わった
-6. analyze      成果物間の整合性チェック（推奨オプション）  ← 次はここを作業する
-7. implement
-8. review
-
 ## Onboarding
 
 このリポジトリで具体的な作業を始めるときは、詳細な手順やディレクトリ構成、`/speckit.*` フローや `scripts/validate_spec.sh` の使い方をまとめた
@@ -251,13 +80,3 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 を最初に参照してください。
 
 以降のセッションでは、README を毎回読み直す必要はなく、`docs/onboarding.md` と各 ExecPlan / spec を見れば十分です。
-
-## SpecialThanks
-
-- https://github.com/github/spec-kit
-
-- https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
-
-- https://note.com/smorce/n/nf836fdeff03d
-
-- https://www.philschmid.de/agents-2.0-deep-agents
