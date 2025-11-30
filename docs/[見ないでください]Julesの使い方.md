@@ -1,4 +1,51 @@
 # 基本的な使い方
+# =========================================
+# Windows（PowerShell）: Jules Tools をグローバル導入
+# =========================================
+
+# 0) 事前チェック
+node -v 2>$null; if ($LASTEXITCODE -ne 0) { Write-Host "[INFO] Node.js が無ければ公式配布や winget で導入してください（LTS推奨）" }
+
+# 1) シェル補完（PowerShell）を永続化（公式手順）
+if (!(Test-Path $PROFILE)) { New-Item -ItemType File -Path $PROFILE -Force | Out-Null }
+$line = 'Invoke-Expression (& { (jj util completion power-shell | Out-String) })'
+if (-not (Select-String -Path $PROFILE -Pattern [regex]::Escape($line) -Quiet)) {
+  Add-Content -Path $PROFILE -Value $line
+}
+. $PROFILE   # 現在のセッションにも反映
+
+# 2) Jules Tools を グローバル npm で導入（公式手順）
+npm install -g @google/jules
+→これがWindowsでできるようにしたい。
+→サポートされた。
+
+```アップデート方法
+1. 既存の @google/jules をアンインストール
+2. npm キャッシュをクリア
+3. 最新版を再インストール
+
+npm uninstall -g @google/jules
+npm cache clean --force
+npm install -g @google/jules@latest
+```
+
+# 3) 初回ログイン（ブラウザで Google 認証）
+jules login
+→駄目だ。Windowsのサポート待ち。WSLを使っても認証できない。
+→firefoxをすぐに閉じたら Your browser should open for authentication. If not, please visit: の文字が出て
+URL をクリックして GoogleChrome の方で認証できた。
+ただ、Jules の方は WSL に切り替えないといけないからちょっと使いづらいかも。
+→Windowsでできた。
+
+# 4) GitHub 連携（ブラウザ）： https://jules.google.com → GitHub 連携 → 対象リポジトリ選択
+
+# 5) 確認
+jules version
+jules remote list --repo
+→Windowsでできた。
+
+# 6) Jules の TUI（対話ダッシュボード）を開く
+jules
 
 ## Gemini 3.0 Pro の設定方法
 CLIではなく、Webブラウザからしか設定できない。
