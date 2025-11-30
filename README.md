@@ -203,7 +203,7 @@ services/, tests/, scripts/
 ```
 
 ## 品質ゲート
-- Spec Kit は「specify → clarify → (仕様品質ゲート: checklist, scripts/validate_spec.sh) → Plan → (Plan品質ゲート) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
+- Spec Kit は「specify → clarify → (仕様品質ゲート: scripts/validate_spec.sh) → Plan → (Plan品質ゲート: scripts/validate_plan.sh) → Tasks  → (Task品質ゲート) → Implement → (実装ゲート: コード&セキュリティレビュー)」のゲート制で回すので、1つのプロンプトに詰め込みすぎないこと
 - /plan は Plan を作るだけ。タスク分解は /speckit.tasks、実装は /speckit.implement に流すのが基本ラインです。
 - /speckit.plan で生成されるものは以下。以下をPlan品質ゲートでチェックする
   - impl-plan.md
@@ -232,8 +232,8 @@ services/, tests/, scripts/
 1. specify
 2. clarify
 3. checklist
-4. plan         ← ここを作業中
-5. tasks        ExecPlan で管理したからプロンプト調整？
+4. plan         ← ここまで終わった
+5. tasks        ExecPlan で管理したからプロンプト調整？  ← 次はここを作業する
 6. analyze      成果物間の整合性チェック（推奨オプション）
 7. implement
 8. review
