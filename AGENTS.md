@@ -94,7 +94,22 @@ set UV_LINK_MODE=copy && uv run python script.py
 
 ---
 
-## 5. Gitルール (Git Rules)
+## 5. 手持ちのツール群 (Tools/Skills)
+
+tools:
+  - name: dcf_model
+    description: "割引キャッシュフロー（DCF）法を使用して企業の投資分析と価値評価を行うためのツール。過去の財務データ（売上、EBITDA、Capex等）と将来の予測前提（成長率、マージン、WACCパラメータ等）を入力とし、企業価値（Enterprise Value）、株式価値（Equity Value）、および株価を算出します。"
+    skill_path: "skills/creating-financial-models/dcf_model/SKILL.md"
+  - name: sensitivity_analysis
+    description: "財務モデルにおける変数の変動が出力（企業価値やIRRなど）に与える影響を評価するためのツール。一方向感度分析、二方向感度分析、トルネード分析、損益分岐点分析をサポートし、最も影響力の大きいリスク要因や価値ドライバーを特定します。"
+    skill_path: "skills/creating-financial-models/sensitivity_analysis/SKILL.md"
+  - name: frontend-design
+    description: "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics."
+    skill_path: "skills/frontend-design/SKILL.md"
+
+---
+
+## 6. Gitルール (Git Rules)
 
 *   コミットプレフィックスは以下の通りです:
     *   `feat:` 新機能の追加または機能の変更
