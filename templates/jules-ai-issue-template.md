@@ -11,6 +11,8 @@
 - **対象フィーチャ**: `<FEATURE-ID (例: F-API-001)>`
 - **関連ブランチ**: `<feature-branch or TBD>`
 - **優先度 / 期限**: `<priority / due-date>`
+- **保管場所**: `services/<service-name>/issues/<issue-id>.md`  
+  - *テンプレート記入後は、必ず対象マイクロサービス配下に `issues/` ディレクトリ（無ければ作成）を作り、上記パスへ Markdown ファイルとして保存してください。Pull Request ではこのファイルも含めてください。*
 
 ### 期待するユーザー価値
 `<このサービス実装でユーザーが得る価値を1〜2文で記述>`
