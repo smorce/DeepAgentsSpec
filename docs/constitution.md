@@ -12,7 +12,6 @@
 - **人間（ビジネス/プロダクト側）**:
   - ビジネス要件の提示
   - 優先度の決定と合意形成
-  - SOW（Scope of Work）の承認（作業開始のゲート）
 
 ---
 
@@ -22,7 +21,27 @@
 - **TDD（Red→Green→Refactor）**: 失敗テスト→最小実装→リファクタ。**テストが先**、設計はテストで駆動。
 - **Tidy First**: 構造変更（リファクタ）と振る舞い変更（機能）は**同一コミットで混在禁止**。
 - **シンプル設計**: YAGNI / DRY / KISS を徹底。過剰設計を避ける。
-- **分散システムの規律**: サービス間通信・耐障害性・可観測性は**標準手法**（例：サービスメッシュ、分散トレーシング、構造化ロギング）で一貫運用。
+
+### 2.1 フェーズ順序と完了条件
+アクティビティは「アーキテクチャ → サービス設計 → TDD実装」の順で進め、各フェーズで以下を満たす。
+
+1. **アーキテクチャ設計**: `architecture/` 配下と `plans/system/<EPIC-ID>/exec-plan.md` を更新し、Progress/Decision Log と `harness/AI-Agent-progress.txt` の双方へ記録。
+2. **マイクロサービス設計**: `services/<service>/service-architecture.md`、`plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/spec.md` / `impl-plan.md`（必要に応じ `research.md` / `data-model.md` / `contracts/` / `quickstart.md`）を整備し、`scripts/validate_spec.sh` → `scripts/validate_plan.sh` を実行して結果をログ化。
+3. **TDD実装**: `templates/jules-ai-issue-template.md` から Issue を作成し、完成版を `services/<service>/issues/<issue-id>.md` に保存して Jules を起動。Red→Green→Refactor の証跡を Issue コメントと ExecPlan Validation に残す。
+
+### 2.2 成果物配置ルール
+- システム設計/決定は `architecture/` と `plans/system/...` が唯一のソースオブトゥルース。
+- サービス別アーティファクト（spec, impl-plan, data-model, contracts, quickstart）は `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/` に置き、`harness/feature_list.json` の `spec_path` / `checklist_path` と同期。
+- Jules Issue は `services/<service>/issues/<issue-id>.md` に保存し、Issue 内で参照ドキュメントや検証コマンドを明示。
+- ExecPlan の `Progress` / `Decision Log` と `harness/AI-Agent-progress.txt` は常にセットで更新する。
+- コミットは Tidy First を徹底し、`scripts/run_all_unit_tests.sh` や `scripts/run_all_e2e_tests.sh` を最新のテストコマンドで維持する。
+
+### 2.3 TDD / Issue 駆動運用ルール
+- **Issue運用**: すべての実装タスクはテンプレートを使用して Issue 化し、`services/<service>/issues/<issue-id>.md` に格納。Issue には参照すべき `architecture/` `plans/` `spec/impl-plan` `scripts/validate_*.sh` を列挙。
+- **Red→Green→Refactor**: 失敗するテストを先に書き、`scripts/run_all_unit_tests.sh` などに組み込む。各サイクルの要約を Issue コメントと ExecPlan Validation に残す。
+- **Tidy First実務**: 構造リファクタと振る舞い変更を別コミットに分離し、振る舞い変更コミットではテスト結果を提示。
+- **品質ゲート**: Spec 更新後は Requirements checklist を更新し `scripts/validate_spec.sh` を実行、Plan/設計更新後は PlanQualityGate checklist と `scripts/validate_plan.sh` を実行し、結果を `harness/AI-Agent-progress.txt` に追記。
+- **ステータス更新**: TDDサイクル完了・Issueクローズ時は `harness/feature_list.json` の対象 Feature `status` を最新化する。
 
 以下はLLMアプリを実装する際の設計原則:
 - **Natural Language → Tool Calls**: 自然言語は構造化ツール呼び出しに還元する。
@@ -50,125 +69,3 @@
 5. **API契約（OpenAPI 等）**: 入出力・エラー・セキュリティ　→ **APIの動作に関しては契約が最優先**
 6. **実装計画・タスク**: 実現手段・順序
 7. **コード**: 上記を実現する成果物（上位に矛盾したら修正対象はコード）
-
-> **衝突時**は新たに**ADRを作成**して解決し、必要に応じて仕様/設計/契約/計画を**連鎖更新**する。
-
----
-
-## 4. ワークフロー（ゲートのみ）
-本章は**工程のゲート条件のみ**を定める。
-
-**フェーズ順**:
-`/speckit.constitution → /speckit.specify → /speckit.clarify（任意） → /speckit.plan → /speckit.tasks → /speckit.analyze（任意） → /speckit.implement`
-
-**ゲート**:
-- **Spec Gate**: 機能仕様合意まで、Planに進まない。
-- **Plan Gate**: 代替案比較・テスト方針・リスク明示の Plan 合意まで、Tasksを作らない。
-- **Tasks Gate**: TDD前提のタスク（Redケース含む）確定まで、Implementを開始しない。
-- **Quality Gate（PR）**: 全テスト/リンタ/契約テスト/チェックリストが**Green**でないPRはマージ不可。
-- **SOW Gate**: AIが着手する前に小粒度の**SOWを作成し、人間が承認**するまで作業を開始しない。
-
----
-
-## 5. 成果物（Artifacts）
-- **必須成果物（フェーズ別）**
-  - **Specify**: 作りたいソフトウェアが「何を」「なぜ」実現するものなのか、ユースケース、ユーザーストーリー。
-  - **Plan**: 技術選定・アーキテクチャ方針・データ設計・テスト方針・リスクと代替案。
-  - **Tasks**: 実装タスク分解（TDD前提、依存関係、受け入れ条件）。
-  - **Implement**: TDDログ、PR、テスト結果、リリースノート。
-- **意思決定ログ（ADR）**: ソフトウェアやシステムのアーキテクチャに関する重要な決定とその背景、結果を記録した軽量なテキストドキュメント。
-- **作業ログ**: Work Log。AIの記憶領域として作業ログを残す。
-
----
-
-## 6. マイクロサービス規約（技術非依存の原則）
-- **境界と独立性**
-  - 単一ドメインへ高凝集、他サービスへ疎結合。
-  - **Database per Service**。他サービスDBへの直接アクセス禁止。共有はAPI/イベントのみ。
-- **契約駆動（Contract-First）**
-  - APIは OpenAPI 等の**契約を先に**。実装は契約に**厳密一致**。
-  - エラーは**共通フォーマット**（例：`code`, `message`, `details`）で標準化。
-- **通信指針**
-  - 同期（REST/gRPC）と非同期（メッセージング）を**ユースケースで選択**。遅延許容/再送性/整合性要件をSpecに明記。
-  - 冪等性と**タイムアウト**は全外部呼び出しで必須。必要に応じ**リトライ（指数バックオフ）/サーキットブレーカー/フォールバック**。
-- **データ整合性**
-  - 2相分散Txは原則回避。必要なら **Saga + 補償Tx** を明示し失敗系をテストで担保。
-  - 必要に応じ **CQRS** を検討（読み性能要件次第）。
-- **可観測性**
-  - **W3C Trace Context** を全Hopで伝播。構造化ログ（JSON）＋主要メトリクス（レイテンシ/スループット/エラー率）を**標準名**で出力。
-
----
-
-## 7. セキュリティ & コンプライアンス（ベースライン）
-- **認証/認可**: JWT等の標準方式。最小権限（PoLP）。データ層の行レベル制御（RLS**相当**）を推奨。
-- **入力検証**: すべての外部入力を **サーバ側で検証**。スキーマバリデーションを契約と連動。
-- **秘密情報**: `.env*` や鍵類を**参照・出力・保存しない**。サンプルは **ダミー値**のみ。
-- **監査**: 重要操作は**監査証跡**（誰が/いつ/何を）を記録。個人情報は法令・社内規定に準拠。
-
----
-
-## 8. テスト方針（TDDの運用）
-- **型**: ユニット / コンポーネント / 契約（OpenAPI適合）/ 統合 / 回帰 / 失敗シナリオ。
-- **順序**: **テスト先行**。Red ケースに**境界値/失敗経路**を含める。
-- **カバレッジ**: 目標は Line/Branch **≥ 80%**（例）。閾値は *Specify* で機能毎に上書き可（下回る値は不可）。
-- **テスト独立性**: 並行実行可能に設計。外部依存はフェイク/スタブで隔離。
-
----
-
-## 9. コミット/PR 規律
-- **コミット要件（すべて満たすこと）**  
-  1) **全テストGreen**、2) リンタ警告ゼロ、3) **単一論理変更**、4) 形式的Prefix（`feat:`,`fix:`,`docs:`,`style:`,`refactor:`,`test:`,`ci:`,`docker:`,`chore:`）。
-- **Tidy First厳守**: 構造変更と振る舞い変更を**別コミット**に分離。
-- **PR**: 1つの目的に集中。PR本文は**一段落で簡潔**に（改行なし）。
-
----
-
-## 10. 禁止事項（Safety）
-- **破壊的操作**: `rm -rf` / `git reset --hard` / `git rebase`（履歴改変）等の強行実行を**行わない**。
-- **依存の無断削除**: `npm uninstall` などの削除系は Plan/Tasks で明示されない限り**禁止**。
-- **機密アクセス**: `.env*`、SSH秘密鍵、`token`/`key`を含むパス、`secrets/` 配下の**読み書き禁止**。
-
----
-
-## 11. Python 利用規約（uv）
-- Python系ツールは **uv を標準**とする。事前に `uv pip show <pkg>` で存在確認。
-- **リンクモード**: クラウド同期環境の不具合回避のため **常に copy** を使用。
-  - 例: `uv run --link-mode=copy script.py`  
-    もしくは `UV_LINK_MODE=copy` を環境変数で指定。
-- 例:
-  - 実行: `uv run python -c "print('Hello from uv')"`
-  - テスト/静的解析: `uv run pytest`, `uv run ruff check`
-  - 追加/削除: `uv add numpy pandas`, `uv remove numpy`
-
----
-
-## 12. 文書化・記録（テンプレ/命名規約）
-- **SOW**（Scope of Work）  
-  - 保存場所: `_docs/temp/sow/SOW-YYYYMMDD-<slug>.md`  
-  - 役割: 作業前の**合意ゲート**として機能する**必須**のドキュメント。要件定義書より小規模な**戦術的・一時的な文書**であり、気軽に作成し、不要になれば破棄してよい。
-- **ADR**（Architecture Decision Record）  
-  - 保存場所: `_docs/adrs/ADR-YYYYMMDD-<slug>.md`  
-  - 役割: **1決定 = 1ADR** の原則で、重要な技術的判断の**最終決定**を記録する。
-  - 構成: **DecisionTitle**（決定のタイトル） / **Context**（背景・問題） / **Decision**（最終決定と理由） / **Alternatives**（検討した選択肢 3〜5個）
-- **Work Log**（作業ログ）
-  - 保存場所: `_docs/worklogs/LOG-YYYYMMDD-<slug>.md`
-  - 役割: SOWやタスクリストに基づき実行した**作業の要約**をマイルストーンごとに記録し、プロジェクトの実行履歴を追跡可能にする。
-  - 記録内容: 対応SOW、達成事項、発生した問題、次のステップ、関連PRへのリンク。
-- **thinking**（思考ログ）
-  - 保存場所: `_docs/thinking/THINK-YYYYMMDD-<slug>.md`
-  - 役割: 設計判断や思考過程を外部化する。候補の列挙、比較、却下理由、迷い、判断根拠を短文で残す。  
-  - 記録内容: 候補比較のスナップショット、却下理由、採択案の根拠、次の一手。**最終決定は置かない**。必ず関連 **ADR** へのリンクを付ける。
-- **features**（機能メモ）
-  - 保存場所: `_docs/features/FEATURE-YYYYMMDD-<slug>.md`
-  - 役割: 新機能の追加・改修の目的と背景を簡潔に残す。  
-  - 記録内容: 実装目的、画面/入出力の要点、データ構造のポイント、リスク、完了条件（受け入れ条件）。
-- **deleted**（削除ログ）
-  - 保存場所: `_docs/deleted/DELETED-YYYYMMDD-<slug>.md`
-  - 役割: 削除・廃止した機能やファイルの履歴を残し、理由と影響を追跡できるようにする。  
-  - 記録内容: 削除理由、影響範囲、代替手段、再発防止策、関連PR/Issue参照。
-
-### 12.1. 重複回避ルール（thinking と ADR の役割分担）
-- **thinking = 検討の記録（過程）**、**ADR = 最終決定の記録（結果）**。  
-- thinking に置いた比較は、採択後に **ADR の Alternatives** に要約して転記可。詳細は thinking に残す。  
-- **ADRからthinkingのログへ逆リンク**し、文脈をたどれるようにする。
-- どちらにも同じ本文をコピーしない。**リンクで結ぶ**。
