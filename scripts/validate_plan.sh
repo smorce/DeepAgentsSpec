@@ -22,12 +22,12 @@
 
 # * 対象:
 
-#   * 引数なし: `plans/**/features/*/checklists/plan.md` を全て検査
-#   * 引数あり: 引数で指定された `plan.md` のみ検査
+#   * 引数なし: `plans/**/features/*/checklists/PlanQualityGate.md` を全て検査
+#   * 引数あり: 引数で指定された `PlanQualityGate.md` のみ検査
 
 # * 振る舞い:
 
-#   * 各 `plan.md` 内の未チェック項目（`- [ ]`）を検出
+#   * 各 `PlanQualityGate.md` 内の未チェック項目（`- [ ]`）を検出
 #   * 1 つでも未チェック項目があれば **FAILED**
 #   * すべて `- [x]` なら **PASSED**
 
@@ -40,14 +40,14 @@
 
 #       ```text
 #       [2025-10-01 13:05Z] plan quality check: PASSED
-#       target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/plan.md
+#       target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
 #       ```
 
 #     * FAILED:
 
 #       ```text
 #       [2025-10-01 13:05Z] plan quality check: FAILED
-#       target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/plan.md
+#       target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
 #       incomplete items:
 #         - line 23: - [ ] Technical Context has no NEEDS CLARIFICATION markers
 #         - line 41: - [ ] data-model.md exists and matches the spec
@@ -64,8 +64,8 @@
 
 # 1. `specify → clarify → scripts/validate_spec.sh` が PASS
 # 2. `/speckit.plan` で `impl-plan.md` + `research.md` + `data-model.md` + `contracts/` + `quickstart.md` を生成・更新
-# 3. AIエージェントのレビューで `checklists/plan.md` を埋める（`- [x]` にする）
-# 4. `scripts/validate_plan.sh [plan.md]` を回す
+# 3. AIエージェントのレビューで `checklists/PlanQualityGate.md` を埋める（`- [x]` にする）
+# 4. `scripts/validate_plan.sh [PlanQualityGate.md]` を回す
 # 5. Plan 品質ゲートが PASS したら `/speckit.tasks` にハンドオフ
 
 # こうしておくと、
@@ -95,10 +95,10 @@ if [ "$#" -gt 0 ]; then
     PLAN_CHECKLIST_FILES+=("$arg")
   done
 else
-  # plans 以下の「features/*/checklists/plan.md」を全部拾う
+  # plans 以下の「features/*/checklists/PlanQualityGate.md」を全部拾う
   while IFS= read -r path; do
     PLAN_CHECKLIST_FILES+=("$path")
-  done < <(find "$REPO_ROOT/plans" -type f -path "*/features/*/checklists/plan.md" | sort || true)
+  done < <(find "$REPO_ROOT/plans" -type f -path "*/features/*/checklists/PlanQualityGate.md" | sort || true)
 fi
 
 if [ "${#PLAN_CHECKLIST_FILES[@]}" -eq 0 ]; then
