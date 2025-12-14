@@ -80,7 +80,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
    * Read `FEATURE_SPEC`.
 
-   * Read `/memory/constitution.md`.
+   * Read `/docs/constitution.md`.
 
    * Load the IMPL_PLAN template (already copied to `IMPL_PLAN` by the setup script).
 
@@ -103,7 +103,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      * Use `FEATURE_SPEC` and (if present) `EPIC_DESIGN_INDEX` as primary inputs.
      * Mark all unknowns as `NEEDS CLARIFICATION`.
 
-   * Fill **Constitution Check** using `/memory/constitution.md`.
+   * Fill **Constitution Check** using `/docs/constitution.md`.
 
    * Evaluate gates; return an ERROR if any violations are not explicitly justified.
 

@@ -24,7 +24,7 @@ to determine:
 - `BRANCH`
 
 The execution workflow for `/speckit.plan` is defined in  
-`.specify/templates/commands/plan.md`.
+`templates/commands/plan.md`.
 
 ---
 
@@ -64,7 +64,7 @@ The execution workflow for `/speckit.plan` is defined in
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Summarize the applicable gates derived from `/memory/constitution.md`.  
+[Summarize the applicable gates derived from `/docs/constitution.md`.  
 For each relevant constraint, indicate whether this plan currently **conforms**,  
 and if not, why an exception might be needed.]
 

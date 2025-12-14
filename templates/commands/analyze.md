@@ -28,7 +28,7 @@ This command MUST run only after `/speckit.tasks` has successfully produced a co
 
 **STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report only. You may suggest an optional remediation plan, but the user must explicitly approve and invoke any editing commands (e.g., `/speckit.specify`, `/speckit.plan`, manual edits).
 
-**Constitution Authority**: The project constitution (`/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically **CRITICAL** and require adjustment of the spec, impl-plan, tasks, or checklists—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit.analyze`.
+**Constitution Authority**: The project constitution (`/docs/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically **CRITICAL** and require adjustment of the spec, impl-plan, tasks, or checklists—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit.analyze`.
 
 ## Execution Steps
 
@@ -107,7 +107,7 @@ Load only the minimal necessary context from each artifact:
 
 **From constitution:**
 
-* Load `/memory/constitution.md` for principle validation:
+* Load `/docs/constitution.md` for principle validation:
 
   * Names of principles
   * MUST / SHOULD normative statements

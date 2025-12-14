@@ -15,6 +15,36 @@
   - **意思決定の記録 (Decision Logging)**: 重要なアーキテクチャ上の決定、設計パターンの選択理由、技術的なトレードオフなどを記録し、後で参照できるようにします。
   - **基本原則の徹底**: YAGNI（You Aren't Gonna Need It）、DRY（Don't Repeat Yourself）、KISS（Keep It Simple Stupid）の原則をすべての計画と設計に適用します。
 
+### 2.1 フェーズ順序と完了条件
+
+アクティビティは必ず次の順序を守り、各フェーズの完了条件を満たしてから次に進みます。
+
+1. **アーキテクチャ設計フェーズ**  
+   - `architecture/` 配下の文書（system-architecture.md / service-boundaries.md / deployment-topology.md / diagrams/）と、`plans/system/<EPIC-ID>/exec-plan.md` を更新し、システム全体の構造と決定を明文化する。  
+   - Epic Progress / Decision Log と `harness/AI-Agent-progress.txt` に同じ情報を必ず記録する。
+2. **マイクロサービス設計フェーズ**  
+   - 各サービス直下の `service-architecture.md`・`README.md`・`service-config.example.yaml` を最新化し、`plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/` にある `spec.md` / `impl-plan.md`（および `research.md` / `data-model.md` / `contracts/` / `quickstart.md`）を整備する。  
+   - `scripts/validate_spec.sh` → `scripts/validate_plan.sh` の順で品質ゲートを通し、結果をログへ記録する。
+3. **TDD 実装フェーズ**  
+   - `templates/jules-ai-issue-template.md` を用いて GitHub Issue を作成し、Issue 完成版を `services/<service>/issues/<issue-id>.md` に保存してから Jules に割り当てる。  
+   - Jules / 人間エージェントは Issue と ExecPlan に従い、Red→Green→Refactor を明示したテストログを Issue コメントと ExecPlan Validation に残す。
+
+### 2.2 成果物配置ルール
+
+- システム設計と意思決定は `architecture/` と `plans/system/...` を唯一のソースオブトゥルースとする。  
+- サービス別の仕様/計画/契約は `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/` に配置し、`harness/feature_list.json` の `spec_path` / `checklist_path` と整合させる。  
+- Jules 指示書は `services/<service>/issues/<issue-id>.md` のみで管理し、Issue には保存パスを明記する。  
+- 進捗・決定は ExecPlan の `Progress` / `Decision Log` と `harness/AI-Agent-progress.txt` の両方に追記する。  
+- すべてのコード変更は Tidy First を前提に、構造変更と機能変更のコミットを分離し、テスト実行コマンド（`scripts/run_all_unit_tests.sh` / `scripts/run_all_e2e_tests.sh` など）を常に最新状態へ更新する。
+
+### 2.3 TDD / Issue 駆動運用ルール
+
+- **Jules Issue**: 実装タスクは必ず `templates/jules-ai-issue-template.md` をベースに作成し、完成後は `services/<service>/issues/<issue-id>.md` に保存する。Issue 内で参照すべき `architecture/`・`plans/`・`spec/impl-plan`・`scripts/validate_*.sh` のパスを明記する。
+- **Red → Green → Refactor**: 失敗するテストを先に追加し、`scripts/run_all_unit_tests.sh` 等へ反映させる。各サイクルの要約（失敗/成功テスト、リファクタ内容）を Issue コメントと ExecPlan Validation に記録する。
+- **Tidy First実務**: 構造リファクタリングと振る舞い変更のコミットを分け、振る舞い変更コミットにはテスト結果を添える。必要に応じて先にリファクタコミットで準備してから機能追加する。
+- **品質ゲート**: Spec 変更後は Requirements checklist を更新して `scripts/validate_spec.sh` を実行、Plan/設計を更新したら PlanQualityGate checklist と `scripts/validate_plan.sh` を走らせ、`harness/AI-Agent-progress.txt` に結果を追記する。
+- **記録義務**: 重要なアーキテクチャ判断は ExecPlan の `Decision Log` と `docs/decisions.md` の双方に要約する。TDDサイクル完了や Issue クローズ時には `harness/feature_list.json` の該当 Feature `status` を最新化する。
+
 ---
 
 ## 3. 禁止事項 (Prohibited Actions)

@@ -203,7 +203,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 5. **Generate `tasks.md`**
 
-   Use `.specify/templates/tasks-template.md` as the structural template, and write the generated content to `TASKS_FILE`.
+   Use `templates/tasks-template.md` as the structural template, and write the generated content to `TASKS_FILE`.
 
    When filling the template:
 
