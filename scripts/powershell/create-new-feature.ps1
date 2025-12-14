@@ -1,283 +1,274 @@
 #!/usr/bin/env pwsh
-# Create a new feature
+
 [CmdletBinding()]
 param(
-    [switch]$Json,
+    [string]$FeatureId,
     [string]$ShortName,
-    [int]$Number = 0,
+    [string[]]$Service,
+    [string]$Search,
+    [switch]$Json,
     [switch]$Help,
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$FeatureDescription
 )
+
 $ErrorActionPreference = 'Stop'
 
-# Show help if requested
 if ($Help) {
-    Write-Host "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number N] <feature description>"
-    Write-Host ""
-    Write-Host "Options:"
-    Write-Host "  -Json               Output in JSON format"
-    Write-Host "  -ShortName <name>   Provide a custom short name (2-4 words) for the branch"
-    Write-Host "  -Number N           Specify branch number manually (overrides auto-detection)"
-    Write-Host "  -Help               Show this help message"
-    Write-Host ""
-    Write-Host "Examples:"
-    Write-Host "  ./create-new-feature.ps1 'Add user authentication system' -ShortName 'user-auth'"
-    Write-Host "  ./create-new-feature.ps1 'Implement OAuth2 integration for API'"
+    Write-Output @" 
+Usage: create-new-feature.ps1 -FeatureId F-XXX-YYY [options] <feature description>
+
+Options:
+  -FeatureId <ID>   Target feature ID defined in harness/feature_list.json (required)
+  -ShortName <slug> Optional short slug for branch naming
+  -Service <name>   Filter candidate features by owning service (repeatable)
+  -Search <text>    Filter candidate features by substring in ID/title
+  -Json             Emit machine-readable JSON
+  -Help             Show this help message
+"@
     exit 0
 }
 
-# Check if feature description provided
-if (-not $FeatureDescription -or $FeatureDescription.Count -eq 0) {
-    Write-Error "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] <feature description>"
-    exit 1
-}
-
+$repoRoot = (Resolve-Path "$PSScriptRoot/../..").Path
 $featureDesc = ($FeatureDescription -join ' ').Trim()
 
-# Resolve repository root. Prefer git information when available, but fall back
-# to searching for repository markers so the workflow still functions in repositories that
-# were initialized with --no-git.
-function Find-RepositoryRoot {
-    param(
-        [string]$StartDir,
-        [string[]]$Markers = @('.git', '.specify')
-    )
-    $current = Resolve-Path $StartDir
-    while ($true) {
-        foreach ($marker in $Markers) {
-            if (Test-Path (Join-Path $current $marker)) {
-                return $current
+if (-not $FeatureId) {
+    if ($env:SPECIFY_FEATURE -and $env:SPECIFY_FEATURE -match '^F-[A-Za-z0-9-]+$') {
+        $FeatureId = $env:SPECIFY_FEATURE
+    } else {
+        $matches = Find-FeaturesByFilter -FeatureData $featureData -Services $Service -SearchTerm $Search
+        if ($matches.Count -eq 0) {
+            Write-Error "No feature matches filters. Provide -FeatureId or use -Service/-Search to narrow."
+            exit 1
+        }
+        if ($matches.Count -gt 1) {
+            Write-Error "Multiple features match filters. Use -FeatureId to disambiguate. Candidates:"
+            foreach ($m in $matches) {
+                Write-Error ("  - {0} | {1} | {2}" -f $m.Id, $m.Title, $m.Services)
             }
+            exit 1
         }
-        $parent = Split-Path $current -Parent
-        if ($parent -eq $current) {
-            # Reached filesystem root without finding markers
-            return $null
-        }
-        $current = $parent
+        $FeatureId = $matches[0].Id
     }
 }
 
-function Get-HighestNumberFromSpecs {
-    param([string]$SpecsDir)
-    
-    $highest = 0
-    if (Test-Path $SpecsDir) {
-        Get-ChildItem -Path $SpecsDir -Directory | ForEach-Object {
-            if ($_.Name -match '^(\d+)') {
-                $num = [int]$matches[1]
-                if ($num -gt $highest) { $highest = $num }
-            }
-        }
-    }
-    return $highest
-}
+$featureId = $FeatureId.ToUpper()
 
-function Get-HighestNumberFromBranches {
-    param()
-    
-    $highest = 0
-    try {
-        $branches = git branch -a 2>$null
-        if ($LASTEXITCODE -eq 0) {
-            foreach ($branch in $branches) {
-                # Clean branch name: remove leading markers and remote prefixes
-                $cleanBranch = $branch.Trim() -replace '^\*?\s+', '' -replace '^remotes/[^/]+/', ''
-                
-                # Extract feature number if branch matches pattern ###-*
-                if ($cleanBranch -match '^(\d+)-') {
-                    $num = [int]$matches[1]
-                    if ($num -gt $highest) { $highest = $num }
-                }
-            }
-        }
-    } catch {
-        # If git command fails, return 0
-        Write-Verbose "Could not check Git branches: $_"
-    }
-    return $highest
-}
-
-function Get-NextBranchNumber {
-    param(
-        [string]$SpecsDir
-    )
-
-    # Fetch all remotes to get latest branch info (suppress errors if no remotes)
-    try {
-        git fetch --all --prune 2>$null | Out-Null
-    } catch {
-        # Ignore fetch errors
-    }
-
-    # Get highest number from ALL branches (not just matching short name)
-    $highestBranch = Get-HighestNumberFromBranches
-
-    # Get highest number from ALL specs (not just matching short name)
-    $highestSpec = Get-HighestNumberFromSpecs -SpecsDir $SpecsDir
-
-    # Take the maximum of both
-    $maxNum = [Math]::Max($highestBranch, $highestSpec)
-
-    # Return next number
-    return $maxNum + 1
-}
-
-function ConvertTo-CleanBranchName {
-    param([string]$Name)
-    
-    return $Name.ToLower() -replace '[^a-z0-9]', '-' -replace '-{2,}', '-' -replace '^-', '' -replace '-$', ''
-}
-$fallbackRoot = (Find-RepositoryRoot -StartDir $PSScriptRoot)
-if (-not $fallbackRoot) {
-    Write-Error "Error: Could not determine repository root. Please run this script from within the repository."
+$harnessFile = Join-Path $repoRoot 'harness/feature_list.json'
+if (-not (Test-Path $harnessFile -PathType Leaf)) {
+    Write-Error "File not found: $harnessFile"
     exit 1
+}
+
+function Load-FeatureList {
+    param([string]$HarnessPath)
+    $content = Get-Content $HarnessPath
+    $filtered = $content | Where-Object { $_ -notmatch '^\s*//' }
+    return ($filtered -join "`n") | ConvertFrom-Json
+}
+
+$featureData = Load-FeatureList -HarnessPath $harnessFile
+
+function Get-FeatureMetadata {
+    param(
+        [object]$FeatureData,
+        [string]$RepoRoot,
+        [string]$TargetId
+    )
+
+    $match = $FeatureData.features | Where-Object { $_.id.ToUpper() -eq $TargetId }
+    if (-not $match) {
+        throw "Feature ID $TargetId not found in harness/feature_list.json"
+    }
+
+    $specRel = $match.spec_path
+    if (-not $specRel) {
+        throw "Feature ID $TargetId is missing spec_path in harness/feature_list.json"
+    }
+
+    $specPathCandidate = Join-Path $RepoRoot $specRel
+    if (Test-Path $specPathCandidate) {
+        $specPath = (Resolve-Path $specPathCandidate).Path
+    } else {
+        $specPath = [System.IO.Path]::GetFullPath($specPathCandidate)
+    }
+    $defaultChecklist = Join-Path (Split-Path $specRel -Parent) 'checklists/requirements.md'
+    $checklistRel = if ($match.checklist_path) { $match.checklist_path } else { $defaultChecklist }
+    $checklistCandidate = Join-Path $RepoRoot $checklistRel
+    if (Test-Path $checklistCandidate) {
+        $checklistPath = (Resolve-Path $checklistCandidate).Path
+    } else {
+        $checklistPath = [System.IO.Path]::GetFullPath($checklistCandidate)
+    }
+
+    return [PSCustomObject]@{
+        SpecPath      = $specPath
+        ChecklistPath = $checklistPath
+        FeatureTitle  = if ($match.title) { $match.title } else { $TargetId }
+        Services      = ($match.services -join ',')
+        EpicId        = $match.epic_id
+    }
+}
+
+function Find-FeaturesByFilter {
+    param(
+        [object]$FeatureData,
+        [string[]]$Services,
+        [string]$SearchTerm
+    )
+
+    $serviceFilters = @()
+    if ($Services) {
+        $serviceFilters = $Services | Where-Object { $_ } | ForEach-Object { $_.ToLower() }
+    }
+    $term = if ($SearchTerm) { $SearchTerm.ToLower() } else { '' }
+
+    $matches = @()
+    foreach ($feat in $FeatureData.features) {
+        $fid = [string]$feat.id
+        $title = [string]($feat.title)
+        $svcList = @()
+        if ($feat.services) { $svcList = $feat.services | ForEach-Object { $_.ToLower() } }
+
+        if ($serviceFilters.Count -gt 0 -and (-not ($svcList | Where-Object { $serviceFilters -contains $_ }))) {
+            continue
+        }
+
+        if ($term) {
+            $hay = "{0} {1}" -f $fid, $title
+            if ($hay.ToLower().IndexOf($term) -lt 0) { continue }
+        }
+
+        $matches += [PSCustomObject]@{
+            Id        = $fid
+            Title     = $title
+            Services  = ($feat.services -join ',')
+            SpecPath  = $feat.spec_path
+        }
+    }
+    return $matches
 }
 
 try {
-    $repoRoot = git rev-parse --show-toplevel 2>$null
+    $meta = Get-FeatureMetadata -FeatureData $featureData -RepoRoot $repoRoot -TargetId $featureId
+} catch {
+    Write-Error $_.Exception.Message
+    exit 1
+}
+
+$featureDir    = Split-Path $meta.SpecPath -Parent
+$checklistDir  = Split-Path $meta.ChecklistPath -Parent
+New-Item -ItemType Directory -Path $featureDir -Force | Out-Null
+New-Item -ItemType Directory -Path $checklistDir -Force | Out-Null
+
+function Invoke-Slugify([string]$Value) {
+    if (-not $Value) { return "" }
+    $Value.ToLower() -replace '[^a-z0-9]+', '-' -replace '-{2,}', '-' -replace '^-', '' -replace '-$', ''
+}
+
+$branchPrefix = ""
+if ($featureId -match '([0-9]{3,})$') {
+    $branchPrefix = $matches[1]
+}
+
+if ($ShortName) {
+    $branchSuffix = Invoke-Slugify $ShortName
+} elseif ($featureDesc) {
+    $branchSuffix = Invoke-Slugify $featureDesc
+} else {
+    $branchSuffix = Invoke-Slugify $meta.FeatureTitle
+}
+if (-not $branchSuffix) { $branchSuffix = "feature" }
+
+if ($branchPrefix) {
+    $branchName = "$branchPrefix-$branchSuffix"
+} else {
+    $branchName = ("{0}-{1}" -f $featureId.ToLower(), $branchSuffix)
+}
+if ($branchName.Length -gt 244) {
+    $branchName = $branchName.Substring(0, 244).TrimEnd('-')
+}
+
+$hasGit = $false
+try {
+    git -C $repoRoot rev-parse --is-inside-work-tree 2>$null | Out-Null
     if ($LASTEXITCODE -eq 0) {
         $hasGit = $true
-    } else {
-        throw "Git not available"
-    }
-} catch {
-    $repoRoot = $fallbackRoot
-    $hasGit = $false
-}
-
-Set-Location $repoRoot
-
-$specsDir = Join-Path $repoRoot 'specs'
-New-Item -ItemType Directory -Path $specsDir -Force | Out-Null
-
-# Function to generate branch name with stop word filtering and length filtering
-function Get-BranchName {
-    param([string]$Description)
-    
-    # Common stop words to filter out
-    $stopWords = @(
-        'i', 'a', 'an', 'the', 'to', 'for', 'of', 'in', 'on', 'at', 'by', 'with', 'from',
-        'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
-        'do', 'does', 'did', 'will', 'would', 'should', 'could', 'can', 'may', 'might', 'must', 'shall',
-        'this', 'that', 'these', 'those', 'my', 'your', 'our', 'their',
-        'want', 'need', 'add', 'get', 'set'
-    )
-    
-    # Convert to lowercase and extract words (alphanumeric only)
-    $cleanName = $Description.ToLower() -replace '[^a-z0-9\s]', ' '
-    $words = $cleanName -split '\s+' | Where-Object { $_ }
-    
-    # Filter words: remove stop words and words shorter than 3 chars (unless they're uppercase acronyms in original)
-    $meaningfulWords = @()
-    foreach ($word in $words) {
-        # Skip stop words
-        if ($stopWords -contains $word) { continue }
-        
-        # Keep words that are length >= 3 OR appear as uppercase in original (likely acronyms)
-        if ($word.Length -ge 3) {
-            $meaningfulWords += $word
-        } elseif ($Description -match "\b$($word.ToUpper())\b") {
-            # Keep short words if they appear as uppercase in original (likely acronyms)
-            $meaningfulWords += $word
+        Set-Location $repoRoot
+        if (git rev-parse --verify "refs/heads/$branchName" 2>$null) {
+            git checkout $branchName 2>$null | Out-Null
+        } else {
+            git checkout -b $branchName 2>$null | Out-Null
         }
     }
-    
-    # If we have meaningful words, use first 3-4 of them
-    if ($meaningfulWords.Count -gt 0) {
-        $maxWords = if ($meaningfulWords.Count -eq 4) { 4 } else { 3 }
-        $result = ($meaningfulWords | Select-Object -First $maxWords) -join '-'
-        return $result
+} catch {
+    Write-Warning "[create-new-feature] Git repository not detected; branch creation skipped."
+}
+
+$dateStamp = (Get-Date -Format 'yyyy-MM-dd')
+$descText = if ($featureDesc) { $featureDesc } else { "Feature description not provided" }
+
+$specTemplate = Join-Path $repoRoot 'templates/spec-template.md'
+if (-not (Test-Path $meta.SpecPath -PathType Leaf)) {
+    if (Test-Path $specTemplate -PathType Leaf) {
+        Copy-Item $specTemplate $meta.SpecPath
     } else {
-        # Fallback to original logic if no meaningful words found
-        $result = ConvertTo-CleanBranchName -Name $Description
-        $fallbackWords = ($result -split '-') | Where-Object { $_ } | Select-Object -First 3
-        return [string]::Join('-', $fallbackWords)
+        '# Feature Specification' | Set-Content $meta.SpecPath -Encoding UTF8
     }
-}
-
-# Generate branch name
-if ($ShortName) {
-    # Use provided short name, just clean it up
-    $branchSuffix = ConvertTo-CleanBranchName -Name $ShortName
+    $content = Get-Content $meta.SpecPath -Raw
+    $content = $content.Replace('[FEATURE NAME]', $meta.FeatureTitle, 1)
+    $content = $content.Replace('[F-XXX-YYY]', $featureId, 1)
+    $content = $content.Replace('[###-feature-name]', $branchName, 1)
+    $content = $content.Replace('[DATE]', $dateStamp, 1)
+    $content = $content.Replace('$ARGUMENTS', $descText, 1)
+    Set-Content -Path $meta.SpecPath -Value $content -Encoding UTF8
 } else {
-    # Generate from description with smart filtering
-    $branchSuffix = Get-BranchName -Description $featureDesc
+    Write-Warning "[create-new-feature] Spec already exists at $($meta.SpecPath); leaving untouched."
 }
 
-# Determine branch number
-if ($Number -eq 0) {
-    if ($hasGit) {
-        # Check existing branches on remotes
-        $Number = Get-NextBranchNumber -SpecsDir $specsDir
-    } else {
-        # Fall back to local directory check
-        $Number = (Get-HighestNumberFromSpecs -SpecsDir $specsDir) + 1
-    }
-}
+if (-not (Test-Path $meta.ChecklistPath -PathType Leaf)) {
+    @"
+# ${featureId} Requirements Checklist
 
-$featureNum = ('{0:000}' -f $Number)
-$branchName = "$featureNum-$branchSuffix"
+**Created**: ${dateStamp}
+**Feature**: ${meta.FeatureTitle}
 
-# GitHub enforces a 244-byte limit on branch names
-# Validate and truncate if necessary
-$maxBranchLength = 244
-if ($branchName.Length -gt $maxBranchLength) {
-    # Calculate how much we need to trim from suffix
-    # Account for: feature number (3) + hyphen (1) = 4 chars
-    $maxSuffixLength = $maxBranchLength - 4
-    
-    # Truncate suffix
-    $truncatedSuffix = $branchSuffix.Substring(0, [Math]::Min($branchSuffix.Length, $maxSuffixLength))
-    # Remove trailing hyphen if truncation created one
-    $truncatedSuffix = $truncatedSuffix -replace '-$', ''
-    
-    $originalBranchName = $branchName
-    $branchName = "$featureNum-$truncatedSuffix"
-    
-    Write-Warning "[specify] Branch name exceeded GitHub's 244-byte limit"
-    Write-Warning "[specify] Original: $originalBranchName ($($originalBranchName.Length) bytes)"
-    Write-Warning "[specify] Truncated to: $branchName ($($branchName.Length) bytes)"
-}
+## Content Quality
+- [ ] No [NEEDS CLARIFICATION] markers remain in spec.md
+- [ ] Requirements are testable and free from implementation details
+- [ ] Scope boundaries and success criteria are clearly written
 
-if ($hasGit) {
-    try {
-        git checkout -b $branchName | Out-Null
-    } catch {
-        Write-Warning "Failed to create git branch: $branchName"
-    }
+## Acceptance Readiness
+- [ ] User stories have measurable acceptance scenarios
+- [ ] Edge cases and error states are captured in the specification
+- [ ] Dependencies and assumptions are documented
+"@ | Set-Content -Path $meta.ChecklistPath -Encoding UTF8
 } else {
-    Write-Warning "[specify] Warning: Git repository not detected; skipped branch creation for $branchName"
+    Write-Warning "[create-new-feature] Checklist already exists at $($meta.ChecklistPath); leaving untouched."
 }
 
-$featureDir = Join-Path $specsDir $branchName
-New-Item -ItemType Directory -Path $featureDir -Force | Out-Null
+$env:SPECIFY_FEATURE = $featureId
 
-$template = Join-Path $repoRoot '.specify/templates/spec-template.md'
-$specFile = Join-Path $featureDir 'spec.md'
-if (Test-Path $template) { 
-    Copy-Item $template $specFile -Force 
-} else { 
-    New-Item -ItemType File -Path $specFile | Out-Null 
+$result = [PSCustomObject]@{
+    BRANCH_NAME    = $branchName
+    SPEC_FILE      = $meta.SpecPath
+    FEATURE_ID     = $featureId
+    FEATURE_TITLE  = $meta.FeatureTitle
+    FEATURE_DIR    = $featureDir
+    CHECKLIST_FILE = $meta.ChecklistPath
+    EPIC_ID        = $meta.EpicId
+    SERVICES       = $meta.Services
 }
-
-# Set the SPECIFY_FEATURE environment variable for the current session
-$env:SPECIFY_FEATURE = $branchName
 
 if ($Json) {
-    $obj = [PSCustomObject]@{ 
-        BRANCH_NAME = $branchName
-        SPEC_FILE = $specFile
-        FEATURE_NUM = $featureNum
-        HAS_GIT = $hasGit
-    }
-    $obj | ConvertTo-Json -Compress
+    $result | ConvertTo-Json -Compress
 } else {
-    Write-Output "BRANCH_NAME: $branchName"
-    Write-Output "SPEC_FILE: $specFile"
-    Write-Output "FEATURE_NUM: $featureNum"
-    Write-Output "HAS_GIT: $hasGit"
-    Write-Output "SPECIFY_FEATURE environment variable set to: $branchName"
+    Write-Output ("Feature ID     : {0}" -f $featureId)
+    Write-Output ("Spec file      : {0}" -f $meta.SpecPath)
+    Write-Output ("Checklist file : {0}" -f $meta.ChecklistPath)
+    Write-Output ("Feature dir    : {0}" -f $featureDir)
+    Write-Output ("Branch name    : {0}" -f $branchName)
+    Write-Output ("Epic ID        : {0}" -f ($meta.EpicId | ForEach-Object { if ($_){$_} else {'N/A'} }))
+    Write-Output ("Services       : {0}" -f ($meta.Services | ForEach-Object { if ($_){$_} else {'N/A'} }))
+    Write-Output ("SPECIFY_FEATURE environment variable set to: {0}" -f $featureId)
 }
-
