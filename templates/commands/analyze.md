@@ -1,8 +1,8 @@
 ---
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, impl-plan.md, and tasks.md for this long-running AI agent repository.
 scripts:
-  sh: scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
-  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
+  sh: scripts/bash/check-prerequisites.sh --json --require-plan --require-tasks --include-tasks
+  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequirePlan -RequireTasks -IncludeTasks
 ---
 
 ## User Input
@@ -34,12 +34,12 @@ This command MUST run only after `/speckit.tasks` has successfully produced a co
 
 ### 1. Initialize Analysis Context
 
-Run `{SCRIPT}` once from the repository root and parse JSON for at least:
+Run `{SCRIPT}` once from the repository root and parse the JSON payload. The script guarantees:
 
 * `FEATURE_DIR` — absolute path to the feature directory
   (e.g. `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001`)
-* `AVAILABLE_DOCS` — list of document basenames present in `FEATURE_DIR`
-  (e.g. `["spec.md","impl-plan.md","tasks.md","research.md","data-model.md","quickstart.md"]`)
+* `AVAILABLE_DOCS` — list of optional design artifacts present in `FEATURE_DIR`
+  (e.g. `["research.md","data-model.md","contracts/","quickstart.md","tasks.md"]`)
 
 Derive absolute paths (do **not** use relative `./` or `../`):
 
@@ -52,11 +52,13 @@ Additionally derive **quality gate checklists** for this repository:
 * `SPEC_CHECKLIST` = `${FEATURE_DIR}/checklists/requirements.md`
 * `PLAN_CHECKLIST` = `${FEATURE_DIR}/checklists/PlanQualityGate.md` (if present)
 
-Abort with an error message if any **required core artifact** is missing:
+Immediately confirm that each core artifact exists; abort with an error message if any are missing:
 
 * If `spec.md` missing → instruct user to run `/speckit.specify` for this feature.
 * If `impl-plan.md` missing → instruct user to run `/speckit.plan` for this feature.
 * If `tasks.md` missing → instruct user to run `/speckit.tasks` for this feature.
+
+> NOTE: `AVAILABLE_DOCS` intentionally lists only optional deliverables (research, data-model, contracts, quickstart, tasks when requested). Do **not** assume `spec.md` or `impl-plan.md` appear there; they are validated via the derived paths above.
 
 For single quotes in args like `"I'm Groot"`, use escape syntax: e.g. `'I'\''m Groot'`
 (or double-quote if possible: `"I'm Groot"`).

@@ -4,7 +4,8 @@
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
 **Status**: Draft  
-**Input**: User description: "$ARGUMENTS"
+**Input**: User description: "$ARGUMENTS"  
+**Spec Checklist**: `[plans/<scope>/<service>/<EPIC-ID>/features/[FEATURE-ID]/checklists/requirements.md]` (validate via `scripts/validate_spec.sh`)
 
 <!--
   This spec is written for non-technical stakeholders.
@@ -36,6 +37,19 @@
 
 - [List related capabilities or flows that are explicitly NOT included]
 - [Clarify anything that might reasonably be assumed but is out of scope]
+
+---
+
+## Reference Materials *(mandatory to cite actual docs)*
+
+- `architecture/system-architecture.md` → [Describe relevant sections]
+- `architecture/service-boundaries.md` → [How this feature fits existing domains]
+- `plans/system/<EPIC-ID>/exec-plan.md` → [Epics / decisions to honor]
+- `services/<service-name>/service-architecture.md` → [Service-specific constraints]
+
+If additional docs (e.g., `architecture/deployment-topology.md`, `services/<service>/README.md`,
+existing feature specs) influence this feature, reference them here. This keeps the
+spec aligned with the Architecture → Microservice hierarchy mandated in `AGENTS.md`.
 
 ---
 
@@ -84,8 +98,6 @@
 ---
 
 ### User Story 3 - [Brief Title] (Priority: P3)
-
-[Describe this user journey in plain language]
 
 [Describe this user journey in plain language]
 
@@ -215,3 +227,14 @@
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50% within 3 months of launch"]
 
 [Each success criterion must be verifiable without referring to implementation details (frameworks, APIs, or internal metrics only developers understand).]
+
+---
+
+## Checklist & Gate Integration
+
+- Mirror updates from this spec into `checklists/requirements.md` under the same
+  feature directory and run `scripts/validate_spec.sh <path-to-requirements.md>`
+  until it reports `PASSED`.
+- If additional domain checklists are generated via `scripts/*/add-domain-checklist.*`,
+  reference them in this spec where relevant (e.g., Security requirements).
+- Record spec validation results in `harness/AI-Agent-progress.txt` per project rules.

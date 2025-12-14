@@ -2,7 +2,7 @@
 #
 # scripts/validate_plan.sh
 #
-# impl-plan + 設計成果物に対する Plan 品質チェックリスト（plan.md）を検証し、
+# impl-plan + 設計成果物に対する Plan 品質チェックリスト（PlanQualityGate.md）を検証し、
 # harness/AI-Agent-progress.txt に結果を追記するスクリプト。
 #
 # 使い方:
@@ -11,7 +11,7 @@
 #
 #   # 特定のチェックリストだけ検査
 #   ./scripts/validate_plan.sh \
-#     plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/plan.md
+#     plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
 #
 # 結果:
 #   - PASSED の場合: 終了コード 0、progress ファイルに PASSED ログを追記

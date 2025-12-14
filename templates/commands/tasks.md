@@ -10,8 +10,8 @@ handoffs:
     prompt: Start the implementation in phases using tasks.md as the source of truth.
     send: true
 scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
+  sh: scripts/bash/check-prerequisites.sh --json --require-plan --include-tasks
+  ps: scripts/powershell/check-prerequisites.ps1 -Json -RequirePlan -IncludeTasks
 ---
 
 ## User Input
@@ -28,14 +28,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 
    From the repo root, run `{SCRIPT}` and parse the JSON output.
 
-   The script is expected to provide at least:
+   The script returns:
 
-   * `FEATURE_SPEC`  — path to the feature spec
-     (e.g. `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`)
    * `FEATURE_DIR`   — feature directory
      (e.g. `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001`)
-   * `BRANCH`        — current branch name
-   * `HAS_GIT`       — `"true"` or `"false"`
+   * `AVAILABLE_DOCS` — optional artifacts detected in that directory
+     (e.g. `["research.md","data-model.md","contracts/","quickstart.md","tasks.md"]`)
 
    Derive:
 
@@ -44,10 +42,16 @@ You **MUST** consider the user input before proceeding (if not empty).
    * `IMPL_PLAN`        = `${SPECS_DIR}/impl-plan.md`
    * `TASKS_FILE`       = `${SPECS_DIR}/tasks.md`
    * `FEATURE_CHECKLIST`= `${SPECS_DIR}/checklists/requirements.md`
-   * `PLAN_CHECKLIST`   = `${SPECS_DIR}/checklists/plan.md`
+   * `PLAN_CHECKLIST`   = `${SPECS_DIR}/checklists/PlanQualityGate.md`
    * `EPIC_DIR`         = parent directory of the `features` directory that contains `SPECS_DIR`
      (i.e. two levels up from `SPECS_DIR`)
    * `EPIC_DESIGN_INDEX`= `${EPIC_DIR}/design/index.md`
+
+   Determine the current branch separately (for reporting later), e.g.:
+
+   ```bash
+   BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+   ```
 
    For single quotes in args like `"I'm Groot"`, use escape syntax: e.g. `'I'\''m Groot'`
    (or double-quote if possible: `"I'm Groot"`).
@@ -71,7 +75,8 @@ You **MUST** consider the user input before proceeding (if not empty).
       From the repo root, run:
 
       ```bash
-      scripts/validate_spec.sh "${FEATURE_CHECKLIST}" "${PLAN_CHECKLIST}"
+      scripts/validate_spec.sh "${FEATURE_CHECKLIST}"
+      scripts/validate_plan.sh "${PLAN_CHECKLIST}"
       ```
 
       * If the script returns a non-zero exit code:

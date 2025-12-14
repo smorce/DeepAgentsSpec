@@ -11,8 +11,8 @@ description: "Task list template for feature implementation in this long-running
 
 - `spec.md` (feature spec with user stories and priorities)
 - `impl-plan.md` (feature implementation plan)
-- `checklists/requirements.md` (spec quality checklist — PASSED)
-- `checklists/plan.md` (plan quality checklist — PASSED)
+- `checklists/requirements.md` (spec quality checklist — PASSED via `scripts/validate_spec.sh`)
+- `checklists/PlanQualityGate.md` (plan quality checklist — PASSED via `scripts/validate_plan.sh`)
 
 **Optional but recommended design artifacts**:
 

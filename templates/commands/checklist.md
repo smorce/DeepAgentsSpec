@@ -111,7 +111,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 4. **Load feature context**: Read from FEATURE_DIR:
 
    * `spec.md`: Feature requirements and scope (**required**)
-   * `plan.md` (if exists): Technical details, dependencies (implementation-oriented information, only when needed)
+   * `impl-plan.md` (if exists): Technical details, dependencies (implementation-oriented information, only when needed)
    * `tasks.md` (if exists): Implementation tasks (supplementary information at task granularity)
 
    **Context Loading Strategy**:

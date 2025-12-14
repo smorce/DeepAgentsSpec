@@ -24,6 +24,7 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+REQUIRE_PLAN=false
 REQUIRE_TASKS=false
 INCLUDE_TASKS=false
 PATHS_ONLY=false
@@ -32,6 +33,9 @@ for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --require-plan)
+            REQUIRE_PLAN=true
             ;;
         --require-tasks)
             REQUIRE_TASKS=true
@@ -50,17 +54,18 @@ Consolidated prerequisite checking for Spec-Driven Development workflow.
 
 OPTIONS:
   --json              Output in JSON format
-  --require-tasks     Require tasks.md to exist (for implementation phase)
+  --require-plan      Require impl-plan.md to exist (planning/implementation phases)
+  --require-tasks     Require tasks.md to exist (implementation phase)
   --include-tasks     Include tasks.md in AVAILABLE_DOCS list
   --paths-only        Only output path variables (no prerequisite validation)
   --help, -h          Show this help message
 
 EXAMPLES:
-  # Check task prerequisites (plan.md required)
+  # Check planning prerequisites (plan required)
   ./check-prerequisites.sh --json
   
-  # Check implementation prerequisites (plan.md + tasks.md required)
-  ./check-prerequisites.sh --json --require-tasks --include-tasks
+  # Check implementation prerequisites (plan + tasks required)
+  ./check-prerequisites.sh --json --require-plan --require-tasks --include-tasks
   
   # Get feature paths only (no validation, used e.g. by /speckit.clarify)
   ./check-prerequisites.sh --paths-only --json
@@ -118,10 +123,9 @@ if [[ ! -f "$FEATURE_SPEC" ]]; then
     exit 1
 fi
 
-# plan.md (IMPL_PLAN) は実装フェーズ用の前提として扱う
-# まだこのリポジトリの設計が固まっていないため、既存のチェックを維持する
-if [[ ! -f "$IMPL_PLAN" ]]; then
-    echo "ERROR: plan.md not found in $FEATURE_DIR" >&2
+# plan.md (IMPL_PLAN) を要求するフラグが有効な場合のみチェック
+if $REQUIRE_PLAN && [[ ! -f "$IMPL_PLAN" ]]; then
+    echo "ERROR: impl-plan.md not found in $FEATURE_DIR" >&2
     echo "Run /speckit.plan first to create the implementation plan." >&2
     exit 1
 fi

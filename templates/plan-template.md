@@ -4,6 +4,7 @@
 **Epic**: `[EPIC-ID]` (`plans/<scope>/<service-or-system>/<EPIC-ID>/exec-plan.md`)  
 **Feature Spec**: `[relative path to spec.md]`  
 **Spec Checklist**: `[relative path to checklists/requirements.md]`  
+**Plan Checklist**: `[relative path to checklists/PlanQualityGate.md]` (validate via `scripts/validate_plan.sh`)  
 
 **Input**: Feature specification under  
 `plans/<scope>/<service-or-system>/<EPIC-ID>/features/[FEATURE_ID]/spec.md`  
@@ -92,7 +93,8 @@ plans/<scope>/<service-or-system>/<EPIC-ID>/features/[FEATURE_ID]/
 ├── quickstart.md         # Phase 1 output (/speckit.plan)
 ├── contracts/            # Phase 1 output (/speckit.plan) - API / schema contracts
 ├── checklists/
-│   └── requirements.md   # Spec quality checklist (/speckit.specify, then validated)
+│   ├── requirements.md    # Spec quality checklist (/speckit.specify + scripts/validate_spec.sh)
+│   └── PlanQualityGate.md # Plan quality checklist (/speckit.plan + scripts/validate_plan.sh)
 └── tasks.md              # Phase 2 output (/speckit.tasks - NOT created by /speckit.plan)
 ```
 
@@ -111,6 +113,10 @@ plans/<scope>/<service-or-system>/<EPIC-ID>/
 This feature’s design (data-model, contracts, quickstart) should be reflected in
 `design/index.md` when it introduces shared entities, endpoints, or invariants
 that affect other features in the same epic.
+
+Ensure `checklists/PlanQualityGate.md` is created alongside `requirements.md`,
+kept in sync with this plan, and validated via `scripts/validate_plan.sh`
+before `/speckit.tasks` consumes the plan.
 
 ### Source Code (repository root)
 
@@ -182,3 +188,69 @@ If this table is non-empty, make sure related decisions are also captured in:
 
 * The epic’s `exec-plan.md` → **Decision Log**
 * (If relevant) `plans/<...>/<EPIC-ID>/design/index.md` → shared design context
+
+---
+
+## Plan of Work
+
+> **Purpose**: Provide the high-level flow the coding agent must follow. Keep it
+> synchronized with the epic’s `exec-plan.md > Plan of Work`.
+
+- **Phase 0 – Research**: `[outline the investigations needed to resolve all NEEDS CLARIFICATION items; link to research.md sections]`
+- **Phase 1 – Design & Contracts**: `[list the design deliverables (data-model, contracts/, quickstart.md) and cross-feature updates such as design/index.md]`
+- **Phase 2 – Implementation Prep**: `[call out environment setup, scaffolding, migrations, and tests to add before coding]`
+- **Phase 3 – Validation**: `[state which scripts/tests must pass before handoff (e.g., scripts/run_all_unit_tests.sh, scripts/validate_plan.sh, scripts/validate_spec.sh)]`
+
+Update this section whenever scope or sequencing changes; `/speckit.tasks` reads
+it to derive task order.
+
+---
+
+## Concrete Steps
+
+1. `[Step description referencing exact files under services/ or scripts/]`
+2. `[Another step tied to repo paths and owners]`
+3. `[Include checkpoints for updating docs/checklists or running validations]`
+
+Each step must be actionable, mention responsible directories (e.g.,
+`services/api-gateway/src/routes/...`), and reference any script invocations.
+
+---
+
+## Validation / Acceptance
+
+List the commands, HTTP checks, or scripts proving this plan is complete. Use
+repo-root relative commands:
+
+- `./scripts/run_all_unit_tests.sh` → `PASS`
+- `./scripts/run_all_e2e_tests.sh` → `PASS`
+- `scripts/validate_plan.sh plans/.../PlanQualityGate.md` → `PASSED`
+- `[curl command or wrangler dev invocation demonstrating the feature surfaces]`
+
+Describe expected outputs (HTTP status, log snippet, metric threshold). If a
+validation depends on external services, note required mocks or credentials.
+
+---
+
+## Idempotence / Recovery
+
+Explain how to safely re-run each step without corrupting state:
+
+- `[Data migrations]` → use reversible scripts / wrap in transaction.
+- `[Workers deployment]` → describe rollback (e.g., redeploy previous tag).
+- `[Checklist updates]` → mention how to revert mistaken edits.
+
+Include cleanup steps for partially-applied changes and how to restore local
+environment (e.g., `make reset-db && make seed-sample-data`).
+
+---
+
+## Checklist & Gate Integration
+
+- Keep `checklists/requirements.md` aligned with spec updates and validate via
+  `scripts/validate_spec.sh`.
+- Maintain `checklists/PlanQualityGate.md` alongside this plan; after edits,
+  re-run `scripts/validate_plan.sh <path>` and record the outcome in
+  `harness/AI-Agent-progress.txt`.
+- Document in ExecPlan’s Progress section when each gate passes to aid Jules /
+  GitHub Issue tracking.

@@ -27,69 +27,43 @@ The text the user typed after `/speckit.specify` in the triggering message **is*
 
 Given that feature description, do this:
 
-1. **Generate a concise short name** (2-4 words) for the branch:
+1. **Identify the target feature entry from `harness/feature_list.json`:**
 
-   * Analyze the feature description and extract the most meaningful keywords
-   * Create a 2-4 word short name that captures the essence of the feature
-   * Use action-noun format when possible (e.g., "add-user-auth", "fix-payment-bug")
-   * Preserve technical terms and acronyms (OAuth2, API, JWT, etc.)
-   * Keep it concise but descriptive enough to understand the feature at a glance
-   * Examples:
+   * Each feature is defined with an `id`, `title`, `spec_path`, and `services` list.
+   * `/speckit.specify` must either receive the `--feature-id F-XXX-YYY` via `SPECIFY_FEATURE`
+     (preferred), or infer it from context (e.g., `/speckit.specify F-USER-001 …`).
+   * When unsure, filter the `feature_list.json` entries by service, search term, or explicit ID.
+     The helper script already supports:
 
-     * "I want to add user authentication" → "user-auth"
-     * "Implement OAuth2 integration for the API" → "oauth2-api-integration"
-     * "Create a dashboard for analytics" → "analytics-dashboard"
-     * "Fix payment processing timeout bug" → "fix-payment-timeout"
+     * `--feature-id F-USER-001`
+     * `--service api-gateway --search "health check"`
 
-2. **Check for existing branches before creating new one**:
+2. **Invoke `{SCRIPT}` (create-new-feature) with the resolved feature ID**:
 
-   a. First, fetch all remote branches to ensure we have the latest information:
+   * Example bash command:
 
-   ```bash
-   git fetch --all --prune
-   ```
+     ```bash
+     scripts/bash/create-new-feature.sh --feature-id F-USER-001 "Implement signup flow"
+     ```
 
-   b. Determine whether this short-name already exists:
+   * Example PowerShell command:
 
-   * Remote branches: `git ls-remote --heads origin | grep -E 'refs/heads/[0-9]+-<short-name>$'`
-   * Local branches: `git branch | grep -E '^[* ]*[0-9]+-<short-name>$'`
-   * Existing feature specs:
+     ```powershell
+     scripts/powershell/create-new-feature.ps1 -FeatureId F-USER-001 "Implement signup flow"
+     ```
 
-     * Feature specifications are stored under the new per-feature layout:
+   * The script automatically:
 
-       * `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/spec.md`
-       * Example:
-
-         * `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`
-     * You may use these existing SPEC_FILE locations (and any associated metadata, such as feature IDs or branch numbers) to detect if a feature with the same short-name already exists.
-
-   c. Determine the next available number:
-
-   * From remote and local branches that match `^[0-9]+-<short-name>$`, extract the leading numeric prefix (the feature number).
-   * Include any additional numeric identifiers your tooling associates with this short-name (for example, numbers recorded alongside SPEC_FILE entries).
-   * Find the highest number N.
-   * Use N+1 for the new branch number.
-   * If no existing branches (or numeric identifiers) are found for this short-name, start with number 1.
-
-   d. Run the script `{SCRIPT}` with the calculated number and short-name:
-
-   * Pass `--number N+1` and `--short-name "your-short-name"` along with the feature description
-   * Bash example: `{SCRIPT} --json --number 5 --short-name "user-auth" "Add user authentication"`
-   * PowerShell example: `{SCRIPT} -Json -Number 5 -ShortName "user-auth" "Add user authentication"`
+     * Looks up the feature metadata in `harness/feature_list.json`.
+     * Creates/checkout the appropriate branch (using the repo’s naming convention).
+     * Copies `templates/spec-template.md` into the `spec.md` path specified by the feature entry.
+     * Creates `checklists/requirements.md` if missing.
 
    **IMPORTANT**:
 
-   * Always use remote and local branches as the primary source of existing numbers for a given short-name.
-   * You may additionally use existing feature specs (and/or `harness/feature_list.json`) to detect prior work for the same feature.
-   * You must only ever run this script once per feature.
-   * The JSON is provided in the terminal as output - always refer to it to get the actual content you're looking for.
-   * The JSON output will contain `BRANCH_NAME` and `SPEC_FILE` paths.
-   * Under the current repository layout, `SPEC_FILE` points to a per-feature specification in the following form:
-
-     * `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/spec.md`
-     * Example:
-
-       * `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`
+   * Do **not** attempt to invent branch numbers manually; the harness chooses consistent naming based on the selected feature.
+   * Always run `{SCRIPT}` exactly once per feature to avoid clobbering existing work.
+   * The JSON output from `{SCRIPT}` will contain fields such as `BRANCH_NAME`, `SPEC_FILE`, `FEATURE_DIR`, and checklist paths. Use these values verbatim when writing the spec.
    * For single quotes in args like "I'm Groot", use escape syntax: e.g. `'I'\''m Groot'` (or double-quote if possible: `"I'm Groot"`)
 
 3. Load `templates/spec-template.md` to understand required sections.
