@@ -475,18 +475,13 @@ ExecPlan は、**feature 単位の spec / impl-plan / 設計成果物** と、
 
 * 動作（概念）：
 
-  * ブランチ用の短い名前（2〜4語）を生成（例：`user-onboarding`）。
+  * 入力を自動でエピック/フィーチャに分割し、ID を採番して `harness/feature_list.json` を新規作成または更新。
 
-  * 数値プレフィックス（`N`）を選択し、ブランチ `N-short-name` を作成/チェックアウト。
+  * 各フィーチャごとに所定パスへ成果物を生成：
+    * `spec.md`（`templates/spec-template.md` をベースに内容も埋める）
+    * `checklists/requirements.md`（空チェックの品質チェックリスト）
 
-  * `scripts/bash/create-new-feature.sh` または `scripts/powershell/create-new-feature.ps1` を実行。
-
-  * 以下を作成または更新：
-
-    * その機能用の `spec.md`。
-    * その機能用の `checklists/requirements.md`。
-
-  * 正しい場所は `harness/feature_list.json` (`spec_path`, `checklist_path`) から取得されます。
+  * 生成パスは `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/...` の規約に従う。
 
 結果として生成されるファイルの例：
 

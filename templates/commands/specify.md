@@ -1,6 +1,6 @@
 ---
-description: Create or update the feature specification from a natural language feature description.
-handoffs: 
+description: From a natural-language product description, auto-generate epics/features, update harness/feature_list.json, create spec.md & requirements checklist for each feature, then hand off to clarify/plan.
+handoffs:
   - label: Build Technical Plan
     agent: speckit.plan
     prompt: Create a plan for the spec. I am building with...
@@ -8,9 +8,6 @@ handoffs:
     agent: speckit.clarify
     prompt: Clarify specification requirements
     send: true
-scripts:
-  sh: scripts/bash/create-new-feature.sh --json "{ARGS}"
-  ps: scripts/powershell/create-new-feature.ps1 -Json "{ARGS}"
 ---
 
 ## User Input
@@ -19,185 +16,103 @@ scripts:
 $ARGUMENTS
 ````
 
-You **MUST** consider the user input before proceeding (if not empty).
+You **MUST** treat `$ARGUMENTS` as the whole product description. No feature ID is required.
 
 ## Outline
 
-The text the user typed after `/speckit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
+The text after `/speckit.specify` **is** the whole product description. From it, you must derive epics/features, write specs, and update the repository. No pre-existing `feature_list.json` entries are assumed.
 
-Given that feature description, do this:
+Execution flow:
 
-1. **Identify the target feature entry from `harness/feature_list.json`:**
+1. **Parse product description**  
+   - Extract candidate epics and features (aim for 1–5 features unless the description clearly implies more).  
+   - Assign responsible services from the known set: `api-gateway`, `user-service`, `billing-service` (add more only if already present in the repo).  
+   - Summarize each feature with title + 1–2 sentence description.
 
-   * Each feature is defined with an `id`, `title`, `spec_path`, and `services` list.
-   * `/speckit.specify` must either receive the `--feature-id F-XXX-YYY` via `SPECIFY_FEATURE`
-     (preferred), or infer it from context (e.g., `/speckit.specify F-USER-001 …`).
-   * When unsure, filter the `feature_list.json` entries by service, search term, or explicit ID.
-     The helper script already supports:
+2. **Assign IDs (auto)**  
+   - Read or create `harness/feature_list.json`.  
+   - Epic ID format: `EPIC-<CODE>-NNN-<slug>` where `<CODE>` is service code (API/USER/BILL/GEN). Pick NNN as max existing for that code + 1.  
+   - Feature ID format: `F-<CODE>-NNN` with the same numbering rule.  
+   - Avoid collisions; if collision occurs, increment NNN.  
+   - Set `exec_plan_path` to `plans/services/<service>/<epic_id_lower>/exec-plan.md`.
 
-     * `--feature-id F-USER-001`
-     * `--service api-gateway --search "health check"`
+3. **Update `harness/feature_list.json`**  
+   - Append new epics/features with fields: `id`, `epic_id`, `title`, `description`, `services`, `status`="failing", `tags` (optional), `spec_path`, `checklist_path`.  
+   - `spec_path` = `plans/services/<service>/<epic_id_lower>/features/<feature_id>/spec.md`  
+   - `checklist_path` = same dir + `/checklists/requirements.md`  
+   - Create parent directories as needed.
 
-2. **Invoke `{SCRIPT}` (create-new-feature) with the resolved feature ID**:
+4. **Scaffold files per feature**  
+   - Create directories for `spec.md` and `checklists/requirements.md`.  
+   - Copy `templates/spec-template.md` into `spec.md`, then fill placeholders using the feature summary (title/ID/date/branch-name may be generic).  
+   - Write `checklists/requirements.md` using the checklist template below (all unchecked).
 
-   * Example bash command:
+5. **Write the specification content** for each feature  
+   - Follow the guidance in “Specification writing” (see below) using the original product description and the feature summary.  
+   - Keep tech-agnostic; limit to WHAT/WHY.  
+   - Add at most 3 `[NEEDS CLARIFICATION: ...]` markers for high-impact unknowns.
 
-     ```bash
-     scripts/bash/create-new-feature.sh --feature-id F-USER-001 "Implement signup flow"
-     ```
+6. **Output**  
+   - List created epics and features with their IDs and `spec.md` paths.  
+   - Remind the user that `/speckit.clarify` と `/speckit.plan` を次に実行する。  
+   - If any step failed, fix it automatically (retry; create missing dirs; regenerate IDs) and proceed; report only remaining blockers.
 
-   * Example PowerShell command:
+### Specification writing (per feature)
 
-     ```powershell
-     scripts/powershell/create-new-feature.ps1 -FeatureId F-USER-001 "Implement signup flow"
-     ```
+* Extract key concepts: actors, actions, data, constraints, success signals, failure modes.  
+* User Scenarios & Testing: primary happy path + 1–2 edge/error paths.  
+* Functional Requirements: testable, numbered, no implementation detail.  
+* Success Criteria: measurable, tech-agnostic (latency/accuracy/UX completion).  
+* Assumptions: defaults you made.  
+* `[NEEDS CLARIFICATION: question]` up to 3.
 
-   * The script automatically:
+### Checklist template (write to `.../checklists/requirements.md`)
 
-     * Looks up the feature metadata in `harness/feature_list.json`.
-     * Creates/checkout the appropriate branch (using the repo’s naming convention).
-     * Copies `templates/spec-template.md` into the `spec.md` path specified by the feature entry.
-     * Creates `checklists/requirements.md` if missing.
+```markdown
+# Specification Quality Checklist: [FEATURE NAME]
 
-   **IMPORTANT**:
+**Purpose**: Validate specification completeness and quality before proceeding to planning  
+**Created**: [DATE]  
+**Feature**: [Link to spec.md]
 
-   * Do **not** attempt to invent branch numbers manually; the harness chooses consistent naming based on the selected feature.
-   * Always run `{SCRIPT}` exactly once per feature to avoid clobbering existing work.
-   * The JSON output from `{SCRIPT}` will contain fields such as `BRANCH_NAME`, `SPEC_FILE`, `FEATURE_DIR`, and checklist paths. Use these values verbatim when writing the spec.
-   * For single quotes in args like "I'm Groot", use escape syntax: e.g. `'I'\''m Groot'` (or double-quote if possible: `"I'm Groot"`)
+## Content Quality
+- [ ] No implementation details (languages, frameworks, APIs)
+- [ ] Focused on user value and business needs
+- [ ] Written for non-technical stakeholders
+- [ ] All mandatory sections completed
 
-3. Load `templates/spec-template.md` to understand required sections.
+## Requirement Completeness
+- [ ] No [NEEDS CLARIFICATION] markers remain
+- [ ] Requirements are testable and unambiguous
+- [ ] Success criteria are measurable
+- [ ] Success criteria are technology-agnostic
+- [ ] All acceptance scenarios are defined
+- [ ] Edge cases are identified
+- [ ] Scope is clearly bounded
+- [ ] Dependencies and assumptions identified
 
-4. Follow this execution flow:
+## Feature Readiness
+- [ ] All functional requirements have clear acceptance criteria
+- [ ] User scenarios cover primary flows
+- [ ] Feature meets measurable outcomes defined in Success Criteria
+- [ ] No implementation details leak into specification
 
-   1. Parse user description from Input
-      If empty: ERROR "No feature description provided"
+## Notes
+- Items marked incomplete require spec updates before `/speckit.plan`
+```
 
-   2. Extract key concepts from description
-      Identify: actors, actions, data, constraints
+### Reporting
+Provide:
+- Created epic IDs and exec_plan paths (files may be empty placeholders).
+- Created feature IDs with spec/checklist paths.
+- Any `[NEEDS CLARIFICATION]` items per feature.
+- Reminder to run `/speckit.clarify` then `/speckit.plan`.
 
-   3. For unclear aspects:
-
-      * Make informed guesses based on context and industry standards
-      * Only mark with [NEEDS CLARIFICATION: specific question] if:
-
-        * The choice significantly impacts feature scope or user experience
-        * Multiple reasonable interpretations exist with different implications
-        * No reasonable default exists
-      * **LIMIT: Maximum 3 [NEEDS CLARIFICATION] markers total**
-      * Prioritize clarifications by impact: scope > security/privacy > user experience > technical details
-
-   4. Fill User Scenarios & Testing section
-      If no clear user flow: ERROR "Cannot determine user scenarios"
-
-   5. Generate Functional Requirements
-      Each requirement must be testable
-      Use reasonable defaults for unspecified details (document assumptions in Assumptions section)
-
-   6. Define Success Criteria
-      Create measurable, technology-agnostic outcomes
-      Include both quantitative metrics (time, performance, volume) and qualitative measures (user satisfaction, task completion)
-      Each criterion must be verifiable without implementation details
-
-   7. Identify Key Entities (if data involved)
-
-   8. Return: SUCCESS (spec ready for clarification and planning)
-
-5. **Write the specification to SPEC_FILE** using the template structure, replacing placeholders with concrete details derived from the feature description (arguments) while preserving section order and headings.
-
-   * SPEC_FILE is the full path returned in the JSON from `{SCRIPT}`.
-   * Under the per-feature layout, SPEC_FILE will look like:
-
-     * `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/spec.md`
-     * Example:
-
-       * `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`
-
-6. **Specification Quality Checklist**: After writing the initial spec, generate a quality checklist file that will be used later by humans and tools (e.g. `/speckit.clarify`, `scripts/validate_spec.sh`) to validate the spec.
-
-   * Let `FEATURE_DIR` be the directory that contains SPEC_FILE (i.e., the parent directory of `spec.md`).
-     For example, if
-     `SPEC_FILE = plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`
-     then
-     `FEATURE_DIR = plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001`.
-
-   a. **Create Spec Quality Checklist**: Generate a checklist file at `FEATURE_DIR/checklists/requirements.md` using the checklist template structure with these validation items:
-
-   ```markdown
-   # Specification Quality Checklist: [FEATURE NAME]
-
-   **Purpose**: Validate specification completeness and quality before proceeding to planning
-   **Created**: [DATE]
-   **Feature**: [Link to spec.md]
-
-   ## Content Quality
-
-   - [ ] No implementation details (languages, frameworks, APIs)
-   - [ ] Focused on user value and business needs
-   - [ ] Written for non-technical stakeholders
-   - [ ] All mandatory sections completed
-
-   ## Requirement Completeness
-
-   - [ ] No [NEEDS CLARIFICATION] markers remain
-   - [ ] Requirements are testable and unambiguous
-   - [ ] Success criteria are measurable
-   - [ ] Success criteria are technology-agnostic (no implementation details)
-   - [ ] All acceptance scenarios are defined
-   - [ ] Edge cases are identified
-   - [ ] Scope is clearly bounded
-   - [ ] Dependencies and assumptions identified
-
-   ## Feature Readiness
-
-   - [ ] All functional requirements have clear acceptance criteria
-   - [ ] User scenarios cover primary flows
-   - [ ] Feature meets measurable outcomes defined in Success Criteria
-   - [ ] No implementation details leak into specification
-
-   ## Notes
-
-   - Items marked incomplete require spec updates before `/speckit.plan`
-   ```
-
-   * All items should initially remain **unchecked**. Do **not** attempt to automatically decide which items are satisfied at this stage.
-   * Do **not** run an internal validation loop here. The checklist is a contract for later clarification and validation steps, not something `/speckit.specify` must fully satisfy.
-   * Clarifications and checklist completion will be handled by:
-
-     * `/speckit.clarify` (interactive clarification and incremental spec updates)
-     * Human operators and `scripts/validate_spec.sh` (harness-level quality gate)
-
-7. Report completion with:
-
-   * `BRANCH_NAME`
-   * `SPEC_FILE` path
-   * `FEATURE_DIR/checklists/requirements.md` path
-   * A note that the feature spec is ready for the clarification phase (`/speckit.clarify`) and subsequent planning (`/speckit.plan`).
-
-**NOTE:** The script creates and checks out the new branch and initializes the spec file before writing.
-
-## General Guidelines
-
-## Quick Guidelines
-
-* Focus on **WHAT** users need and **WHY**.
-* Avoid HOW to implement (no tech stack, APIs, code structure).
-* Written for business stakeholders, not developers.
-* DO NOT create any checklists that are embedded in the spec. That will be a separate file under `checklists/`.
-
-### Section Requirements
-
-* **Mandatory sections**: Must be completed for every feature
-* **Optional sections**: Include only when relevant to the feature
-* When a section doesn't apply, remove it entirely (don't leave as "N/A")
-
-### For AI Generation
-
-When creating this spec from a user prompt:
-
-1. **Make informed guesses**: Use context, industry standards, and common patterns to fill gaps
-
-2. **Document assumptions**: Record reasonable defaults in the Assumptions section
+### General Guidelines
+* Focus on **WHAT** and **WHY**, not HOW.  
+* Remove sections that don’t apply; don’t leave “N/A”.  
+* Keep `[NEEDS CLARIFICATION]` ≤ 3 per feature.  
+* Specs should be understandable to non-technical stakeholders.
 
 3. **Limit clarifications**: Maximum 3 [NEEDS CLARIFICATION] markers - use only for critical decisions that:
 

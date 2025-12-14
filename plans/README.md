@@ -9,20 +9,14 @@ Feature spec は `/speckit.specify` → `/speckit.clarify` フローを通じて
 
 ## 1. Feature Spec の作成 / 更新 (`/speckit.specify`)
 
-1.  `harness/feature_list.json` でターゲットとなる機能を特定します。
-    -   例: `EPIC-USER-001-ONBOARDING` 配下の `F-USER-001`。
+1.  speckit が有効な環境 (チャットまたは CLI) で、作りたいアプリ/機能の自然言語説明とともに `/speckit.specify` を実行します。`/speckit.specify` の後ろのテキストがそのまま入力になります（Feature ID 指定は不要）。
 
-2.  speckit が有効な環境 (チャットまたは CLI) で、構築したい機能の自然言語による説明とともに `/speckit.specify` を実行します。
-    `/speckit.specify` の後のテキストが、そのまま機能の説明となります。
-
-3.  `/speckit.specify` は以下を実行します:
-    -   `N-short-name` (例: `5-user-onboarding`) のような機能ブランチを作成または再利用します。
-    -   計算された番号と短い名前を使用して `create-new-feature` スクリプトを呼び出します。
-    -   以下に Feature spec を初期化または更新します:
-        -   `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/spec.md`
-            -   例: `plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md`
-    -   以下に品質チェックリストを初期化または更新します:
-        -   `plans/<scope>/<service-or-system>/<EPIC-ID>/features/<FEATURE-ID>/checklists/requirements.md`
+2.  `/speckit.specify` は以下を自動で行います:
+    -   入力をエピック/フィーチャに分割し、`harness/feature_list.json` を新規作成または更新。
+    -   付番したエピックID/フィーチャIDに基づき、以下に Feature spec を初期化・記入:
+        -   `plans/<scope>/<service>/<EPIC-ID>/features/<FEATURE-ID>/spec.md`
+    -   併せて品質チェックリストを作成:
+        -   `plans/<scope>/<service>/<EPIC-ID>/features/<FEATURE-ID>/checklists/requirements.md`
 
 4.  生成された `spec.md` を必要に応じて編集し、**ユーザー/ビジネス**の視点から機能をより適切に反映させます。
     -   実装の詳細 (言語、フレームワーク、内部 API) は追加しないでください。
