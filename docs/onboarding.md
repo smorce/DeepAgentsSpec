@@ -635,7 +635,7 @@ Clarify は **要件初期化エージェント** として、次の2種類の�
 plans/.../<EPIC-ID>/features/<FEATURE-ID>/checklists/requirements.md
 ```
 
-このファイルは `/speckit.specify` によって作成され、Clarify / 手動編集 / レビューを通じて 1 つずつチェックが埋められていきます。
+このファイルは `/speckit.specify` によって作成され、Clarify / 手動編集 / レビューを通じて 1 つずつチェックが埋められていきます。UX やセキュリティなど追加の観点でチェックリストを増やしたい場合は、`templates/checklist/` 以下のテンプレートを `scripts/bash/add-domain-checklist.sh --feature-id F-XXX-YYY --template <テンプレ名>`（Windows/PowerShell は `scripts/powershell/add-domain-checklist.ps1`）で取り込み、`FEATURE_DIR/checklists/<topic>.md` を生成して人間レビューや `/speckit.analyze` の補助に使ってください（`--list` でテンプレ一覧、`--output` でファイル名指定が可能）。
 
 ### 5.2 バリデータの実行
 
