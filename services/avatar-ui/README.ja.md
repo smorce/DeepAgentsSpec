@@ -1,3 +1,10 @@
+- WSL 内で:  
+  `curl http://127.0.0.1:1686/healthz`
+
+- Windows 側ブラウザで:  
+  [http://localhost:1686/healthz](http://localhost:1686/healthz)
+
+
 # AVATAR UI
 
 人と AI が共存する次世代インターフェース基盤。  
