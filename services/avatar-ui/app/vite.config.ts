@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => {
   // プロジェクトルート(appの親)の.envを読み込む
   // app/ で実行されることを想定し、親ディレクトリを指す
   const env = loadEnv(mode, resolve(__dirname, '..'), '')
+  const webOnly = env.AVATAR_UI_WEB_ONLY === '1' || process.env.AVATAR_UI_WEB_ONLY === '1'
   
   // 必須環境変数の取得 (Fail-Fast)
   const getEnv = (key: string) => {
@@ -24,24 +25,28 @@ export default defineConfig(({ mode }) => {
   // プロキシ先のURLを構築
   const serverUrl = `http://${serverHost}:${serverPort}`
 
+  const plugins = webOnly
+    ? []
+    : [
+        electron([
+          {
+            entry: resolve(__dirname, 'src/main/index.ts'),
+            vite: {
+              build: {
+                outDir: resolve(__dirname, 'dist-electron'),
+              },
+            },
+          },
+        ]),
+      ]
+
   return {
     // レンダラーに注入するグローバル定数
     define: {
       __AGUI_BASE__: JSON.stringify(serverUrl), // サーバーのベースURL
     },
     // Electron メインプロセスのビルド設定
-    plugins: [
-      electron([
-        {
-          entry: resolve(__dirname, 'src/main/index.ts'),
-          vite: {
-            build: {
-              outDir: resolve(__dirname, 'dist-electron'),
-            },
-          },
-        },
-      ]),
-    ],
+    plugins,
     // 開発サーバー設定
     server: {
       port: clientPort,

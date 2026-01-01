@@ -121,6 +121,7 @@ class EnvSettings(BaseSettings):
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
     agent_id: str = Field(alias="AGENT_ID")
     server_host: str = Field(alias="SERVER_HOST")
+    server_bind_host: str | None = Field(default=None, alias="SERVER_BIND_HOST")
     server_port: int = Field(alias="SERVER_PORT", ge=1, le=65535)
     client_port: int = Field(alias="CLIENT_PORT", ge=1, le=65535)
     thread_id: str = Field(alias="THREAD_ID")
@@ -194,6 +195,7 @@ app_settings = load_settings_json()   # settings.json5 から読み込み
 GOOGLE_API_KEY = env_settings.google_api_key
 AGENT_ID = env_settings.agent_id
 SERVER_HOST = env_settings.server_host
+SERVER_BIND_HOST = env_settings.server_bind_host or SERVER_HOST
 SERVER_PORT = env_settings.server_port
 CLIENT_PORT = env_settings.client_port
 THREAD_ID = env_settings.thread_id

@@ -16,17 +16,24 @@ if ! command -v npm >/dev/null 2>&1; then
   echo "ERROR: npm is required to run the client." >&2
   exit 1
 fi
-if ! command -v python >/dev/null 2>&1; then
-  echo "ERROR: Python is required to run the server." >&2
+PYTHON_CMD=""
+for cmd in python python3 py; do
+  if command -v "$cmd" >/dev/null 2>&1; then
+    PYTHON_CMD="$cmd"
+    break
+  fi
+done
+if [ -z "$PYTHON_CMD" ]; then
+  echo "ERROR: Python is required to run the server (python/python3/py)." >&2
   exit 1
 fi
 
 # uv がある場合は uv を使ってサーバーを起動
 if command -v uv >/dev/null 2>&1; then
   export UV_LINK_MODE=copy
-  SERVER_CMD=(uv run --link-mode=copy python -m uvicorn main:app --reload)
+  SERVER_CMD=(uv run --link-mode=copy "$PYTHON_CMD" main.py)
 else
-  SERVER_CMD=(python -m uvicorn main:app --reload)
+  SERVER_CMD=("$PYTHON_CMD" main.py)
 fi
 
 # サーバーをバックグラウンド起動
@@ -41,8 +48,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# クライアントを起動
+# クライアントを起動（Webブラウザのみ）
 (
   cd "$APP_DIR"
+  export AVATAR_UI_WEB_ONLY=1
   npm run dev
 )

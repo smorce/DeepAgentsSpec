@@ -37,6 +37,7 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 - `AGENT_ID`
 - `THREAD_ID`
 - `SERVER_HOST`
+- `SERVER_BIND_HOST`（任意、WSL などで 0.0.0.0 バインドしたい場合）
 - `SERVER_PORT`
 - `CLIENT_PORT`
 - `APP_ENV`
@@ -44,12 +45,13 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 - `CLEANUP_INTERVAL_SECONDS`
 
 > 注意: 現行のサーバー実装は `GOOGLE_API_KEY` が未設定だと起動時にエラーになります。
+> WSL で Windows 側ブラウザからアクセスする場合は `SERVER_BIND_HOST=0.0.0.0` を設定してください。
 
 ### 2. 設定ファイル（任意）
 
 `settings.default.json5` を元に `settings.json5` を用意すると設定を上書きできます。
 
-### 3. 起動（開発）
+### 3. 起動（開発 / Webブラウザ）
 
 以下のどちらかで起動できます。
 
@@ -71,7 +73,7 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
   # 初回のみ（依存の取得）
   uv pip show ag-ui-protocol fastapi uvicorn
   uv pip install --link-mode=copy -e .
-  uv run --link-mode=copy python -m uvicorn main:app --reload
+  uv run --link-mode=copy python main.py
 
   # 別ターミナルでクライアント
   cd services/avatar-ui/app
@@ -79,7 +81,8 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
   npm run dev
   ```
 
-> `uv` が未インストールの場合は `python -m uvicorn ...` を利用してください。
+> `uv` が未インストールの場合は `python main.py` を利用してください。
+> Electron ではなく Web ブラウザで動作させるため、`AVATAR_UI_WEB_ONLY=1` が自動で有効になります。
 
 ### 必要なもの
 
@@ -213,3 +216,23 @@ cp settings.default.json5 settings.json5
 [MIT License](LICENSE)
 
 © 2025 [SIQI](https://siqi.jp) (Sito Sikino)
+
+## メモ
+
+フロントエンド（Vite/ブラウザ）と Python（FastAPI）は、それぞれ別プロセスとして同時に起動しています。  
+`services/avatar-ui/scripts/run_dev.sh` は、まず Python サーバー（FastAPI）をバックグラウンドで起動し、次に Vite（フロントエンド）をフォアグラウンドで起動します。
+
+起動の流れ（概要）:
+
+1. Python（FastAPI）が `SERVER_HOST:SERVER_PORT` で待機
+2. Vite が `CLIENT_PORT` で待機
+3. ブラウザは Vite にアクセス
+4. Vite は `/agui` への通信を Python サーバーにプロキシ
+
+このプロキシの設定は `services/avatar-ui/app/vite.config.ts` に記載されています。  
+つまり、「UI はブラウザで動作し、API は Python で提供される」構成となっています。
+
+起動状況の確認方法:
+
+- Vite:  [http://localhost:CLIENT_PORT](http://localhost:CLIENT_PORT)
+- Python: [http://SERVER_HOST:SERVER_PORT/healthz](http://SERVER_HOST:SERVER_PORT/healthz)

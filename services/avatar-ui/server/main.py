@@ -140,3 +140,14 @@ async def healthz():
 @app.get("/")
 def root():
     return {"status": "ok", "endpoint": "/agui"}
+
+# スクリプトとして起動する場合は .env の値でバインドする
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "main:app",
+        host=config.SERVER_BIND_HOST,
+        port=config.SERVER_PORT,
+        reload=(config.APP_ENV == "dev"),
+    )
