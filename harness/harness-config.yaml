@@ -5,6 +5,8 @@ services:
     path: services/user-service
   - name: billing-service
     path: services/billing-service
+  - name: avatar-ui
+    path: services/avatar-ui
 
 feature_list_file: harness/feature_list.json
 
