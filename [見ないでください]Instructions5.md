@@ -32,3 +32,19 @@ GitHub Issue を作成して @me にアサインしてください。タイト�
 あなたは担当機能の実装エージェントです。
 現在のブランチで gh コマンドを使用して Issue「F-API-002: MiniRAG backend #1」を確認して実行してください。
 MiniRAG は Docker が必要だと思いますが、この環境に Docker は入っています。
+# --------------------------
+マイクロサービスとして MiniRAG を実装したいです。該当のディレクトリは services/api-gateway/EPIC-API-002-minirag です。
+MiniRAG はポスグレを必要としており、Dockerファイルが2つ必要です。詳しくは "services/api-gateway/EPIC-API-002-minirag/compose.yaml" を見てください。
+Dockerコマンド「docker compose up」を使ってポスグレとMiniRAGを起動させて欲しいです。
+
+- MiniRAG には構造化データを入れてそのデータを検索することができます
+- 構造化データはポスグレで永続化されます
+- LLMは deepseek/deepseek-v3.2-speciale を使います
+- MiniRAGとポスグレはそれぞれDockerで起動します
+- 登録・検索用のサンプルコードは「services/api-gateway/EPIC-API-002-minirag/minirag_app/docs/MiniRAG_on_postgres.py」です。これを参照して実装してください
+- 別のプロジェクトから持ってきたコードなので、様々な Path はこのプロジェクト用に更新してください。
+
+MiniRAGの仕様で不明点があれば聞いてください。
+
+
+
