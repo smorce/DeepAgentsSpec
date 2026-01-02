@@ -10,4 +10,5 @@ Current high-level components:
 - User Service: onboarding and identity domain.
 - Billing Service: invoice and billing domain.
 - Avatar UI: desktop/web UI plus its AG-UI server for agent interactions.
+- MiniRAG Demo UI: static HTML/JS demo UI served by a minimal HTTP server, calling the API Gateway.
 

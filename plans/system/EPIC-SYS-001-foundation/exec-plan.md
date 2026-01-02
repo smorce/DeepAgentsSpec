@@ -18,6 +18,7 @@ Related services:
 - api-gateway
 - user-service
 - billing-service
+- frontend
 
 ## Purpose / Big Picture
 

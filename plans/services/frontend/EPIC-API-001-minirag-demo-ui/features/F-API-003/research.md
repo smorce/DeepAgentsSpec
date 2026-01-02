@@ -1,16 +1,17 @@
 # Research: F-API-003 MiniRAGデモ用チャットUI
 
-## Decision 1: UI 実装は avatar-ui の Vite/Electron クライアントに配置
-- Decision: `services/avatar-ui/app/src/renderer` 配下に MiniRAG デモ UI を実装する
-- Rationale: 既存の UI サービス構成（Vite/Electron）と整合し、追加サービスを不要にできる
+## Decision 1: UI 実装は静的HTML/JSで提供
+- Decision: `services/frontend/EPIC-API-001-minirag-demo-ui/public/` に HTML/CSS/JS を配置する
+- Rationale: ビルドなしで最小のHTTPサーバー配信を実現し、デモ用途に適した最小構成になる
 - Alternatives considered:
-  - 新規 UI サービスを追加（デモ用途には過剰）
+  - Vite/Electron（avatar-ui を流用）
+  - 新規SPAフレームワーク導入（デモ用途には過剰）
 
 ## Decision 2: API 連携は REST JSON + 固定デモ API キー
 - Decision: F-API-002 の REST エンドポイントを直接呼び、`X-Demo-Api-Key` を埋め込む
 - Rationale: デモ用途で最小限の安全性と実装コストのバランスが良い
 - Alternatives considered:
-  - UI にキー入力欄を設ける（操作の簡潔さが下がる）
+  - UI にキー入力欄を設ける（操作が複雑）
   - 認証なし（誤操作リスク）
 
 ## Decision 3: 操作モデル

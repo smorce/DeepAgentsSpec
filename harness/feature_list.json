@@ -15,6 +15,13 @@
       "exec_plan_path": "plans/services/api-gateway/EPIC-API-001-routing/exec-plan.md"
     },
     {
+      "id": "EPIC-API-001-MINIRAG-DEMO-UI",
+      "title": "MiniRAG demo UI (static)",
+      "category": "service:frontend",
+      "services": ["frontend"],
+      "exec_plan_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md"
+    },
+    {
       "id": "EPIC-USER-001-ONBOARDING",
       "title": "User onboarding flow",
       "category": "service:user-service",
@@ -49,6 +56,18 @@
 
       "spec_path": "plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/spec.md",
       "checklist_path": "plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md"
+    },
+    {
+      "id": "F-API-003",
+      "epic_id": "EPIC-API-001-MINIRAG-DEMO-UI",
+      "title": "MiniRAG demo chat UI",
+      "description": "Static HTML/JS demo UI to register/search/delete sample data.",
+      "services": ["frontend", "api-gateway"],
+      "status": "failing",
+      "tags": ["frontend", "demo-ui"],
+
+      "spec_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
+      "checklist_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md"
     },
     {
       "id": "F-USER-001",

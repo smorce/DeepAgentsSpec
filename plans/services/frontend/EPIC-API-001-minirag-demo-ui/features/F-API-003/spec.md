@@ -1,11 +1,11 @@
 # Feature Specification: MiniRAGデモ用チャットUI
 
 **Feature ID**: F-API-003  
-**Feature Branch**: `api-003-minirag-ui`  
+**Feature Branch**: `F-API-003-minirag-chat-ui`  
 **Created**: 2026-01-02  
 **Status**: Draft  
 **Input**: User description: "HTMLベースの簡易チャットUIで、5件の構造化データを登録・削除・検索できるようにする。"  
-**Spec Checklist**: `plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-003/checklists/requirements.md` (validate via `scripts/validate_spec.sh`)
+**Spec Checklist**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md` (validate via `scripts/validate_spec.sh`)
 
 ## Overview & Goal *(mandatory)*
 
@@ -33,8 +33,8 @@
 
 - `architecture/system-architecture.md` → UIとバックエンドの関係性の前提
 - `architecture/service-boundaries.md` → UI責務の境界
-- `plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md` → 本エピックの作業計画
-- `services/avatar-ui/service-architecture.md` → UIサービスの制約
+- `plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md` → 本エピックの作業計画
+- `services/frontend/EPIC-API-001-minirag-demo-ui/service-architecture.md` → UIサービスの制約
 - `temp/MiniRAGのサンプル/minirag_app/docs/MiniRAG_on_postgres.py` → サンプルデータ構造の参考
 
 ---
@@ -117,7 +117,8 @@
   - F-API-002（MiniRAGバックエンド機能）
 
 - **Constraints**:
-  - UIはブラウザで動作する簡易チャットUIであること
+  - UIはブラウザで動作する静的な簡易チャットUIであること（ビルドなし）
+  - 配信は最小のHTTPサーバーで行うこと
   - デモ利用を想定した最小限の画面構成とすること
   - UIは固定のデモ用APIキーを使用してバックエンド要求を行うこと
 
