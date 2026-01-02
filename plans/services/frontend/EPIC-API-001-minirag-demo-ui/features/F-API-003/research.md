@@ -4,7 +4,7 @@
 - Decision: `services/frontend/EPIC-API-001-minirag-demo-ui/public/` に HTML/CSS/JS を配置する
 - Rationale: ビルドなしで最小のHTTPサーバー配信を実現し、デモ用途に適した最小構成になる
 - Alternatives considered:
-  - Vite/Electron（avatar-ui を流用）
+  - Vite/Electron（avatar-ui を流用）※採用せず
   - 新規SPAフレームワーク導入（デモ用途には過剰）
 
 ## Decision 2: API 連携は REST JSON + 固定デモ API キー
