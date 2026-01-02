@@ -45,10 +45,11 @@ Tests are REQUIRED for this task list.
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented.
 
 - [ ] T004 [P] Define Pydantic schemas (StructuredDocument, SearchRequest/Response, DeleteResponse) in `services/api-gateway/src/minirag/schemas.py`
-- [ ] T005 [P] Implement DB repository (upsert, search, delete) in `services/api-gateway/src/minirag/repository.py`
-- [ ] T006 [P] Implement MiniRAG service layer (search note "0件", top_k default 5) in `services/api-gateway/src/minirag/service.py`
-- [ ] T007 Add API key verification dependency in `services/api-gateway/src/routes/minirag.py`
-- [ ] T008 Wire routes into FastAPI app in `services/api-gateway/src/app.py` (create if missing)
+- [ ] T005 [P] Add initial schema SQL in `services/api-gateway/src/minirag/schema.sql` for persistent storage
+- [ ] T006 [P] Implement DB repository (upsert, search, delete) in `services/api-gateway/src/minirag/repository.py`
+- [ ] T007 [P] Implement MiniRAG service layer (search note "0件", top_k default 5) in `services/api-gateway/src/minirag/service.py`
+- [ ] T008 Add API key verification dependency in `services/api-gateway/src/routes/minirag.py`
+- [ ] T009 Wire routes into FastAPI app in `services/api-gateway/src/app.py` (create if missing)
 
 **Checkpoint**: Foundation ready — user story implementation can now begin in parallel.
 
@@ -62,14 +63,15 @@ Tests are REQUIRED for this task list.
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Add unit tests for bulk register/search in `services/api-gateway/tests/test_minirag_routes.py`
-- [ ] T010 [P] [US1] Add E2E scenario for register + search in `tests/e2e/scenarios/minirag_demo.spec.js`
+- [ ] T010 [P] [US1] Add unit tests for bulk register/search in `services/api-gateway/tests/test_minirag_routes.py`
+- [ ] T011 [P] [US1] Add E2E scenario for register + search in `tests/e2e/scenarios/minirag_demo.spec.js`
+- [ ] T012 [P] [US1] Add E2E persistence check (restart service and re-search) in `tests/e2e/scenarios/minirag_demo.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Implement `POST /minirag/documents/bulk` handler (upsert, registered_count) in `services/api-gateway/src/routes/minirag.py`
-- [ ] T012 [US1] Implement `POST /minirag/search` handler (top_k default 5, note "0件") in `services/api-gateway/src/routes/minirag.py`
-- [ ] T013 [US1] Load fixed sample data from `services/api-gateway/src/minirag/sample_data.py` in `services/api-gateway/src/minirag/service.py`
+- [ ] T013 [US1] Implement `POST /minirag/documents/bulk` handler (upsert, registered_count) in `services/api-gateway/src/routes/minirag.py`
+- [ ] T014 [US1] Implement `POST /minirag/search` handler (top_k default 5, note "0件") in `services/api-gateway/src/routes/minirag.py`
+- [ ] T015 [US1] Load fixed sample data from `services/api-gateway/src/minirag/sample_data.py` in `services/api-gateway/src/minirag/service.py`
 
 **Checkpoint**: User Story 1 should be fully functional and testable independently.
 
@@ -83,14 +85,14 @@ Tests are REQUIRED for this task list.
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Add unit tests for delete endpoints in `services/api-gateway/tests/test_minirag_routes.py`
-- [ ] T015 [P] [US2] Extend E2E scenario with delete checks in `tests/e2e/scenarios/minirag_demo.spec.js`
+- [ ] T016 [P] [US2] Add unit tests for delete endpoints in `services/api-gateway/tests/test_minirag_routes.py`
+- [ ] T017 [P] [US2] Extend E2E scenario with delete checks in `tests/e2e/scenarios/minirag_demo.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Implement `DELETE /minirag/documents/{doc_id}` handler (deleted_count) in `services/api-gateway/src/routes/minirag.py`
-- [ ] T017 [US2] Implement `DELETE /minirag/documents` handler (deleted_count) in `services/api-gateway/src/routes/minirag.py`
-- [ ] T018 [US2] Add delete methods to `services/api-gateway/src/minirag/service.py` and `services/api-gateway/src/minirag/repository.py`
+- [ ] T018 [US2] Implement `DELETE /minirag/documents/{doc_id}` handler (deleted_count) in `services/api-gateway/src/routes/minirag.py`
+- [ ] T019 [US2] Implement `DELETE /minirag/documents` handler (deleted_count) in `services/api-gateway/src/routes/minirag.py`
+- [ ] T020 [US2] Add delete methods to `services/api-gateway/src/minirag/service.py` and `services/api-gateway/src/minirag/repository.py`
 
 **Checkpoint**: User Stories 1 AND 2 should both work independently.
 
@@ -100,9 +102,9 @@ Tests are REQUIRED for this task list.
 
 **Purpose**: Improvements that affect multiple user stories.
 
-- [ ] T019 Update `scripts/run_all_unit_tests.sh` to include api-gateway MiniRAG unit tests
-- [ ] T020 Update `scripts/run_all_e2e_tests.sh` to include MiniRAG demo scenario
-- [ ] T021 Run `plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/quickstart.md` end-to-end and update if drift exists
+- [ ] T021 Update `scripts/run_all_unit_tests.sh` to include api-gateway MiniRAG unit tests
+- [ ] T022 Update `scripts/run_all_e2e_tests.sh` to include MiniRAG demo scenario
+- [ ] T023 Run `plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/quickstart.md` end-to-end and update if drift exists
 
 ---
 
