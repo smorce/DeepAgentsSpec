@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+numpy
+aiohttp
+tenacity
+tiktoken
+pytest
+httpx
