@@ -15,3 +15,4 @@ target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/
 [2026-01-02 06:15Z] spec quality check: PASSED
 target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
 [2026-01-02] F-API-003 validate_spec PASSED after spec/contract alignment updates.
+2026-01-02T09:17:44Z | implementation-agent | EPIC-API-001-MINIRAG-DEMO-UI | F-API-003 | Added static MiniRAG demo UI, puppeteer E2E scenario, and updated scripts/README.
