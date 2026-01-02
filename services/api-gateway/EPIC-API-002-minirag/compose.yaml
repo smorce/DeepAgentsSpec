@@ -10,9 +10,8 @@ services:
       - "5433:5432"
     shm_size: 1g
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data     # ホスト側永続化ボリューム
-      - ./postgres/init/:/docker-entrypoint-initdb.d:ro  # 初期化スクリプト用（読み取り専用）
-      - ./postgres/sql/migrations/:/docker-entrypoint-initdb.d/migrations:ro # マイグレーションスクリプト用（読み取り専用）
+      - postgres_data:/var/lib/postgresql/data     # Docker管理のnamed volume（OneDrive権限問題回避）
+      - ./postgres/init/:/docker-entrypoint-initdb.d:ro  # 初期化スクリプト用（読み取り専用、migrationsサブディレクトリも含む）
     command:
       - "postgres"
       - "-c"
@@ -46,11 +45,18 @@ services:
     environment:
       - TZ=Asia/Tokyo
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - MINIRAG_WORKING_DIR=/data/minirag
     ports:
       - "8165:8165"
+    volumes:
+      - ./data/minirag:/data/minirag
     restart: unless-stopped
     networks:
       - app_net
+
+volumes:
+  postgres_data:
+    driver: local
 
 networks:
   app_net:
