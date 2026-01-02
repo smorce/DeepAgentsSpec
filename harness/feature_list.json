@@ -20,6 +20,13 @@
       "category": "service:user-service",
       "services": ["api-gateway", "user-service"],
       "exec_plan_path": "plans/services/user-service/EPIC-USER-001-onboarding/exec-plan.md"
+    },
+    {
+      "id": "EPIC-API-002-MINIRAG",
+      "title": "MiniRAG integration and demo UI",
+      "category": "service:api-gateway",
+      "services": ["api-gateway", "avatar-ui"],
+      "exec_plan_path": "plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md"
     }
   ],
   "features": [
@@ -73,6 +80,30 @@
 
       "spec_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/spec.md",
       "checklist_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md"
+    },
+    {
+      "id": "F-API-002",
+      "epic_id": "EPIC-API-002-MINIRAG",
+      "title": "MiniRAG structured data registration/search backend",
+      "description": "Users can register, delete, and search five structured sample records via backend operations.",
+      "services": ["api-gateway"],
+      "status": "failing",
+      "tags": ["backend", "rag", "data-search"],
+
+      "spec_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/spec.md",
+      "checklist_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md"
+    },
+    {
+      "id": "F-API-003",
+      "epic_id": "EPIC-API-002-MINIRAG",
+      "title": "MiniRAG demo chat UI for sample data operations",
+      "description": "A simple web chat UI lets users register, delete, and search five structured sample records and view results.",
+      "services": ["avatar-ui", "api-gateway"],
+      "status": "failing",
+      "tags": ["frontend", "ui", "demo"],
+
+      "spec_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-003/spec.md",
+      "checklist_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-003/checklists/requirements.md"
     }
   ]
 }
