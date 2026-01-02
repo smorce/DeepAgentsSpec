@@ -25,4 +25,5 @@ F-API-002（MiniRAG構造化データ登録・検索バックエンド）と F-A
 
 /speckit.clarify F-API-002
 /speckit.clarify F-API-003
-
+# --------------------------
+GitHub Issue を作成して @me にアサインしてください。タイトルは良い感じに整形してください。
