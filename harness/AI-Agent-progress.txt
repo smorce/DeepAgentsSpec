@@ -61,3 +61,6 @@ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/check
 [2026-01-02 06:18Z] plan quality check: PASSED
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
 [2026-01-02] F-API-002 validate_spec/validate_plan PASSED after tasks.md creation.
+[2026-01-02 06:45Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-01-02] F-API-002 spec/tasks のMEDIUM指摘対応（LLM明記/性能・依存障害テスト追加）
