@@ -1,38 +1,46 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Usage: ./start_jules_from_issues.sh [limit]
+# Usage: ./start_jules_from_issues.sh [limit] [wait_seconds]
 LIMIT="${1:-2}"
+WAIT_SECONDS="${2:-${JULES_WAIT_SECONDS:-600}}"
 
-# LIMIT が整数か確認
 if ! [[ "$LIMIT" =~ ^[0-9]+$ ]]; then
   echo "Error: limit must be a non-negative integer (got: $LIMIT)" >&2
   exit 1
 fi
+if ! [[ "$WAIT_SECONDS" =~ ^[0-9]+$ ]]; then
+  echo "Error: wait_seconds must be a non-negative integer (got: $WAIT_SECONDS)" >&2
+  exit 1
+fi
 
-# 自分にアサインされた open Issue を最大 LIMIT 件取得
-issues=$(gh issue list \
-  --assignee @me \
-  --state open \
-  --limit "$LIMIT" \
-  --json number,title)
+# 番号<TAB>タイトル の形式で取得（jq 不要）
+issue_lines="$(
+  gh issue list \
+    --assignee @me \
+    --state open \
+    --limit "$LIMIT" \
+    --json number,title \
+    --template '{{range .}}{{.number}}{{"\t"}}{{.title}}{{"\n"}}{{end}}'
+)"
 
-count=$(echo "$issues" | jq 'length')
-if [ "$count" -eq 0 ]; then
+if [[ -z "${issue_lines//$'\n'/}" ]]; then
   echo "No open issues assigned to me"
   exit 0
 fi
 
+count="$(printf '%s\n' "$issue_lines" | sed '/^$/d' | wc -l | tr -d ' ')"
 echo "Starting $count Jules tasks in parallel..."
 
-while IFS= read -r issue; do
-  number=$(echo "$issue" | jq -r '.number')
-  title=$(echo "$issue" | jq -r '.title')
+while IFS=$'\t' read -r number title; do
+  [[ -z "${number:-}" ]] && continue
 
-  # Issue 本文を取得
-  body=$(gh issue view "$number" --json body -q '.body')
+  body="$(
+    gh issue view "$number" \
+      --json body \
+      --template '{{.body}}'
+  )"
 
-  # Jules に渡すプロンプトを組み立て
   prompt=$(cat <<EOF
 You are working on the following GitHub Issue.
 
@@ -48,11 +56,27 @@ EOF
 )
 
   echo "→ Starting Jules task for Issue #$number"
-
-  # 公式の想定どおり、stdin でプロンプトを渡す
   printf '%s\n' "$prompt" | jules remote new --repo . &
 
-done < <(echo "$issues" | jq -c '.[]')
+done <<< "$issue_lines"
 
-wait
-echo "All Jules tasks started."
+if [[ "$WAIT_SECONDS" -eq 0 ]]; then
+  echo "All Jules tasks started (not waiting for completion)."
+  exit 0
+fi
+
+start_ts="$(date +%s)"
+while :; do
+  running="$(jobs -pr | wc -l | tr -d ' ')"
+  if [[ "$running" -eq 0 ]]; then
+    echo "All Jules tasks started."
+    exit 0
+  fi
+  now_ts="$(date +%s)"
+  elapsed="$((now_ts - start_ts))"
+  if [[ "$elapsed" -ge "$WAIT_SECONDS" ]]; then
+    echo "Timed out waiting for Jules tasks after ${WAIT_SECONDS}s (background jobs may still be running)."
+    exit 0
+  fi
+  sleep 2
+done
