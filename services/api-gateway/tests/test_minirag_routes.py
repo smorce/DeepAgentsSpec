@@ -1,8 +1,13 @@
 import pytest
 from fastapi.testclient import TestClient
 from src.main import app
+import os
+from unittest import mock
 from src.minirag.schemas import BulkRegisterRequest, StructuredDocument
 from datetime import datetime
+
+# Enforce in-memory for testing
+os.environ["MINIRAG_STORAGE_TYPE"] = "memory"
 
 client = TestClient(app)
 
@@ -12,10 +17,15 @@ WORKSPACE = "test-ws"
 
 @pytest.fixture(autouse=True)
 def clean_store():
-    # Helper to clean store between tests if needed,
-    # but since InMemoryMiniRAGService is a singleton in main,
-    # we might need to rely on delete_all API or re-instantiate.
-    # For now, we will rely on delete_all API.
+    # Ensure environment is memory
+    os.environ["MINIRAG_STORAGE_TYPE"] = "memory"
+
+    # Reset singleton manually if possible, or use delete_all
+    # Since _service is a global singleton in routes, we might need to reset it.
+    # Accessing internal module for reset:
+    from src.routes import minirag
+    minirag._service = None # Force re-init
+
     client.delete(f"/minirag/documents?workspace={WORKSPACE}", headers=HEADERS)
 
 def test_bulk_register_and_search():

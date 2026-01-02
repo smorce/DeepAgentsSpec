@@ -7,3 +7,5 @@ tenacity
 tiktoken
 pytest
 httpx
+asyncpg
+pgvector

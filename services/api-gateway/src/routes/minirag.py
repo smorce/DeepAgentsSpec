@@ -1,18 +1,33 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from typing import Optional
+import os
+import logging
 from src.minirag.schemas import (
     BulkRegisterRequest, BulkRegisterResponse,
     SearchRequest, SearchResponse,
     DeleteResponse, ErrorResponse
 )
+from src.minirag.base import MiniRAGService
 from src.minirag.service import InMemoryMiniRAGService
+from src.minirag.postgres_service import PostgresMiniRAGService
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/minirag", tags=["minirag"])
 
-# Singleton instance for in-memory storage persistence across requests
-_service = InMemoryMiniRAGService()
+# Singleton instance
+_service = None
 
-async def get_service():
+async def get_service() -> MiniRAGService:
+    global _service
+    if _service is None:
+        storage_type = os.environ.get("MINIRAG_STORAGE_TYPE", "memory").lower()
+        if storage_type == "postgres":
+            logger.info("Initializing PostgresMiniRAGService")
+            _service = PostgresMiniRAGService()
+        else:
+            logger.info("Initializing InMemoryMiniRAGService")
+            _service = InMemoryMiniRAGService()
     return _service
 
 async def verify_api_key(x_demo_api_key: str = Header(...)):
@@ -24,7 +39,7 @@ async def verify_api_key(x_demo_api_key: str = Header(...)):
 @router.post("/documents/bulk", response_model=BulkRegisterResponse)
 async def bulk_register(
     req: BulkRegisterRequest,
-    service: InMemoryMiniRAGService = Depends(get_service),
+    service: MiniRAGService = Depends(get_service),
     api_key: str = Depends(verify_api_key)
 ):
     count = await service.bulk_register(req.workspace, req.documents)
@@ -33,7 +48,7 @@ async def bulk_register(
 @router.post("/search", response_model=SearchResponse)
 async def search(
     req: SearchRequest,
-    service: InMemoryMiniRAGService = Depends(get_service),
+    service: MiniRAGService = Depends(get_service),
     api_key: str = Depends(verify_api_key)
 ):
     results = await service.search(req.workspace, req.query, req.top_k)
@@ -44,7 +59,7 @@ async def search(
 async def delete_one(
     doc_id: str,
     workspace: str = Query(...),
-    service: InMemoryMiniRAGService = Depends(get_service),
+    service: MiniRAGService = Depends(get_service),
     api_key: str = Depends(verify_api_key)
 ):
     count = await service.delete_one(workspace, doc_id)
@@ -53,7 +68,7 @@ async def delete_one(
 @router.delete("/documents", response_model=DeleteResponse)
 async def delete_all(
     workspace: str = Query(...),
-    service: InMemoryMiniRAGService = Depends(get_service),
+    service: MiniRAGService = Depends(get_service),
     api_key: str = Depends(verify_api_key)
 ):
     count = await service.delete_all(workspace)
