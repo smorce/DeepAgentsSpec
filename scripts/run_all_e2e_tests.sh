@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
-echo "[run_all_e2e_tests.sh] Placeholder - run end-to-end suites."
+set -euo pipefail
 
+if ! command -v node >/dev/null 2>&1; then
+  echo "Node.js is required to run E2E tests." >&2
+  exit 1
+fi
+
+node tests/e2e/scenarios/minirag_demo.spec.js

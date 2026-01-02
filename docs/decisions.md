@@ -33,3 +33,11 @@ Each entry should follow this format:
   Summary: Implement user onboarding flow via api-gateway and user-service with an HTTP-based integration.
   Details: See ExecPlan at:
     - plans/services/user-service/EPIC-USER-001-onboarding.md (Decision Log)
+
+- ID: DEC-2026-001
+  Date: 2026-01-02
+  Scope: service:api-gateway
+  Related epics: EPIC-API-002-MINIRAG
+  Summary: Require MINIRAG_DB_DSN for persistent storage and allow in-memory only when explicitly enabled.
+  Details: See ExecPlan at:
+    - plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md (Decision Log)

@@ -24,7 +24,9 @@ MiniRAG を使ったデモで、利用者が「構造化データの登録→検
 - [x] (2026-01-02 02:49Z) F-API-002 の spec 品質ゲートを通過
 - [x] (2026-01-02 03:16Z) F-API-002 の plan 品質ゲートを通過
 - [ ] F-API-002 の実装タスク分解（`/speckit.tasks`）と Issue 化
-- [ ] F-API-002 の TDD 実装（Red→Green→Refactor）
+- [x] (2026-01-02 09:18Z) F-API-002 の実装（API/テスト/E2E/スクリプト）を追加
+- [x] (2026-01-02 12:56Z) F-API-002 の unit テスト実行（`scripts/run_all_unit_tests.sh`）
+- [x] (2026-01-02 14:03Z) F-API-002 の e2e テスト実行（`scripts/run_all_e2e_tests.sh`）
 - [ ] F-API-003 の plan 品質ゲート確認（F-API-003 ブランチ側）
 - [ ] F-API-003 の実装タスク分解と TDD 実装
 
@@ -39,6 +41,9 @@ MiniRAG を使ったデモで、利用者が「構造化データの登録→検
   Date/Author: 2026-01-02 / Codex
 - Decision: 認可は固定デモAPIキーを必須とする。  
   Rationale: 最小限の安全策として十分で、デモの手順を複雑化しない。  
+  Date/Author: 2026-01-02 / Codex
+- Decision: 永続化は `MINIRAG_DB_DSN` を必須とし、`MINIRAG_ALLOW_IN_MEMORY=true` の場合のみインメモリを許可する。  
+  Rationale: 再起動後のデータ保持要件を担保しつつ、テスト時に注入可能なリポジトリを確保するため。  
   Date/Author: 2026-01-02 / Codex
 
 ## Outcomes & Retrospective

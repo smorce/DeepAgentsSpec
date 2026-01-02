@@ -64,3 +64,6 @@ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/check
 [2026-01-02 06:45Z] spec quality check: PASSED
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
 [2026-01-02] F-API-002 spec/tasks のMEDIUM指摘対応（LLM明記/性能・依存障害テスト追加）
+2026-01-02T09:18:43Z | codex | EPIC-API-002-MINIRAG | F-API-002 | api-gateway に MiniRAG API/リポジトリ/スキーマ/テスト/E2E/スクリプトを追加。検証は未実行。
+2026-01-02T12:56:25Z | codex | EPIC-API-002-MINIRAG | F-API-002 | scripts/run_all_unit_tests.sh PASSED (5 tests).
+2026-01-02T14:04:00Z | codex | EPIC-API-002-MINIRAG | F-API-002 | Docker Postgres(AGE/pgvector) 起動、MINIRAG API 起動後に scripts/run_all_e2e_tests.sh PASSED。

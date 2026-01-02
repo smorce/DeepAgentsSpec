@@ -28,6 +28,20 @@
 4. 登録・検索・削除 API を実装
 5. 単体テストと E2E シナリオを追加
 
+## Postgres (pgvector/AGE) の起動
+
+`services/api-gateway/docker/compose.minirag.yaml` を利用して起動する。
+
+```bash
+services/api-gateway/scripts/start_minirag_postgres.sh
+```
+
+API 起動は以下（必要に応じて環境変数で上書き可能）:
+
+```bash
+services/api-gateway/scripts/run_minirag_api.sh
+```
+
 ## バリデーション
 - `scripts/validate_spec.sh plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md`
 - `scripts/validate_plan.sh plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md`
