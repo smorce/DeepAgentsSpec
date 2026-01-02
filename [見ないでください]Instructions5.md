@@ -1,4 +1,5 @@
 README.md と docs/onboarding.md を確認してください。
+あれば、harness/AI-Agent-progress.txt も確認してください。
 また、必要に応じてブランチ作成とPUSH操作を許可します。
 
 # --------------------------
