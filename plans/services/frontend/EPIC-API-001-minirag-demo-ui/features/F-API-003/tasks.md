@@ -62,8 +62,8 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Implement register button flow in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
-- [ ] T007 [US1] Implement search submit flow with result rendering (top 5) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T006 [US1] Implement register button flow (show `registered_count`) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T007 [US1] Implement search submit flow with result rendering (top 5, note display) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
 - [ ] T008 [US1] Render chat log and results UI in `services/frontend/EPIC-API-001-minirag-demo-ui/public/index.html`
 
 **Checkpoint**: User Story 1 should be fully functional and testable independently.

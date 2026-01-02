@@ -75,6 +75,7 @@
 - 登録前に検索した場合の空結果表示
 - 入力が空の場合は検索実行せず、チャット内に注意メッセージを表示する
 - バックエンドが一時的に利用不可の場合のエラー表示
+- 検索結果が0件の場合は、結果は空配列として表示し、APIの`note`（"0件"）を明示する
 
 ---
 
@@ -86,9 +87,11 @@
 - **FR-002**: UIは、検索クエリをチャット入力で実行できなければならない
 - **FR-003**: UIは、5件のサンプルデータを一括登録するボタン操作を提供しなければならない
 - **FR-004**: UIは、サンプルデータの個別削除および一括削除のボタン操作を提供しなければならない
-- **FR-005**: UIは、検索結果の上位5件を関連度降順で一覧表示し、タイトル・要約・主要属性が確認できなければならない
+- **FR-005**: UIは、検索結果の上位5件を関連度降順で一覧表示し、タイトル・要約・doc_id・relevance・source_fields（あれば）を確認できなければならない
 - **FR-006**: UIは、登録・削除・検索の成功/失敗をユーザーに分かる形で表示しなければならない
 - **FR-007**: UIは、エラー発生時にチャット履歴内へエラーメッセージを表示しなければならない
+- **FR-008**: UIは、検索結果が0件の場合に空結果とAPIの`note`（"0件"）を表示しなければならない
+- **FR-009**: UIは、登録完了時に`registered_count`を表示しなければならない
 
 ### Non-Functional Requirements *(include if relevant)*
 
@@ -98,7 +101,8 @@
 
 ### Key Entities *(include if feature involves data)*
 
-- **SampleStructuredRecord**: doc_id, title, summary, body, status, region, priority, created_at, metadata を含む表示対象データ
+- **SampleStructuredRecord**: workspace, doc_id, title, summary, body, status, region, priority, created_at, metadata を含む登録用データ
+- **SearchResult**: doc_id, title, summary, relevance, source_fields を含む検索表示データ
 - **ChatMessage**: role, content, timestamp を持つUI表示メッセージ
 
 ---
@@ -108,6 +112,7 @@
 - UIはデモ用途であり、単一ユーザーの操作を前提とする
 - 操作はバックエンド（F-API-002）の提供する機能に依存する
 - サンプルデータは固定の5件で運用する
+- workspace は固定値 `demo` を使用する
 
 ---
 

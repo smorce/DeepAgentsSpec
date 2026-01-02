@@ -13,6 +13,65 @@ components:
       in: header
       name: X-Demo-Api-Key
   schemas:
+    StructuredDocument:
+      type: object
+      required:
+        - workspace
+        - doc_id
+        - title
+        - summary
+        - body
+        - status
+        - created_at
+      properties:
+        workspace:
+          type: string
+        doc_id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+        status:
+          type: string
+        region:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 5
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+    SearchResult:
+      type: object
+      required:
+        - doc_id
+        - title
+        - summary
+        - relevance
+      properties:
+        doc_id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        relevance:
+          type: number
+          format: float
+        source_fields:
+          type: array
+          items:
+            type: string
     SearchRequest:
       type: object
       required:
@@ -39,7 +98,7 @@ components:
         results:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/SearchResult'
     BulkRegisterRequest:
       type: object
       required:
@@ -51,7 +110,19 @@ components:
         documents:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/StructuredDocument'
+    BulkRegisterResponse:
+      type: object
+      required:
+        - registered_count
+        - documents
+      properties:
+        registered_count:
+          type: integer
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StructuredDocument'
     DeleteResponse:
       type: object
       required:
@@ -88,6 +159,10 @@ paths:
       responses:
         '200':
           description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkRegisterResponse'
         '400':
           description: Invalid request
           content:

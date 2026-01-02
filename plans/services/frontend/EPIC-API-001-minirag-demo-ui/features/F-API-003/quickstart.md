@@ -17,10 +17,12 @@
 ## UI 要件の要約
 - 検索はチャット入力で実行
 - 登録/削除はボタン操作
-- 結果は上位5件を関連度順で表示
+- 結果は上位5件を関連度順で表示（0件時は `note: "0件"` を表示）
 - エラーはチャット履歴内に表示
 - 空入力は実行せず注意メッセージを表示
 - 静的配信（ビルドなし）
+- workspace は固定値 `demo`
+- 登録完了時は `registered_count` を表示
 
 ## バリデーション
 - `scripts/validate_spec.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`

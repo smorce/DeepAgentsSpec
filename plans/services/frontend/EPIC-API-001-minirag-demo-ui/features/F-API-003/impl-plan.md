@@ -31,7 +31,7 @@ UI は `services/frontend/EPIC-API-001-minirag-demo-ui` で静的HTML/JSとし�
 **Target Environment**: ブラウザ + 最小HTTPサーバー（静的配信）  
 **Project Type**: frontend-only（静的UI、バックエンド連携あり）  
 **Performance Goals**: 主要操作は 3 分以内に完了できる（SC-001）  
-**Constraints**: ビルドなし、固定デモ API キー、空入力は実行不可、エラーはチャット内表示、結果は上位5件  
+**Constraints**: ビルドなし、固定デモ API キー、workspace は `demo` 固定、空入力は実行不可、エラーはチャット内表示、結果は上位5件、0件時は `note` 表示  
 **Scale/Scope**: 単一ユーザーのデモ利用
 
 ---

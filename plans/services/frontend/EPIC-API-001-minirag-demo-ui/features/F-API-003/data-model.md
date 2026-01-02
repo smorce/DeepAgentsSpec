@@ -5,6 +5,7 @@
 ### SampleStructuredRecord
 - **Purpose**: UI に表示する構造化データ
 - **Fields**:
+  - `workspace` (string, required)
   - `doc_id` (string, required)
   - `title` (string, required)
   - `summary` (string, required)
@@ -23,7 +24,16 @@
   - `timestamp` (ISO-8601 datetime, required)
 
 ## Relationships
-- UI は検索結果（SearchResult）を `SampleStructuredRecord` に変換して表示
+- UI は検索結果（SearchResult）を表示し、登録用データは `SampleStructuredRecord` を使用する
+
+### SearchResult
+- **Purpose**: 検索表示用の結果要素
+- **Fields**:
+  - `doc_id` (string, required)
+  - `title` (string, required)
+  - `summary` (string, required)
+  - `relevance` (number, required)
+  - `source_fields` (array of string, optional)
 
 ## Validation Rules
 - `content` は空文字不可
