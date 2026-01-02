@@ -45,6 +45,7 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 
 - [ ] T003 [P] Define API client helpers (base URL, headers, fetch wrapper) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
 - [ ] T004 [P] Define basic UI state model (chat log, results list) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T005 [P] Implement error message rendering into chat log in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
 
 **Checkpoint**: Foundation ready — user story implementation can now begin in parallel.
 
@@ -58,13 +59,13 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 
 ### Tests for User Story 1
 
-- [ ] T005 [US1] Add E2E scenario for register + search in `tests/e2e/scenarios/minirag_demo_ui.spec.js`
+- [ ] T006 [US1] Add E2E scenario for register + search in `tests/e2e/scenarios/minirag_demo_ui.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Implement register button flow (show `registered_count`) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
-- [ ] T007 [US1] Implement search submit flow with result rendering (top 5, note display) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
-- [ ] T008 [US1] Render chat log and results UI in `services/frontend/EPIC-API-001-minirag-demo-ui/public/index.html`
+- [ ] T007 [US1] Implement register button flow (show `registered_count`) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T008 [US1] Implement search submit flow with result rendering (top 5, note display) in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T009 [US1] Render chat log and results UI in `services/frontend/EPIC-API-001-minirag-demo-ui/public/index.html`
 
 **Checkpoint**: User Story 1 should be fully functional and testable independently.
 
@@ -78,12 +79,12 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 
 ### Tests for User Story 2
 
-- [ ] T009 [US2] Extend E2E scenario with delete checks in `tests/e2e/scenarios/minirag_demo_ui.spec.js`
+- [ ] T010 [US2] Extend E2E scenario with delete checks in `tests/e2e/scenarios/minirag_demo_ui.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T010 [US2] Implement delete single/all flows in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
-- [ ] T011 [US2] Update UI to show delete results and counts in `services/frontend/EPIC-API-001-minirag-demo-ui/public/index.html`
+- [ ] T011 [US2] Implement delete single/all flows in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T012 [US2] Update UI to show delete results and counts in `services/frontend/EPIC-API-001-minirag-demo-ui/public/index.html`
 
 **Checkpoint**: User Stories 1 AND 2 should both work independently.
 
@@ -93,9 +94,9 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 
 **Purpose**: Improvements that affect multiple user stories.
 
-- [ ] T012 Update `scripts/run_all_e2e_tests.sh` to include MiniRAG demo UI scenario
-- [ ] T013 Add empty-input warning message rendering in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
-- [ ] T014 Run `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md` end-to-end and update if drift exists
+- [ ] T013 Update `scripts/run_all_e2e_tests.sh` to include MiniRAG demo UI scenario
+- [ ] T014 Add empty-input warning message rendering in `services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js`
+- [ ] T015 Run `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md` end-to-end and update if drift exists
 
 ---
 
@@ -130,8 +131,8 @@ Tests are OPTIONAL — include them **only** if explicitly requested in the feat
 ## Parallel Example: User Story 1
 
 ```bash
-Task: "T005 [US1] Add E2E scenario for register + search in tests/e2e/scenarios/minirag_demo_ui.spec.js"
-Task: "T006 [US1] Implement register button flow in services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js"
+Task: "T006 [US1] Add E2E scenario for register + search in tests/e2e/scenarios/minirag_demo_ui.spec.js"
+Task: "T007 [US1] Implement register button flow in services/frontend/EPIC-API-001-minirag-demo-ui/public/app.js"
 ```
 
 ---
