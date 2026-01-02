@@ -51,7 +51,7 @@ $title
 Description:
 $body
 
-Please implement this task.
+Please implement this task. Please check out the relevant branch before starting the task.
 EOF
 )
 
