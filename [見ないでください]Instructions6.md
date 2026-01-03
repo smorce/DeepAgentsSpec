@@ -75,3 +75,5 @@ MiniRAG登録失敗時はプロファイル更新しない方針で。
   2. onboarding.mdを確認する
   3. AI-Agent-progress.txtを確認する
   4. tasks.md を読み、最大限効率化しながら優先度順にタスクを実行してください。
+# =========================================
+@services/avatar-ui/patch/mychange1.patch git apply してください。その際、--ignore-whitespace --3wayオプションを使用して適用してください。
