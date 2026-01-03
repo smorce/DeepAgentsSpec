@@ -42,6 +42,7 @@ _MINIRAG_CLIENT = MiniRagClient(
     MiniRagConfig(
         base_url=config.MINIRAG_BASE_URL,
         workspace=config.MINIRAG_WORKSPACE,
+        timeout_seconds=config.MINIRAG_TIMEOUT_SECONDS,
     )
 )
 

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from dataclasses import dataclass
 from typing import Any
@@ -49,6 +50,12 @@ class MiniRagClient:
                         text = await response.text()
                         raise MiniRagError(f"MiniRAG error {response.status}: {text}")
                     return await response.json()
+        except asyncio.TimeoutError as exc:
+            logger.exception("MiniRAG request timed out after %s seconds: %s", self._config.timeout_seconds, url)
+            raise MiniRagError(f"MiniRAG request timed out after {self._config.timeout_seconds} seconds") from exc
         except aiohttp.ClientError as exc:
             logger.exception("MiniRAG request failed: %s", exc)
             raise MiniRagError(f"MiniRAG request failed: {exc}") from exc
+        except ValueError as exc:
+            logger.exception("MiniRAG response JSON parse failed: %s", exc)
+            raise MiniRagError(f"MiniRAG response JSON parse failed: {exc}") from exc

@@ -94,6 +94,7 @@ class MiniRagSettings(BaseModel, extra="forbid"):
     workspace: str = "diary"
     searchEnabledDefault: bool = True
     topKDefault: int = Field(ge=1, le=10, default=3)
+    timeoutSeconds: int = Field(gt=0, default=30)
 
 
 # settings.json5 のルートスキーマ
@@ -244,6 +245,7 @@ MINIRAG_BASE_URL = app_settings.minirag.baseUrl
 MINIRAG_WORKSPACE = app_settings.minirag.workspace
 MINIRAG_SEARCH_ENABLED_DEFAULT = app_settings.minirag.searchEnabledDefault
 MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
+MINIRAG_TIMEOUT_SECONDS = app_settings.minirag.timeoutSeconds
 
 # AG-UI エージェント接続情報（サーバを唯一の真実源とする）
 AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"

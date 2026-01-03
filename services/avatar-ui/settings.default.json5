@@ -85,5 +85,7 @@
     workspace: "diary",
     searchEnabledDefault: true,
     topKDefault: 3,
+    // MiniRAG API のタイムアウト（秒）
+    timeoutSeconds: 300,
   },  
 }
