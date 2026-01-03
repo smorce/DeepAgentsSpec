@@ -128,12 +128,15 @@ async def update_search_settings(request: SearchSettingsRequest) -> SearchSettin
 
 async def search_diary(
     query: str,
-    thread_id: str | None = None,
-    top_k: int | None = None,
+    thread_id: str = "",
+    top_k: int = 0,
 ) -> dict:
     """Search past diary entries and return doc_id/summary/body items."""
-    thread = thread_id or config.THREAD_ID
+    thread = thread_id.strip() if thread_id else ""
+    if not thread:
+        thread = config.THREAD_ID
+    effective_top_k = top_k if top_k > 0 else None
     try:
-        return await run_search_diary(query=query, thread_id=thread, top_k=top_k)
+        return await run_search_diary(query=query, thread_id=thread, top_k=effective_top_k)
     except DiaryValidationError as exc:
         return {"items": [], "error": str(exc)}
