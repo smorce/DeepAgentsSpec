@@ -57,3 +57,11 @@ Each entry should follow this format:
   Summary: Persist search toggle/top_k per thread on the server and distribute defaults via /agui/config for tool + UI alignment.
   Details: See ExecPlan at:
     - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-004
+  Date: 2026-01-03
+  Scope: service:avatar-ui
+  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+  Summary: Update user profiling via diff-based updates that never overwrite non-empty values with empty data and surface failures in UI without blocking diary registration.
+  Details: See ExecPlan at:
+    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)

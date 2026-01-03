@@ -15,6 +15,9 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
 - F-AVATAR-001: 日記会話の構造化登録とMiniRAG検索連携
   - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md`
   - Status: implemented
+- F-AVATAR-002: 日記会話のプロファイリング更新
+  - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/spec.md`
+  - Status: planned
 
 ## Progress
 
@@ -24,6 +27,7 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
 - [x] (2026-01-03 09:20Z) 実装準備としてタスク分解を完了し、Jules Issue 作成へ移行した。
 - [x] (2026-01-03 12:20Z) MiniRAG クライアントと日記確定 API を実装し、UI に検索トグルと会話確定を追加した。
 - [x] (2026-01-03 12:20Z) settings.json5 と README を更新し、日記ワークフローと設定項目を反映した。
+- [x] (2026-01-03 13:30Z) F-AVATAR-002 の spec/impl-plan/research/data-model/contracts/quickstart/tasks を作成した。
 
 ## Surprises & Discoveries
 
@@ -53,6 +57,14 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
 
 - Decision: 検索トグルと top_k 設定は server 側でスレッドごとに保持し、UI 初期値は `/agui/config` から配布する。
   Rationale: UI と検索ツールが同じ設定ソースを参照でき、Gemini のツール呼び出しと UX の整合性を保てるため。
+  Date/Author: 2026-01-03 / codex
+
+- Decision: プロファイル更新は差分適用とし、既存の非空値は空で上書きしない。
+  Rationale: LLM の欠落や誤りによる情報損失を避け、更新の安全性を高めるため。
+  Date/Author: 2026-01-03 / codex
+
+- Decision: プロファイリング失敗は日記登録の成否と切り離し、UI に警告表示を出す。
+  Rationale: 日記登録の成功体験を維持しつつ、失敗を利用者に明示して再試行可能にするため。
   Date/Author: 2026-01-03 / codex
 
 ## Outcomes & Retrospective

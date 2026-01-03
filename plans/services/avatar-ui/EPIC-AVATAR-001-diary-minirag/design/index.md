@@ -17,6 +17,12 @@
   - Data model: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/data-model.md`
   - Contracts: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/contracts/`
   - Quickstart: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/quickstart.md`
+- F-AVATAR-002: 日記会話のプロファイリング更新
+  - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/spec.md`
+  - Impl plan: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/impl-plan.md`
+  - Data model: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/data-model.md`
+  - Contracts: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/contracts/`
+  - Quickstart: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/quickstart.md`
 
 ## 3. Shared Entities & Ownership
 
@@ -27,6 +33,14 @@
 - DiarySearchContext
   - Owner: F-AVATAR-001
   - Notes: Gemini へ渡す doc_id / summary / body の上位N件
+
+- UserProfile
+  - Owner: F-AVATAR-002
+  - Notes: 固定項目のユーザープロファイル（YAML）
+
+- ProfileUpdate
+  - Owner: F-AVATAR-002
+  - Notes: Gemini が生成する差分更新（path/value/confidence）
 
 ## 4. Shared APIs / Contracts
 
@@ -44,11 +58,16 @@
   - Owner feature: F-AVATAR-001
   - Endpoint: `POST /agui/diary/finalize`
   - Consumer: avatar-ui UI
+  - Notes: F-AVATAR-002 で profiling status をレスポンスに追加
 
 - Search settings toggle
   - Owner feature: F-AVATAR-001
   - Endpoint: `POST /agui/diary/search-settings`
   - Consumer: avatar-ui UI
+
+- Profile update contract
+  - Owner feature: F-AVATAR-002
+  - Contract: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/contracts/profile-update.schema.json`
 
 ## 5. Cross-Feature Flows
 
@@ -66,3 +85,9 @@
 2. server が MiniRAG へ検索し、上位N件の doc_id / summary / body を返す。
 3. Gemini がコンテキストとして利用し、会話を継続する。
 
+### 会話確定 → プロファイル更新
+
+1. 日記登録が成功する。
+2. server がユーザー発話のみを分析し、プロファイル差分を生成する。
+3. 既存値を保護しつつプロファイルを更新する。
+4. UI に profiling の成功/失敗を通知する。

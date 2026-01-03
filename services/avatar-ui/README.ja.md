@@ -16,6 +16,7 @@ INFO:     127.0.0.1:41016 - "POST /agui/diary/search-settings HTTP/1.1" 200 OK
   [http://localhost:1686/healthz](http://localhost:1686/healthz)
 
 
+
 # AVATAR UI
 
 人と AI が共存する次世代インターフェース基盤。  

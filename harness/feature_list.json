@@ -108,6 +108,18 @@
       "checklist_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md"
     },
     {
+      "id": "F-AVATAR-002",
+      "epic_id": "EPIC-AVATAR-001-DIARY-MINIRAG",
+      "title": "Diary conversation profiling update",
+      "description": "User-only transcript analysis updates a fixed-profile document after diary finalization, with failure notification in UI.",
+      "services": ["avatar-ui"],
+      "status": "failing",
+      "tags": ["agent", "profiling", "diary"],
+
+      "spec_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/spec.md",
+      "checklist_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md"
+    },
+    {
       "id": "F-USER-001",
       "epic_id": "EPIC-USER-001-ONBOARDING",
       "title": "Signup page basic UI",
