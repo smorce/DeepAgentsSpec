@@ -222,23 +222,79 @@ async def finalize_diary(
 
 
 def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
-    candidates = (
-        payload.get("items")
-        or payload.get("results")
-        or payload.get("documents")
-        or []
-    )
     items: list[dict[str, Any]] = []
-    for entry in candidates:
-        if not isinstance(entry, dict):
+
+    # 旧形式: items/documents など
+    candidates = payload.get("items") or payload.get("documents") or []
+    if isinstance(candidates, list) and candidates:
+        for entry in candidates:
+            if not isinstance(entry, dict):
+                continue
+            items.append(
+                {
+                    "doc_id": entry.get("doc_id") or entry.get("id") or "",
+                    "summary": entry.get("summary") or "",
+                    "body": entry.get("body") or "",
+                }
+            )
+        return items
+
+    # MiniRAG 形式: results -> sources / answer.provenance.chunks
+    results = payload.get("results") or []
+    if not isinstance(results, list):
+        return items
+
+    for result in results:
+        if not isinstance(result, dict):
             continue
-        items.append(
-            {
-                "doc_id": entry.get("doc_id") or entry.get("id") or "",
-                "summary": entry.get("summary") or "",
-                "body": entry.get("body") or "",
-            }
-        )
+        answer = result.get("answer")
+        provenance = answer.get("provenance") if isinstance(answer, dict) else None
+        chunks = provenance.get("chunks") if isinstance(provenance, dict) else None
+
+        if isinstance(chunks, list) and chunks:
+            for chunk in chunks:
+                if not isinstance(chunk, dict):
+                    continue
+                content = str(chunk.get("content") or "").strip()
+                if not content:
+                    continue
+                items.append(
+                    {
+                        "doc_id": chunk.get("full_doc_id")
+                        or chunk.get("doc_id")
+                        or chunk.get("chunk_id")
+                        or "",
+                        "summary": content,
+                        "body": content,
+                    }
+                )
+            continue
+
+        sources = result.get("sources") or []
+        if not isinstance(sources, list):
+            continue
+        for source in sources:
+            if isinstance(source, dict):
+                content = str(
+                    source.get("content")
+                    or source.get("body")
+                    or source.get("summary")
+                    or ""
+                ).strip()
+                doc_id = source.get("doc_id") or source.get("id") or ""
+            else:
+                content = str(source).strip()
+                doc_id = ""
+            if not content:
+                continue
+            items.append(
+                {
+                    "doc_id": doc_id,
+                    "summary": content,
+                    "body": content,
+                }
+            )
+
     return items
 
 
