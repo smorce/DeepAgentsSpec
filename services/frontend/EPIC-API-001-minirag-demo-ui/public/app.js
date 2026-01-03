@@ -1,5 +1,5 @@
 const CONFIG = {
-  baseUrl: "http://localhost:8000",
+  baseUrl: "http://localhost:8165",
   workspace: "demo",
   chatLimit: 100,
 };
