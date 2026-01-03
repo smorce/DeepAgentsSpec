@@ -1378,9 +1378,25 @@ class ADKAgent:
             status = getattr(error, "status", None)
             code = getattr(error, "code", None)
             retry_delay = None
+            error_payload = None
             if isinstance(details, dict):
                 error_payload = details.get("error") or details
-                detail_list = error_payload.get("details") if isinstance(error_payload, dict) else None
+                if isinstance(details.get("message"), str):
+                    raw_message = details.get("message", "").strip()
+                    if raw_message:
+                        try:
+                            error_payload = json.loads(raw_message)
+                        except Exception:
+                            start = raw_message.find("{")
+                            end = raw_message.rfind("}")
+                            if start != -1 and end != -1 and end > start:
+                                try:
+                                    error_payload = json.loads(raw_message[start : end + 1])
+                                except Exception:
+                                    pass
+            if isinstance(error_payload, dict):
+                inner = error_payload.get("error") if "error" in error_payload else error_payload
+                detail_list = inner.get("details") if isinstance(inner, dict) else None
                 if isinstance(detail_list, list):
                     for entry in detail_list:
                         if isinstance(entry, dict) and entry.get("retryDelay"):
