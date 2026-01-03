@@ -85,6 +85,8 @@
     workspace: "diary",
     searchEnabledDefault: true,
     topKDefault: 3,
+    // 検索モードのデフォルト（最大3つまで）
+    searchModesDefault: ["mini"],
     // MiniRAG API のタイムアウト（秒）
     timeoutSeconds: 300,
   },  

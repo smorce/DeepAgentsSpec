@@ -27,6 +27,7 @@ class DiaryMessage(BaseModel):
 class SearchSettingsModel(BaseModel):
     enabled: bool
     top_k: int = Field(ge=1, le=10)
+    modes: list[str] | None = None
 
 
 class DiaryAnalysisModel(BaseModel):
@@ -77,9 +78,15 @@ async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryRe
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid workspace.",
         )
+    modes = (
+        request.search_settings.modes
+        if request.search_settings.modes is not None
+        else config.MINIRAG_SEARCH_MODES_DEFAULT
+    )
     settings = SearchSettings(
         enabled=request.search_settings.enabled,
         top_k=request.search_settings.top_k,
+        modes=tuple(modes),
     )
     set_search_settings(request.thread_id, settings)
     try:
@@ -118,9 +125,15 @@ async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryRe
     responses={400: {"model": ErrorResponse}},
 )
 async def update_search_settings(request: SearchSettingsRequest) -> SearchSettingsResponse:
+    modes = (
+        request.settings.modes
+        if request.settings.modes is not None
+        else config.MINIRAG_SEARCH_MODES_DEFAULT
+    )
     settings = SearchSettings(
         enabled=request.settings.enabled,
         top_k=request.settings.top_k,
+        modes=tuple(modes),
     )
     set_search_settings(request.thread_id, settings)
     return SearchSettingsResponse(applied=True)

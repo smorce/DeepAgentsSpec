@@ -27,6 +27,7 @@ class DiaryAnalysisError(RuntimeError):
 class SearchSettings:
     enabled: bool
     top_k: int
+    modes: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -55,14 +56,26 @@ def get_search_settings(thread_id: str) -> SearchSettings:
         SearchSettings(
             enabled=config.MINIRAG_SEARCH_ENABLED_DEFAULT,
             top_k=config.MINIRAG_TOP_K_DEFAULT,
+            modes=tuple(config.MINIRAG_SEARCH_MODES_DEFAULT),
         ),
     )
 
 
 def set_search_settings(thread_id: str, settings: SearchSettings) -> SearchSettings:
+    allowed_modes = set(config.MINIRAG_SEARCH_MODES_ALLOWED)
+    normalized_modes: list[str] = []
+    for mode in settings.modes:
+        if mode not in allowed_modes:
+            continue
+        if mode in normalized_modes:
+            continue
+        normalized_modes.append(mode)
+        if len(normalized_modes) >= 3:
+            break
     clamped = SearchSettings(
         enabled=settings.enabled,
         top_k=max(1, min(settings.top_k, 10)),
+        modes=tuple(normalized_modes),
     )
     _search_settings_by_thread[thread_id] = clamped
     return clamped
@@ -181,6 +194,7 @@ def build_diary_document(
             "message_count": len(messages),
             "search_enabled": search_settings.enabled,
             "top_k": search_settings.top_k,
+            "modes": list(search_settings.modes),
             "thread_id": thread_id,
         },
     }
@@ -242,7 +256,8 @@ async def search_diary(
         raise DiaryValidationError("Search query is empty.")
     effective_top_k = top_k if top_k is not None else settings.top_k
     try:
-        payload = await _MINIRAG_CLIENT.search(query, effective_top_k)
+        modes = list(settings.modes) if settings.modes else None
+        payload = await _MINIRAG_CLIENT.search(query, effective_top_k, modes)
     except MiniRagError as exc:
         logger.warning("MiniRAG search failed: %s", exc)
         return {"items": [], "error": "MiniRAG unavailable"}

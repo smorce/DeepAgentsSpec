@@ -40,6 +40,7 @@ export interface AppConfig {
     workspace: string;
     searchEnabledDefault: boolean;
     topKDefault: number;
+    searchModesDefault: string[];
   };
   agent: {
     url: string;
@@ -59,6 +60,7 @@ const defaults: AppConfig = {
     workspace: "diary",
     searchEnabledDefault: true,
     topKDefault: 3,
+    searchModesDefault: ["mini"],
   },
   agent: {
     url: "",
@@ -115,6 +117,10 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
     const ui = serverConfig.ui ?? serverConfig;
     const agent = serverConfig.agent ?? defaults.agent;
     const minirag = serverConfig.minirag ?? defaults.minirag;
+    const hasModesDefault = Array.isArray(minirag.searchModesDefault);
+    const rawModes = hasModesDefault
+      ? minirag.searchModesDefault.filter((mode: unknown) => typeof mode === "string")
+      : defaults.minirag.searchModesDefault;
     config.ui = ui;
     const agentUrl = agent.url ?? `${base}/agui`;
     config.agent = {
@@ -126,6 +132,7 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
       workspace: minirag.workspace ?? defaults.minirag.workspace,
       searchEnabledDefault: Boolean(minirag.searchEnabledDefault ?? defaults.minirag.searchEnabledDefault),
       topKDefault: Number(minirag.topKDefault ?? defaults.minirag.topKDefault),
+      searchModesDefault: rawModes,
     };
     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
 

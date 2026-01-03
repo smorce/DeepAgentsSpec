@@ -10,5 +10,7 @@ minirag:
   workspace: diary
   search_enabled_default: true
   top_k_default: 3
+  search_modes_default:
+    - mini
 
 # 実際の起動は .env と settings.json5 を利用してください。

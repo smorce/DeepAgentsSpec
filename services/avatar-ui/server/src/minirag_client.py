@@ -32,12 +32,14 @@ class MiniRagClient:
         }
         return await self._post("/minirag/documents/bulk", payload)
 
-    async def search(self, query: str, top_k: int) -> dict[str, Any]:
+    async def search(self, query: str, top_k: int, modes: list[str] | None = None) -> dict[str, Any]:
         payload = {
             "workspace": self._config.workspace,
             "query": query,
             "top_k": top_k,
         }
+        if modes:
+            payload["modes"] = modes
         return await self._post("/minirag/search", payload)
 
     async def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:

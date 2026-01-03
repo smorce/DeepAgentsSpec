@@ -250,6 +250,16 @@ body {
   gap: 6px;
 }
 
+.search-modes {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-modes__label {
+  opacity: 0.8;
+}
+
 .diary-controls input[type="checkbox"] {
   accent-color: var(--col-theme-main);
 }

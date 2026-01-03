@@ -18,6 +18,9 @@ const metaBar = document.getElementById("meta");
 const avatarLabel = document.getElementById("avatar-label");
 const searchToggle = document.getElementById("search-toggle") as HTMLInputElement | null;
 const topKInput = document.getElementById("search-top-k") as HTMLInputElement | null;
+const modeInputs = Array.from(
+  document.querySelectorAll<HTMLInputElement>('input[name="search-mode"]'),
+);
 const finalizeButton = document.getElementById("finalize-button") as HTMLButtonElement | null;
 const finalizeStatus = document.getElementById("finalize-status") as HTMLSpanElement | null;
 
@@ -157,9 +160,34 @@ async function initApp() {
 
   const serverBase = config.agent.url.replace(/\/agui\/?$/, "");
   const diaryWorkspace = config.minirag.workspace;
+  const allowedSearchModes = ["naive", "mini", "light"] as const;
+  const normalizeSearchModes = (modes: string[]) => {
+    const unique: string[] = [];
+    for (const mode of modes) {
+      if (!allowedSearchModes.includes(mode as (typeof allowedSearchModes)[number])) {
+        continue;
+      }
+      if (unique.includes(mode)) {
+        continue;
+      }
+      unique.push(mode);
+      if (unique.length >= 3) {
+        break;
+      }
+    }
+    return unique;
+  };
+  const fallbackModes = normalizeSearchModes(config.minirag.searchModesDefault ?? ["mini"]);
+  const ensureAtLeastOneMode = (modes: string[]) => {
+    if (modes.length > 0) {
+      return modes;
+    }
+    return fallbackModes.length > 0 ? fallbackModes : ["mini"];
+  };
   const diarySearchSettings = {
     enabled: config.minirag.searchEnabledDefault,
     top_k: config.minirag.topKDefault,
+    modes: ensureAtLeastOneMode(normalizeSearchModes(config.minirag.searchModesDefault ?? [])),
   };
 
   // テキスト行を追加（エンジンを介さない即時表示用）
@@ -225,7 +253,34 @@ async function initApp() {
     });
   }
 
-  if (searchToggle || topKInput) {
+  if (modeInputs.length > 0) {
+    const applyModeSelection = (modes: string[]) => {
+      for (const input of modeInputs) {
+        input.checked = modes.includes(input.value);
+      }
+    };
+    applyModeSelection(diarySearchSettings.modes);
+    modeInputs.forEach((input) => {
+      input.addEventListener("change", async (event) => {
+        const selected = modeInputs
+          .filter((item) => item.checked)
+          .map((item) => item.value);
+        const normalized = normalizeSearchModes(selected);
+        const ensured = ensureAtLeastOneMode(normalized);
+        if (ensured.length !== selected.length || ensured.length !== normalized.length) {
+          applyModeSelection(ensured);
+          const target = event.currentTarget as HTMLInputElement | null;
+          if (target && ensured.includes(target.value) === false && selected.length > 0) {
+            target.checked = false;
+          }
+        }
+        diarySearchSettings.modes = ensured;
+        await applySearchSettings();
+      });
+    });
+  }
+
+  if (searchToggle || topKInput || modeInputs.length > 0) {
     await applySearchSettings();
   }
 

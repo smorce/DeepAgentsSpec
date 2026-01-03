@@ -130,6 +130,7 @@ def get_config():
             "workspace": config.MINIRAG_WORKSPACE,
             "searchEnabledDefault": config.MINIRAG_SEARCH_ENABLED_DEFAULT,
             "topKDefault": config.MINIRAG_TOP_K_DEFAULT,
+            "searchModesDefault": config.MINIRAG_SEARCH_MODES_DEFAULT,
         },
         "agent": {
             "url": config.AGENT_URL,
