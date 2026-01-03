@@ -26,3 +26,22 @@ services/avatar-ui はあくまでもGeminiを使った会話しかできない�
 - services/avatar-ui に渡すコンテキストは、ユーザー入力の本文です。MiniRAGで検索した結果 Gemini に渡すコンテキストは  doc_id / summary / body の上位N件（デフォルト3）                                                      
 - workspace名：diary
 - EPIC/Feature ID は上記の案でOK
+
+
+# =========================================
+あなたは担当機能の実装エージェントです。
+
+【機能名】avatar-ui の改修
+【指示書】services/avatar-ui/issues/ISSUE-AVATAR-001-001.md
+【ドキュメント】
+  - README.md
+  - docs/onboarding.md
+  - harness/AI-Agent-progress.txt
+【やること】
+  1. README.mdを確認する
+  2. onboarding.mdを確認する
+  3. AI-Agent-progress.txtを確認する
+  4. tasks.md を読み、最大限効率化しながら優先度順にタスクを実行してください。
+
+
+
