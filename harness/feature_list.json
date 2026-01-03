@@ -63,7 +63,7 @@
       "title": "MiniRAG demo chat UI",
       "description": "Static HTML/JS demo UI to register/search/delete sample data.",
       "services": ["frontend", "api-gateway"],
-      "status": "failing",
+      "status": "passing",
       "tags": ["frontend", "demo-ui"],
 
       "spec_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
