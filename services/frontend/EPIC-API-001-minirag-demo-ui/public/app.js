@@ -1,7 +1,5 @@
 const CONFIG = {
   baseUrl: "http://localhost:8000",
-  apiKeyHeader: "X-Demo-Api-Key",
-  apiKeyValue: "demo-key",
   workspace: "demo",
   chatLimit: 100,
 };
@@ -153,40 +151,90 @@ const renderResults = () => {
     return;
   }
 
+  const formatSourceLabel = (source, index) => {
+    if (source && typeof source === "object") {
+      return source.doc_id || source.id || `source-${index + 1}`;
+    }
+    return `source-${index + 1}`;
+  };
+
+  const formatSourceText = (source) => {
+    if (!source) {
+      return "詳細なし";
+    }
+    if (typeof source === "string") {
+      return source.length > 180 ? `${source.slice(0, 180)}…` : source;
+    }
+    if (typeof source === "object") {
+      const candidates = [source.title, source.summary, source.body, source.text, source.content];
+      const first = candidates.find((item) => typeof item === "string" && item.trim());
+      if (first) {
+        return first.length > 180 ? `${first.slice(0, 180)}…` : first;
+      }
+      if (Array.isArray(source.body)) {
+        const joined = source.body.join(" ");
+        return joined.length > 180 ? `${joined.slice(0, 180)}…` : joined;
+      }
+      const asJson = JSON.stringify(source);
+      return asJson.length > 180 ? `${asJson.slice(0, 180)}…` : asJson;
+    }
+    return String(source);
+  };
+
   state.results.forEach((result) => {
     const card = document.createElement("div");
     card.className = "result-card";
 
     const title = document.createElement("h3");
-    title.textContent = result.title;
+    title.textContent = result.mode ? `mode: ${result.mode}` : "result";
     card.appendChild(title);
 
-    const summary = document.createElement("p");
-    summary.textContent = result.summary;
-    card.appendChild(summary);
+    const answer = document.createElement("p");
+    answer.className = "result-card__answer";
+    answer.textContent = result.answer || "回答がありません。";
+    card.appendChild(answer);
 
     const meta = document.createElement("div");
     meta.className = "result-card__meta";
-    meta.innerHTML = `
-      <span>doc_id: ${result.doc_id}</span>
-      <span>relevance: ${result.relevance}</span>
-      <span>source_fields: ${
-        result.source_fields && result.source_fields.length
-          ? result.source_fields.join(", ")
-          : "-"
-      }</span>
-    `;
+    const sources = Array.isArray(result.sources) ? result.sources : [];
+    meta.textContent = `sources: ${sources.length}`;
     card.appendChild(meta);
 
-    const actions = document.createElement("div");
-    actions.className = "result-card__actions";
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "ghost";
-    deleteButton.textContent = "この結果を削除";
-    deleteButton.dataset.docId = result.doc_id;
-    deleteButton.addEventListener("click", () => handleDeleteSingle(result.doc_id));
-    actions.appendChild(deleteButton);
-    card.appendChild(actions);
+    if (sources.length > 0) {
+      const sourcesWrap = document.createElement("div");
+      sourcesWrap.className = "result-card__sources";
+
+      sources.forEach((source, index) => {
+        const item = document.createElement("div");
+        item.className = "result-source";
+
+        const header = document.createElement("div");
+        header.className = "result-source__header";
+
+        const label = document.createElement("span");
+        label.textContent = formatSourceLabel(source, index);
+        header.appendChild(label);
+
+        if (source && typeof source === "object" && source.doc_id) {
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "ghost";
+          deleteButton.textContent = "削除";
+          deleteButton.dataset.docId = source.doc_id;
+          deleteButton.addEventListener("click", () => handleDeleteSingle(source.doc_id));
+          header.appendChild(deleteButton);
+        }
+
+        const detail = document.createElement("div");
+        detail.className = "result-source__detail";
+        detail.textContent = formatSourceText(source);
+
+        item.appendChild(header);
+        item.appendChild(detail);
+        sourcesWrap.appendChild(item);
+      });
+
+      card.appendChild(sourcesWrap);
+    }
 
     resultsContainer.appendChild(card);
   });
@@ -198,7 +246,6 @@ const apiRequest = async ({ path, method, body }) => {
     method,
     headers: {
       "Content-Type": "application/json",
-      [CONFIG.apiKeyHeader]: CONFIG.apiKeyValue,
     },
   };
   if (body) {
@@ -208,7 +255,7 @@ const apiRequest = async ({ path, method, body }) => {
   const response = await fetch(url, options);
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const message = payload.message || "APIエラーが発生しました。";
+    const message = payload.detail || payload.message || "APIエラーが発生しました。";
     throw new Error(message);
   }
   return payload;
@@ -221,18 +268,18 @@ const handleRegister = async () => {
       path: "/minirag/documents/bulk",
       method: "POST",
       body: {
-        workspace: CONFIG.workspace,
         documents: SAMPLE_DOCUMENTS,
+        overwrite: true,
       },
     });
 
     updateStatus({
-      registeredCount: response.registered_count,
+      registeredCount: response.inserted,
       lastAction: "登録完了",
     });
     addChatMessage(
       "system",
-      `登録が完了しました。registered_count: ${response.registered_count}`
+      `登録が完了しました。inserted: ${response.inserted}`
     );
   } catch (error) {
     updateStatus({ lastAction: "登録失敗" });
@@ -255,19 +302,25 @@ const handleSearch = async (query) => {
       path: "/minirag/search",
       method: "POST",
       body: {
-        workspace: CONFIG.workspace,
         query: trimmed,
+        modes: ["mini"],
         top_k: 5,
+        include_provenance: true,
+        metadata_filter: { workspace: CONFIG.workspace },
       },
     });
 
     state.results = response.results || [];
     renderResults();
 
+    const totalSources = state.results.reduce(
+      (sum, result) => sum + (result.sources ? result.sources.length : 0),
+      0
+    );
     const note = response.note ? ` (${response.note})` : "";
     addChatMessage(
       "system",
-      `検索が完了しました。count: ${response.count}${note}`
+      `検索が完了しました。sources: ${totalSources}${note}`
     );
     updateStatus({ lastAction: "検索完了" });
   } catch (error) {
@@ -289,7 +342,7 @@ const handleDeleteAll = async () => {
     updateStatus({ registeredCount: 0, lastAction: "全件削除" });
     addChatMessage(
       "system",
-      `削除が完了しました。deleted_count: ${response.deleted_count}`
+      `削除が完了しました。deleted: ${response.deleted}`
     );
   } catch (error) {
     updateStatus({ lastAction: "削除失敗" });
@@ -312,7 +365,7 @@ const handleDeleteSingle = async (docId) => {
     updateStatus({ lastAction: "個別削除" });
     addChatMessage(
       "system",
-      `削除が完了しました。deleted_count: ${response.deleted_count}`
+      `削除が完了しました。deleted: ${response.deleted}`
     );
   } catch (error) {
     updateStatus({ lastAction: "削除失敗" });

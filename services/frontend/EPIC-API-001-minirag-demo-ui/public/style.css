@@ -198,6 +198,13 @@ button.ghost {
   font-size: 16px;
 }
 
+.result-card__answer {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
 .result-card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -206,14 +213,32 @@ button.ghost {
   color: var(--muted);
 }
 
-.result-card__actions {
-  display: flex;
-  justify-content: flex-end;
+.result-card__sources {
+  display: grid;
+  gap: 8px;
 }
 
-.result-card__actions button {
+.result-source {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f8fafc;
+}
+
+.result-source__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   font-size: 12px;
-  padding: 6px 12px;
+  color: var(--muted);
+}
+
+.result-source__detail {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
 }
 
 .result-empty {
