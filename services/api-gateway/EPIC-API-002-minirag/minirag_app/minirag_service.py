@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -63,6 +63,17 @@ class StructuredDocument(BaseModel):
     priority: Optional[int] = None
     created_at: Optional[datetime] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+def normalize_document_payload(document: Dict[str, Any]) -> Dict[str, Any]:
+    created_at = document.get("created_at")
+    if isinstance(created_at, datetime):
+        if created_at.tzinfo is not None and created_at.utcoffset() is not None:
+            document["created_at"] = created_at.astimezone(timezone.utc).replace(tzinfo=None)
+    body = document.get("body")
+    if isinstance(body, list):
+        document["body"] = "\n\n".join(str(item) for item in body)
+    return document
 
 
 class BulkInsertRequest(BaseModel):
@@ -210,7 +221,7 @@ async def bulk_insert(request: BulkInsertRequest) -> Dict[str, Any]:
         raise HTTPException(status_code=400, detail="documents must not be empty")
 
     rag: MiniRAG = app.state.rag
-    docs = [doc.model_dump() for doc in request.documents]
+    docs = [normalize_document_payload(doc.model_dump()) for doc in request.documents]
 
     try:
         await rag.ainsert(
