@@ -113,7 +113,7 @@
       "title": "Diary conversation profiling update",
       "description": "User-only transcript analysis updates a fixed-profile document after diary finalization, with failure notification in UI.",
       "services": ["avatar-ui"],
-      "status": "failing",
+      "status": "passing",
       "tags": ["agent", "profiling", "diary"],
 
       "spec_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/spec.md",

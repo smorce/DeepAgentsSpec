@@ -204,6 +204,10 @@ body {
   color: rgba(var(--error-color-r), var(--error-color-g), var(--error-color-b), 1);
 }
 
+.text-line--warning {
+  color: rgba(255, 196, 102, 1);
+}
+
 /* AI の提案文などを囲うスタイル */
 .text-line--proposed {
   color: var(--col-theme-text);

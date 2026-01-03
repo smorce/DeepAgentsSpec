@@ -102,3 +102,5 @@ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR
 target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
 [2026-01-03 16:42Z] plan quality check: PASSED
 target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+
+2026-01-03T17:06:11Z | implementation-agent | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-002 | Added profiling update flow, schema validation, UI warning, and merge tests.

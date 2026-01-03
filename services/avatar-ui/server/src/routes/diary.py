@@ -38,6 +38,11 @@ class DiaryAnalysisModel(BaseModel):
     episodic_memory: str
 
 
+class ProfilingStatusModel(BaseModel):
+    status: Literal["ok", "failed"]
+    message: str | None = None
+
+
 class FinalizeDiaryRequest(BaseModel):
     workspace: str
     thread_id: str
@@ -49,6 +54,7 @@ class FinalizeDiaryResponse(BaseModel):
     doc_id: str
     inserted: int
     analysis: DiaryAnalysisModel
+    profiling: ProfilingStatusModel
 
 
 class SearchSettingsRequest(BaseModel):
@@ -90,7 +96,7 @@ async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryRe
     )
     set_search_settings(request.thread_id, settings)
     try:
-        doc_id, inserted, analysis = await finalize_diary(
+        doc_id, inserted, analysis, profiling_status = await finalize_diary(
             messages=[message.model_dump() for message in request.messages],
             thread_id=request.thread_id,
             search_settings=settings,
@@ -115,6 +121,10 @@ async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryRe
             summary=analysis.summary,
             semantic_memory=analysis.semantic_memory,
             episodic_memory=analysis.episodic_memory,
+        ),
+        profiling=ProfilingStatusModel(
+            status=profiling_status.status,
+            message=profiling_status.message,
         ),
     )
 

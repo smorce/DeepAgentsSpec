@@ -65,3 +65,11 @@ Each entry should follow this format:
   Summary: Update user profiling via diff-based updates that never overwrite non-empty values with empty data and surface failures in UI without blocking diary registration.
   Details: See ExecPlan at:
     - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-005
+  Date: 2026-01-03
+  Scope: service:avatar-ui
+  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+  Summary: Validate profiling updates against the default profile schema and apply only above a confidence threshold.
+  Details: See ExecPlan at:
+    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)

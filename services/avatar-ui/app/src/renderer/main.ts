@@ -202,10 +202,19 @@ async function initApp() {
   let isRunning = false; // 多重実行防止フラグ
   let isFinalizing = false;
 
-  const updateFinalizeStatus = (text: string, isError = false) => {
+  const updateFinalizeStatus = (
+    text: string,
+    tone: "default" | "warning" | "error" = "default",
+  ) => {
     if (!finalizeStatus) return;
     finalizeStatus.textContent = text;
-    finalizeStatus.style.color = isError ? "rgba(255, 102, 102, 1)" : "";
+    if (tone === "error") {
+      finalizeStatus.style.color = "rgba(255, 102, 102, 1)";
+    } else if (tone === "warning") {
+      finalizeStatus.style.color = "rgba(255, 196, 102, 1)";
+    } else {
+      finalizeStatus.style.color = "";
+    }
   };
 
   const applySearchSettings = async () => {
@@ -228,7 +237,7 @@ async function initApp() {
     } catch (error) {
       updateFinalizeStatus(
         `検索設定の更新に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
-        true,
+        "error",
       );
     }
   };
@@ -386,12 +395,23 @@ async function initApp() {
           `> サマリー: ${payload.analysis.summary}`,
         );
         updateFinalizeStatus("会話確定が完了しました");
+        if (payload.profiling?.status === "failed") {
+          const reason =
+            typeof payload.profiling.message === "string" && payload.profiling.message
+              ? ` (${payload.profiling.message})`
+              : "";
+          appendLine(
+            "text-line--warning",
+            `⚠️ プロファイリングに失敗しました${reason}`,
+          );
+          updateFinalizeStatus("プロファイリングに失敗しました", "warning");
+        }
       } catch (error) {
         appendLine(
           "text-line--error",
           `❌ 会話確定に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
         );
-        updateFinalizeStatus("会話確定に失敗しました", true);
+        updateFinalizeStatus("会話確定に失敗しました", "error");
       } finally {
         isFinalizing = false;
         finalizeButton.disabled = false;

@@ -116,11 +116,20 @@ class MiniRagSettings(BaseModel, extra="forbid"):
         return normalized
 
 
+# Profiling 設定
+class ProfilingSettings(BaseModel, extra="forbid"):
+    model: str
+    minConfidence: float = Field(ge=0, le=1, default=0.6)
+
+
 # settings.json5 のルートスキーマ
 class AppSettings(BaseModel, extra="forbid"):
     server: ServerSettings
     ui: UiSettings
     minirag: MiniRagSettings
+    profiling: ProfilingSettings = Field(
+        default_factory=lambda: ProfilingSettings(model="gemini-2.5-flash")
+    )
 
 
 # ---------- テーマ解決 ----------
@@ -267,6 +276,10 @@ MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
 MINIRAG_SEARCH_MODES_ALLOWED = ("naive", "mini", "light")
 MINIRAG_SEARCH_MODES_DEFAULT = app_settings.minirag.searchModesDefault
 MINIRAG_TIMEOUT_SECONDS = app_settings.minirag.timeoutSeconds
+
+# Profiling 設定
+PROFILING_MODEL = app_settings.profiling.model
+PROFILING_MIN_CONFIDENCE = app_settings.profiling.minConfidence
 
 # AG-UI エージェント接続情報（サーバを唯一の真実源とする）
 AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"

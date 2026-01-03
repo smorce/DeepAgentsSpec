@@ -89,5 +89,11 @@
     searchModesDefault: ["mini"],
     // MiniRAG API のタイムアウト（秒）
     timeoutSeconds: 300,
-  },  
+  },
+  profiling: {
+    // プロファイリング用のモデル
+    model: "gemini-2.5-flash",
+    // 反映する信頼度の最小値（0-1）
+    minConfidence: 0.6,
+  },
 }

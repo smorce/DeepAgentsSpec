@@ -32,6 +32,7 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 - **デスクトップアプリ** – ローカル動作。macOS / Windows / Linux 対応
 - **商用利用可** – オープンソース（MIT）。個人・商用問わず自由に利用可能
 - **日記 + MiniRAG 連携** – 会話確定ボタンで日記を構造化し MiniRAG に登録、必要時に過去日記のコンテキストを取得
+- **プロファイリング更新** – 会話確定後にユーザーの発話を分析し、固定プロファイルを差分更新（失敗時は警告表示）
 
 ## 使い方
 
@@ -48,6 +49,7 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 - 抽出結果は MiniRAG に構造化データとして登録されます。
 - 検索トグル ON のときのみ、Gemini が MiniRAG 検索で過去日記を参照します。
 - top_k と検索トグルの初期値は `settings.json5` の `minirag` セクションで調整できます。
+- 会話確定後にユーザー発話のみを分析し、`profiling/user_profile.yaml` が差分更新されます。
 
 ## クイックスタート
 
@@ -234,6 +236,17 @@ minirag: {
   workspace: "diary",
   searchEnabledDefault: true,
   topKDefault: 3,
+}
+```
+
+### プロファイリング設定
+
+`settings.json5` の `profiling` セクションで、プロファイル更新に使うモデルと反映の最低信頼度を設定できます。
+
+```json5
+profiling: {
+  model: "gemini-2.5-flash",
+  minConfidence: 0.6,
 }
 ```
 

@@ -17,6 +17,9 @@
      cd services/avatar-ui/server
      uv run --link-mode=copy python main.py
 
+   必要に応じて `services/avatar-ui/settings.json5` の `profiling` セクションで
+   プロファイリングモデルと最低信頼度を調整する。
+
 2. avatar-ui app を起動する
 
    例:

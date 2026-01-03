@@ -17,7 +17,7 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
   - Status: implemented
 - F-AVATAR-002: 日記会話のプロファイリング更新
   - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/spec.md`
-  - Status: planned
+  - Status: implemented
 
 ## Progress
 
@@ -28,6 +28,7 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
 - [x] (2026-01-03 12:20Z) MiniRAG クライアントと日記確定 API を実装し、UI に検索トグルと会話確定を追加した。
 - [x] (2026-01-03 12:20Z) settings.json5 と README を更新し、日記ワークフローと設定項目を反映した。
 - [x] (2026-01-03 13:30Z) F-AVATAR-002 の spec/impl-plan/research/data-model/contracts/quickstart/tasks を作成した。
+- [x] (2026-01-03 17:06Z) プロファイル差分更新モジュールと UI 警告表示を実装し、設定とテストを追加した。
 
 ## Surprises & Discoveries
 
@@ -67,9 +68,15 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
   Rationale: 日記登録の成功体験を維持しつつ、失敗を利用者に明示して再試行可能にするため。
   Date/Author: 2026-01-03 / codex
 
+- Decision: プロファイル差分は既定のプロフィールスキーマでパス検証し、信頼度閾値未満は反映しない。
+  Rationale: 固定項目の安全性を保ち、低信頼の推定を避けるため。
+  Date/Author: 2026-01-03 / codex
+
 ## Outcomes & Retrospective
 
 UI への検索トグル・top_k・会話確定ボタン追加と、FastAPI 側の MiniRAG 連携 API を実装した。search_diary ツール経由で Gemini が過去日記検索を行えるようになり、会話確定の結果が UI に表示される。
+
+日記確定後にユーザー発話のみを分析して固定プロフィールを差分更新するフローを追加し、profiling 失敗時は UI に警告表示が出るようにした。
 
 ## Context and Orientation
 

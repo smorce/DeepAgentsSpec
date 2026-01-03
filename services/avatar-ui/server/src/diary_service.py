@@ -10,6 +10,7 @@ from google import genai
 
 from src import config
 from src.minirag_client import MiniRagClient, MiniRagConfig, MiniRagError
+from src.profile_service import ProfilingStatus, run_profiling
 
 
 logger = logging.getLogger(__name__)
@@ -90,6 +91,18 @@ def format_transcript(messages: list[dict[str, Any]]) -> str:
             continue
         label = "User" if role == "user" else "Assistant" if role == "assistant" else "System"
         lines.append(f"{label}: {content}")
+    return "\n".join(lines)
+
+
+def extract_user_transcript(messages: list[dict[str, Any]]) -> str:
+    lines: list[str] = []
+    for message in messages:
+        if message.get("role") != "user":
+            continue
+        content = (message.get("content") or "").strip()
+        if not content:
+            continue
+        lines.append(content)
     return "\n".join(lines)
 
 
@@ -205,7 +218,7 @@ async def finalize_diary(
     messages: list[dict[str, Any]],
     thread_id: str,
     search_settings: SearchSettings,
-) -> tuple[str, int, DiaryAnalysis]:
+) -> tuple[str, int, DiaryAnalysis, ProfilingStatus]:
     analysis = await analyze_diary(messages)
     document = build_diary_document(
         messages=messages,
@@ -218,7 +231,9 @@ async def finalize_diary(
     except MiniRagError as exc:
         raise DiaryAnalysisError(f"MiniRAG bulk insert failed: {exc}") from exc
     inserted = int(result.get("inserted", 1))
-    return document["doc_id"], inserted, analysis
+    user_transcript = extract_user_transcript(messages)
+    profiling_status = run_profiling(user_transcript)
+    return document["doc_id"], inserted, analysis, profiling_status
 
 
 def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
