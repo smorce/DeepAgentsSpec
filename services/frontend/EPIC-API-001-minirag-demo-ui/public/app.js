@@ -15,7 +15,11 @@ const SAMPLE_DOCUMENTS = [
     region: "APAC",
     priority: 1,
     created_at: "2025-10-01T08:30:00Z",
-    metadata: { category: "planning", owner_department: "IT Procurement" },
+    metadata: {
+      workspace: CONFIG.workspace,
+      category: "planning",
+      owner_department: "IT Procurement",
+    },
   },
   {
     workspace: CONFIG.workspace,
@@ -27,7 +31,11 @@ const SAMPLE_DOCUMENTS = [
     region: "NA",
     priority: 2,
     created_at: "2025-10-02T09:15:00Z",
-    metadata: { category: "contract", supplier: "Quantum Systems" },
+    metadata: {
+      workspace: CONFIG.workspace,
+      category: "contract",
+      supplier: "Quantum Systems",
+    },
   },
   {
     workspace: CONFIG.workspace,
@@ -39,7 +47,7 @@ const SAMPLE_DOCUMENTS = [
     region: "Global",
     priority: 3,
     created_at: "2025-10-03T11:05:00Z",
-    metadata: { category: "risk", year: 2025 },
+    metadata: { workspace: CONFIG.workspace, category: "risk", year: 2025 },
   },
   {
     workspace: CONFIG.workspace,
@@ -51,7 +59,7 @@ const SAMPLE_DOCUMENTS = [
     region: "Global",
     priority: 1,
     created_at: "2025-10-04T14:20:00Z",
-    metadata: { category: "budget", year: 2026 },
+    metadata: { workspace: CONFIG.workspace, category: "budget", year: 2026 },
   },
   {
     workspace: CONFIG.workspace,
@@ -63,7 +71,7 @@ const SAMPLE_DOCUMENTS = [
     region: "APAC",
     priority: 4,
     created_at: "2025-10-05T09:45:00Z",
-    metadata: { category: "ops", version: "1.0" },
+    metadata: { workspace: CONFIG.workspace, category: "ops", version: "1.0" },
   },
 ];
 
