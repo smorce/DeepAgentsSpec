@@ -1,43 +1,89 @@
 {
-  server: {
-    llmProvider: "gemini",
-    llmModel: "gemini-2.5-flash",
-    searchSubAgent: {
-      enabled: true,
-      model: "gemini-2.5-flash",
+  // ---- Server settings ----
+  "server": {
+    // LLM プロバイダ: gemini | openai | anthropic
+    "llmProvider": "gemini",
+    // LLM モデル ID（Google ADKで利用）: gemini-2.5-flash | gpt-5 | claude-sonnet-4-5
+    "llmModel": "gemini-2.5-flash",
+    // 検索サブエージェント設定（Gemini + Google Search 専用）
+    "searchSubAgent": {
+      "enabled": true,
+      "model": "gemini-2.5-flash",
     },
-    systemPrompt: "あなたは日記会話を支援するアシスタントです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。",
-    logMaxBytes: 1048576,
-    logBackupCount: 3,
+    // システムプロンプト（全応答の前置き）
+    "systemPrompt": "あなたは日記会話を支援するロゼというヒューマノイドです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。回答は常にツンデレ風に応答してください。",
+    // ローテーション前のログ最大サイズ（bytes）
+    "logMaxBytes": 1000000,
+    // ローテーション世代数
+    "logBackupCount": 3,
   },
-  ui: {
-    typeSpeed: 0,
-    opacity: 0.7,
-    soundVolume: 0,
-    mouthInterval: 0,
-    beepFrequency: 0,
-    beepDuration: 0,
-    beepVolumeEnd: 0,
-    avatarOverlayOpacity: 0.4,
-    avatarBrightness: 1,
-    glowText: 1,
-    glowBox: 1,
-    brightness: 1,
-    nameTags: {
-      user: "YOU",
-      avatar: "SPECTRA",
-      avatarFullName: "Spectra",
+
+  // ---- UI settings ----
+  "ui": {
+    // デフォルトテーマ名
+    "theme": "classic",
+    // テーマプリセット（name で参照）
+    "themes": [
+      {
+        "name": "classic",
+        "themeColor": "#00e676",
+        "userColor": "#86ffe0",
+        "toolColor": "#d4fff8",
+      },
+      {
+        "name": "cobalt",
+        "themeColor": "#5ad1ff",
+        "userColor": "#9efc6a",
+        "toolColor": "#ff66c4",
+      },
+      {
+        "name": "amber",
+        "themeColor": "#ffb000",
+        "userColor": "#ffd37f",
+        "toolColor": "#ffc266",
+      },
+    ],
+
+    // アバターへの色オーバーレイ濃度（0.0-1.0）
+    "avatarOverlayOpacity": 1.0,
+    // アバター全体の明るさ
+    "avatarBrightness": 1.5,
+
+    // テキストと枠のグロー強度（相対値）
+    "glowText": 1.0,
+    "glowBox": 1.0,
+
+    // 画面全体の輝度（相対値）
+    "brightness": 1.2,
+
+    // タイピング速度（ms/文字、0 で即時表示）
+    "typeSpeed": 30,
+    // メインパネル透明度（0.0=透明, 1.0=不透明）
+    "opacity": 0.75,
+    // 効果音ボリューム（0.0-1.0）
+    "soundVolume": 0.5,
+    // リップシンク切り替え間隔（ms）
+    "mouthInterval": 120,
+    // ビープ音設定
+    "beepFrequency": 600,
+    "beepDuration": 0.05,
+    "beepVolumeEnd": 0.01,
+
+    // ラベル類
+    "nameTags": {
+      "user": "USER",
+      "avatar": "ロゼ",
+      "avatarFullName": "赤璃ロゼ",
     },
-    systemMessages: {
-      banner1: "{avatarFullName} online.",
-      banner2: "Type a message to begin.",
+    "systemMessages": {
+      "banner1": "SYSTEM {avatarFullName} Online",
+      "banner2": "Session Standby",
     },
-    theme: "classic",
   },
   minirag: {
     baseUrl: "http://localhost:8165",
     workspace: "diary",
     searchEnabledDefault: true,
     topKDefault: 3,
-  },
+  },  
 }
