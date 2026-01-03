@@ -1,3 +1,5 @@
+UI: http://localhost:5113/
+
 - WSL 内で:  
   `curl http://127.0.0.1:1686/healthz`
 
