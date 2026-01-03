@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MiniRAG Demo UI</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <div>
+          <h1>MiniRAG Demo UI</h1>
+          <p class="app__subtitle">登録 → 検索 → 削除を体験する静的チャットUI</p>
+        </div>
+        <div class="app__status" aria-live="polite">
+          <div>
+            <span class="label">Workspace</span>
+            <span class="value" id="workspace-label">demo</span>
+          </div>
+          <div>
+            <span class="label">Registered</span>
+            <span class="value" id="registered-count">0</span>
+          </div>
+          <div>
+            <span class="label">Last action</span>
+            <span class="value" id="last-action">—</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="app__main">
+        <section class="panel panel--chat">
+          <div class="panel__header">
+            <h2>Chat</h2>
+            <p>検索クエリはチャット入力で実行します。</p>
+          </div>
+          <div class="chat__log" id="chat-log" data-testid="chat-log"></div>
+          <form class="chat__input" id="search-form">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="検索クエリを入力してください"
+              autocomplete="off"
+              aria-label="Search query"
+              data-testid="search-input"
+            />
+            <button type="submit" class="primary" data-testid="search-button">検索</button>
+          </form>
+        </section>
+
+        <section class="panel panel--controls">
+          <div class="panel__header">
+            <h2>Controls</h2>
+            <p>登録/削除はボタン操作で実行します。</p>
+          </div>
+          <div class="controls">
+            <button id="register-button" class="primary" data-testid="register-button">
+              サンプルデータ登録
+            </button>
+            <button id="delete-all-button" class="ghost" data-testid="delete-all-button">
+              すべて削除
+            </button>
+            <div class="controls__note">
+              5件のサンプルデータを固定で登録します。削除は個別または一括で行えます。
+            </div>
+          </div>
+
+          <div class="panel__header panel__header--results">
+            <h2>Results</h2>
+            <p>検索結果は上位5件を関連度順で表示します。</p>
+          </div>
+          <div id="results" class="results" data-testid="search-results"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -2,7 +2,8 @@
 # Each session appends a short summary in plain text.
 # Suggested format:
 # YYYY-MM-DDThh:mm:ssZ | agent-id | epic-ids | feature-ids | summary
-2025-01-01T00:00:00Z | initializer-agent | EPIC-SYS-001-FOUNDATION | F-SYS-001 | Repository scaffold created, PLANS.md and initial ExecPlans added.[2026-01-02 02:47Z] spec quality check: FAILED
+2025-01-01T00:00:00Z | initializer-agent | EPIC-SYS-001-FOUNDATION | F-SYS-001 | Repository scaffold created, PLANS.md and initial ExecPlans added.
+[2026-01-02 02:47Z] spec quality check: FAILED
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
 incomplete items:
   - line 8: - [ ] No implementation details (languages, frameworks, APIs)
@@ -56,6 +57,19 @@ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-003/check
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
 [2026-01-02 03:34Z] exec plan updated: EPIC-API-002-minirag (self-contained per PLANS.md)
 [2026-01-02] F-API-002 tasks.md を作成（MiniRAG バックエンド）
+[2026-01-02 04:14Z] spec quality check: PASSED
+target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-01-02 04:14Z] plan quality check: PASSED
+target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-01-02 04:15Z] F-API-003 moved to frontend/EPIC-API-001-minirag-demo-ui (static UI), spec/plan updated, spec+plan gates PASSED
+[2026-01-02 04:34Z] spec quality check: PASSED
+target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-01-02 04:34Z] plan quality check: PASSED
+target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-01-02 04:35Z] tasks generated: F-API-003 (plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/tasks.md)
+[2026-01-02 06:15Z] spec quality check: PASSED
+target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-01-02] F-API-003 validate_spec PASSED after spec/contract alignment updates.
 [2026-01-02 06:18Z] spec quality check: PASSED
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
 [2026-01-02 06:18Z] plan quality check: PASSED
@@ -64,6 +78,7 @@ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/check
 [2026-01-02 06:45Z] spec quality check: PASSED
 target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
 [2026-01-02] F-API-002 spec/tasks のMEDIUM指摘対応（LLM明記/性能・依存障害テスト追加）
+2026-01-02T09:17:44Z | implementation-agent | EPIC-API-001-MINIRAG-DEMO-UI | F-API-003 | Added static MiniRAG demo UI, puppeteer E2E scenario, and updated scripts/README.
 2026-01-02T09:18:43Z | codex | EPIC-API-002-MINIRAG | F-API-002 | api-gateway に MiniRAG API/リポジトリ/スキーマ/テスト/E2E/スクリプトを追加。検証は未実行。
 2026-01-02T12:56:25Z | codex | EPIC-API-002-MINIRAG | F-API-002 | scripts/run_all_unit_tests.sh PASSED (5 tests).
 2026-01-02T14:04:00Z | codex | EPIC-API-002-MINIRAG | F-API-002 | Docker Postgres(AGE/pgvector) 起動、MINIRAG API 起動後に scripts/run_all_e2e_tests.sh PASSED。

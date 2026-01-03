@@ -1,0 +1,7 @@
+service:
+  name: minirag-demo-ui
+  type: static-ui
+
+backend:
+  base_url: http://localhost:8000
+  api_key_header: X-Demo-Api-Key
