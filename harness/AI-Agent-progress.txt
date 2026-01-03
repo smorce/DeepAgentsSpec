@@ -82,3 +82,8 @@ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/check
 2026-01-02T09:18:43Z | codex | EPIC-API-002-MINIRAG | F-API-002 | api-gateway に MiniRAG API/リポジトリ/スキーマ/テスト/E2E/スクリプトを追加。検証は未実行。
 2026-01-02T12:56:25Z | codex | EPIC-API-002-MINIRAG | F-API-002 | scripts/run_all_unit_tests.sh PASSED (5 tests).
 2026-01-02T14:04:00Z | codex | EPIC-API-002-MINIRAG | F-API-002 | Docker Postgres(AGE/pgvector) 起動、MINIRAG API 起動後に scripts/run_all_e2e_tests.sh PASSED。
+2026-01-03T09:20:06Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | avatar-ui 日記/MiniRAG連携の仕様・設計成果物を追加し、アーキテクチャ文書を更新。
+[2026-01-03 09:20Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-01-03 09:20Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md

@@ -27,6 +27,7 @@ Ensure the repository layout, harness, and baseline tooling are defined so futur
 ## Progress
 
 - [ ] (YYYY-MM-DD hh:mmZ) Repository layout with architecture, plans, services, tests, and docs created.
+- [x] (2026-01-03 09:13Z) Architecture docs updated to reflect avatar-ui diary + MiniRAG integration.
 - [ ] (YYYY-MM-DD hh:mmZ) Harness files (`init.sh`, `feature_list.json`, etc.) added and validated.
 - [ ] (YYYY-MM-DD hh:mmZ) Baseline scripts in `scripts/` and service directories show placeholder behavior.
 - [ ] (YYYY-MM-DD hh:mmZ) Verification steps recorded in Validation and Acceptance along with exact commands and outputs.
@@ -54,6 +55,18 @@ Ensure the repository layout, harness, and baseline tooling are defined so futur
   Date/Author:
 
   YYYY-MM-DD / coding-agent
+
+- Decision:
+
+  Document diary structuring and MiniRAG context retrieval as avatar-ui responsibilities, while keeping MiniRAG APIs owned by api-gateway.
+
+  Rationale:
+
+  The new diary workflow introduces cross-service calls without changing ownership of the MiniRAG backend.
+
+  Date/Author:
+
+  2026-01-03 / codex
 
 ## Outcomes & Retrospective
 

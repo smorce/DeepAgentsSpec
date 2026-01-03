@@ -1,0 +1,14 @@
+service:
+  name: avatar-ui
+  server_host: 127.0.0.1
+  server_port: 1686
+  client_port: 5113
+  app_env: dev
+
+minirag:
+  base_url: http://localhost:8165
+  workspace: diary
+  search_enabled_default: true
+  top_k_default: 3
+
+# 実際の起動は .env と settings.json5 を利用してください。

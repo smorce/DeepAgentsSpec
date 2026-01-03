@@ -6,4 +6,6 @@ that support the DeepAgentsSpec microservices. The avatar UI runs as a client
 application (Electron/Vite) alongside its local AG-UI server, which can also be
 deployed as a separate service if needed. The MiniRAG demo UI is a static site
 served by a minimal HTTP server and communicates with the API gateway.
+The avatar UI server additionally calls the MiniRAG API to register diary entries
+and to retrieve past diary context when Gemini requests it.
 

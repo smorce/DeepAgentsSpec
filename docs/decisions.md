@@ -41,3 +41,11 @@ Each entry should follow this format:
   Summary: Require MINIRAG_DB_DSN for persistent storage and allow in-memory only when explicitly enabled.
   Details: See ExecPlan at:
     - plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-002
+  Date: 2026-01-03
+  Scope: service:avatar-ui
+  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+  Summary: Finalize diary conversations via explicit UI action and register structured entries to MiniRAG with fixed workspace "diary".
+  Details: See ExecPlan at:
+    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
