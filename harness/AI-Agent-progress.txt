@@ -92,3 +92,4 @@ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR
 [2026-01-03 11:24Z] plan quality check: PASSED
 target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
 2026-01-03T11:25:50Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | tasks.md を生成（avatar-ui 日記構造化 + MiniRAG 連携）。
+2026-01-03T11:52:13Z | implementation-agent | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | Implemented MiniRAG diary finalize/search endpoints, UI controls, and settings defaults for avatar-ui.

@@ -36,6 +36,11 @@ export interface AppConfig {
   server: {
     url: string;
   };
+  minirag: {
+    workspace: string;
+    searchEnabledDefault: boolean;
+    topKDefault: number;
+  };
   agent: {
     url: string;
     agentId: string;
@@ -49,6 +54,11 @@ export interface AppConfig {
 const defaults: AppConfig = {
   server: {
     url: "", // プロキシ使用 (/agui/config)
+  },
+  minirag: {
+    workspace: "diary",
+    searchEnabledDefault: true,
+    topKDefault: 3,
   },
   agent: {
     url: "",
@@ -104,6 +114,7 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
     // 新形式: { ui, clientLogVerbose, agent }, 旧形式: uiのみ
     const ui = serverConfig.ui ?? serverConfig;
     const agent = serverConfig.agent ?? defaults.agent;
+    const minirag = serverConfig.minirag ?? defaults.minirag;
     config.ui = ui;
     const agentUrl = agent.url ?? `${base}/agui`;
     config.agent = {
@@ -111,10 +122,16 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
       agentId: agent.agentId ?? "",
       threadId: agent.threadId ?? "",
     };
+    config.minirag = {
+      workspace: minirag.workspace ?? defaults.minirag.workspace,
+      searchEnabledDefault: Boolean(minirag.searchEnabledDefault ?? defaults.minirag.searchEnabledDefault),
+      topKDefault: Number(minirag.topKDefault ?? defaults.minirag.topKDefault),
+    };
     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
 
 	    console.info("Config loaded from server:", {
 	      ui: config.ui,
+	      minirag: config.minirag,
 	      agent: config.agent,
 	      clientLogVerbose: config.clientLogVerbose,
 	    });

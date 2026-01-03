@@ -1,0 +1,43 @@
+{
+  server: {
+    llmProvider: "gemini",
+    llmModel: "gemini-2.5-flash",
+    searchSubAgent: {
+      enabled: true,
+      model: "gemini-2.5-flash",
+    },
+    systemPrompt: "あなたは日記会話を支援するアシスタントです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。",
+    logMaxBytes: 1048576,
+    logBackupCount: 3,
+  },
+  ui: {
+    typeSpeed: 0,
+    opacity: 0.7,
+    soundVolume: 0,
+    mouthInterval: 0,
+    beepFrequency: 0,
+    beepDuration: 0,
+    beepVolumeEnd: 0,
+    avatarOverlayOpacity: 0.4,
+    avatarBrightness: 1,
+    glowText: 1,
+    glowBox: 1,
+    brightness: 1,
+    nameTags: {
+      user: "YOU",
+      avatar: "SPECTRA",
+      avatarFullName: "Spectra",
+    },
+    systemMessages: {
+      banner1: "{avatarFullName} online.",
+      banner2: "Type a message to begin.",
+    },
+    theme: "classic",
+  },
+  minirag: {
+    baseUrl: "http://localhost:8165",
+    workspace: "diary",
+    searchEnabledDefault: true,
+    topKDefault: 3,
+  },
+}

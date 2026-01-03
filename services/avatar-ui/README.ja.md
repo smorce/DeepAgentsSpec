@@ -35,6 +35,7 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 - 会話確定ボタンを押すと、Gemini が会話内容を分析し、重要度・サマリー・記憶を抽出します。
 - 抽出結果は MiniRAG に構造化データとして登録されます。
 - 検索トグル ON のときのみ、Gemini が MiniRAG 検索で過去日記を参照します。
+- top_k と検索トグルの初期値は `settings.json5` の `minirag` セクションで調整できます。
 
 ## クイックスタート
 
@@ -210,6 +211,19 @@ cp settings.default.json5 settings.json5
 ```
 
 検索サブエージェントは Gemini API を使用するため、利用には `GOOGLE_API_KEY` の設定が必要です。
+
+### 日記 + MiniRAG 設定
+
+`settings.json5` の `minirag` セクションで、MiniRAG の接続先と UI のデフォルト値を設定できます。
+
+```json5
+minirag: {
+  baseUrl: "http://localhost:8165",
+  workspace: "diary",
+  searchEnabledDefault: true,
+  topKDefault: 3,
+}
+```
 
 ### カスタマイズ一覧
 

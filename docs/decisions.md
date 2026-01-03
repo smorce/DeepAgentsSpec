@@ -49,3 +49,11 @@ Each entry should follow this format:
   Summary: Finalize diary conversations via explicit UI action and register structured entries to MiniRAG with fixed workspace "diary".
   Details: See ExecPlan at:
     - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-003
+  Date: 2026-01-03
+  Scope: service:avatar-ui
+  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+  Summary: Persist search toggle/top_k per thread on the server and distribute defaults via /agui/config for tool + UI alignment.
+  Details: See ExecPlan at:
+    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)

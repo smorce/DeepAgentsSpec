@@ -14,14 +14,16 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
 
 - F-AVATAR-001: 日記会話の構造化登録とMiniRAG検索連携
   - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md`
-  - Status: planned
+  - Status: implemented
 
 ## Progress
 
 - [x] (2026-01-03 09:13Z) Epic の初期 ExecPlan と設計ドキュメント骨子を作成した。
 - [x] (2026-01-03 09:20Z) Spec / Impl Plan / Research / Data Model / Contracts / Quickstart を整備し、品質ゲートを PASS にした。
 - [x] (2026-01-03 09:20Z) avatar-ui のサービス設計ドキュメントを更新し、計画との差分を解消した。
-- [ ] (2026-01-03 09:13Z) 実装準備としてタスク分解を完了し、Jules Issue 作成へ移行する。
+- [x] (2026-01-03 09:20Z) 実装準備としてタスク分解を完了し、Jules Issue 作成へ移行した。
+- [x] (2026-01-03 12:20Z) MiniRAG クライアントと日記確定 API を実装し、UI に検索トグルと会話確定を追加した。
+- [x] (2026-01-03 12:20Z) settings.json5 と README を更新し、日記ワークフローと設定項目を反映した。
 
 ## Surprises & Discoveries
 
@@ -49,9 +51,13 @@ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATA
   Rationale: 個人日記用途で運用が単純化でき、検索フィルタも明確になるため。
   Date/Author: 2026-01-03 / codex
 
+- Decision: 検索トグルと top_k 設定は server 側でスレッドごとに保持し、UI 初期値は `/agui/config` から配布する。
+  Rationale: UI と検索ツールが同じ設定ソースを参照でき、Gemini のツール呼び出しと UX の整合性を保てるため。
+  Date/Author: 2026-01-03 / codex
+
 ## Outcomes & Retrospective
 
-この時点では計画のみ作成済み。実装は未着手。
+UI への検索トグル・top_k・会話確定ボタン追加と、FastAPI 側の MiniRAG 連携 API を実装した。search_diary ツール経由で Gemini が過去日記検索を行えるようになり、会話確定の結果が UI に表示される。
 
 ## Context and Orientation
 

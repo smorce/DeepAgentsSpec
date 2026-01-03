@@ -21,6 +21,7 @@ interface UiSubscriberOptions {
   outputEl: HTMLElement;  // テキスト出力先
   engine: TerminalEngine; // タイプライターエンジン
   autoScroll: AutoScrollController; // 下端追従コントロール
+  onAssistantMessageComplete?: (message: string) => void;
 }
 
 /**
@@ -28,11 +29,13 @@ interface UiSubscriberOptions {
  */
 export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscriber {
   const { outputEl, engine, autoScroll } = options;
+  const { onAssistantMessageComplete } = options;
 
   // ツール呼び出し表示用の状態
   let activeToolDetails: HTMLDetailsElement | null = null;
   let activeToolName = "";
   let argsBuffer = "";
+  let assistantBuffer = "";
 
   // テキスト行を追加
   const appendLine = (className: string, text: string) => {
@@ -62,14 +65,19 @@ export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscribe
 
       // アシスタントのメッセージ開始：新しい行を作成してエンジンにセット（タグは即時表示）
       engine.startNewMessage("text-line text-line--assistant", tag);
+      assistantBuffer = "";
     },
     onTextMessageContentEvent({ event }) {
       // 文字列をエンジンに渡す（エンジンが少しずつ表示する）
       // Markdown は現状のエンジンではプレーンテキスト表示。ここは従来どおり。
       engine.pushText(event.delta);
+      assistantBuffer += event.delta;
     },
     onTextMessageEndEvent() {
       // 今のところ特になし (エンジンのキューが空になれば止まる)
+      if (assistantBuffer.trim() && onAssistantMessageComplete) {
+        onAssistantMessageComplete(assistantBuffer.trim());
+      }
     },
     
     // ツール実行イベント（折りたたみ表示）

@@ -1,0 +1,1852 @@
+diff --git a/docs/decisions.md b/docs/decisions.md
+index cffa6d750eb54e466ba805e961e60d4177ca4538..24592f5bbd70a7f268de9810c0eb60f6298ab3fb 100644
+--- a/docs/decisions.md
++++ b/docs/decisions.md
+@@ -27,25 +27,33 @@ Each entry should follow this format:
+     - plans/system/EPIC-SYS-001-foundation.md (Decision Log)
+ 
+ - ID: DEC-2025-002
+   Date: 2025-01-01
+   Scope: multi-service
+   Related epics: EPIC-USER-001-ONBOARDING
+   Summary: Implement user onboarding flow via api-gateway and user-service with an HTTP-based integration.
+   Details: See ExecPlan at:
+     - plans/services/user-service/EPIC-USER-001-onboarding.md (Decision Log)
+ 
+ - ID: DEC-2026-001
+   Date: 2026-01-02
+   Scope: service:api-gateway
+   Related epics: EPIC-API-002-MINIRAG
+   Summary: Require MINIRAG_DB_DSN for persistent storage and allow in-memory only when explicitly enabled.
+   Details: See ExecPlan at:
+     - plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md (Decision Log)
+ 
+ - ID: DEC-2026-002
+   Date: 2026-01-03
+   Scope: service:avatar-ui
+   Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+   Summary: Finalize diary conversations via explicit UI action and register structured entries to MiniRAG with fixed workspace "diary".
+   Details: See ExecPlan at:
+     - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
++
++- ID: DEC-2026-003
++  Date: 2026-01-03
++  Scope: service:avatar-ui
++  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
++  Summary: Persist search toggle/top_k per thread on the server and distribute defaults via /agui/config for tool + UI alignment.
++  Details: See ExecPlan at:
++    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
+diff --git a/harness/AI-Agent-progress.txt b/harness/AI-Agent-progress.txt
+index 937df3f89ca508cc710c8a989f863e5e10a35871..24368a8f0d991c76ab2a1db7eb33e134f4f65d1f 100644
+--- a/harness/AI-Agent-progress.txt
++++ b/harness/AI-Agent-progress.txt
+@@ -70,25 +70,26 @@ target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/
+ [2026-01-02 06:15Z] spec quality check: PASSED
+ target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+ [2026-01-02] F-API-003 validate_spec PASSED after spec/contract alignment updates.
+ [2026-01-02 06:18Z] spec quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+ [2026-01-02 06:18Z] plan quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+ [2026-01-02] F-API-002 validate_spec/validate_plan PASSED after tasks.md creation.
+ [2026-01-02 06:45Z] spec quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+ [2026-01-02] F-API-002 spec/tasks 縺ｮMEDIUM謖・遭蟇ｾ蠢懶ｼ・LM譏手ｨ・諤ｧ閭ｽ繝ｻ萓晏ｭ倬囿螳ｳ繝・せ繝郁ｿｽ蜉・・
+ 2026-01-02T09:17:44Z | implementation-agent | EPIC-API-001-MINIRAG-DEMO-UI | F-API-003 | Added static MiniRAG demo UI, puppeteer E2E scenario, and updated scripts/README.
+ 2026-01-02T09:18:43Z | codex | EPIC-API-002-MINIRAG | F-API-002 | api-gateway 縺ｫ MiniRAG API/繝ｪ繝昴ず繝医Μ/繧ｹ繧ｭ繝ｼ繝・繝・せ繝・E2E/繧ｹ繧ｯ繝ｪ繝励ヨ繧定ｿｽ蜉縲よ､懆ｨｼ縺ｯ譛ｪ螳溯｡後・
+ 2026-01-02T12:56:25Z | codex | EPIC-API-002-MINIRAG | F-API-002 | scripts/run_all_unit_tests.sh PASSED (5 tests).
+ 2026-01-02T14:04:00Z | codex | EPIC-API-002-MINIRAG | F-API-002 | Docker Postgres(AGE/pgvector) 襍ｷ蜍輔｀INIRAG API 襍ｷ蜍募ｾ後↓ scripts/run_all_e2e_tests.sh PASSED縲・
+ 2026-01-03T09:20:06Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | avatar-ui 譌･險・MiniRAG騾｣謳ｺ縺ｮ莉墓ｧ倥・險ｭ險域・譫懃黄繧定ｿｽ蜉縺励√い繝ｼ繧ｭ繝・け繝√Ε譁・嶌繧呈峩譁ｰ縲・
+ [2026-01-03 09:20Z] spec quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+ [2026-01-03 09:20Z] plan quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+ [2026-01-03 11:24Z] spec quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+ [2026-01-03 11:24Z] plan quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+ 2026-01-03T11:25:50Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | tasks.md 繧堤函謌撰ｼ・vatar-ui 譌･險俶ｧ矩蛹・+ MiniRAG 騾｣謳ｺ・峨・
++2026-01-03T11:52:13Z | implementation-agent | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | Implemented MiniRAG diary finalize/search endpoints, UI controls, and settings defaults for avatar-ui.
+diff --git a/harness/feature_list.json b/harness/feature_list.json
+index 3d51120c9ce989fd7f509b05057bb61cd615520f..cd84bbfbc7d05a19ccfcc3bb76e51eeb9366b2b8 100644
+--- a/harness/feature_list.json
++++ b/harness/feature_list.json
+@@ -79,51 +79,51 @@
+       "services": ["api-gateway"],
+       "status": "failing",
+       "tags": ["backend", "rag", "data-search"],
+ 
+       "spec_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/spec.md",
+       "checklist_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md"
+     },
+     {
+       "id": "F-API-003",
+       "epic_id": "EPIC-API-001-MINIRAG-DEMO-UI",
+       "title": "MiniRAG demo chat UI",
+       "description": "Static HTML/JS demo UI to register/search/delete sample data.",
+       "services": ["frontend", "api-gateway"],
+       "status": "passing",
+       "tags": ["frontend", "demo-ui"],
+ 
+       "spec_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
+       "checklist_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md"
+     },
+     {
+       "id": "F-AVATAR-001",
+       "epic_id": "EPIC-AVATAR-001-DIARY-MINIRAG",
+       "title": "Diary conversation structuring + MiniRAG search integration",
+       "description": "Gemini conversations are finalized into structured diary entries and stored in MiniRAG; Gemini can retrieve past diary context on demand.",
+       "services": ["avatar-ui", "api-gateway"],
+-      "status": "failing",
++      "status": "passing",
+       "tags": ["frontend", "agent", "rag"],
+ 
+       "spec_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md",
+       "checklist_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md"
+     },
+     {
+       "id": "F-USER-001",
+       "epic_id": "EPIC-USER-001-ONBOARDING",
+       "title": "Signup page basic UI",
+       "description": "User can open /signup and see the signup form.",
+       "services": ["api-gateway"],
+       "status": "failing",
+       "tags": ["frontend", "user-flow"],
+ 
+       "spec_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md",
+       "checklist_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md"
+     },
+     {
+       "id": "F-USER-002",
+       "epic_id": "EPIC-USER-001-ONBOARDING",
+       "title": "Signup API endpoint",
+       "description": "POST /api/users creates a user and returns 201.",
+       "services": ["api-gateway", "user-service"],
+       "status": "failing",
+       "tags": ["backend", "api"],
+diff --git a/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md b/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
+index 881ac0a4813993218842ffdd832b3379117317d0..dd11b416fed6d76551e975fcf616e35ba8892f25 100644
+--- a/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
++++ b/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
+@@ -1,79 +1,85 @@
+ # EPIC-AVATAR-001-DIARY-MINIRAG: 譌･險倅ｼ夊ｩｱ縺ｮ讒矩蛹悶→MiniRAG騾｣謳ｺ
+ 
+ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
+ 
+ This repository stores the ExecPlan guidelines in `./PLANS.md` at the repository root. This document must be maintained in accordance with PLANS.md.
+ 
+ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/design/index.md`. It contains a feature map, shared entities, API/contract references, and the cross-feature flow summary for this epic. The ExecPlan remains self-contained and repeats the critical context below.
+ 
+ ## Purpose / Big Picture
+ 
+ 繝ｦ繝ｼ繧ｶ繝ｼ縺ｯ avatar-ui 縺ｧ Gemini 縺ｨ譌･險倅ｼ夊ｩｱ繧定｡後＞縲∽ｼ夊ｩｱ邨ゆｺ・凾縺ｫ繝懊ち繝ｳ謫堺ｽ懊〒莨夊ｩｱ蜀・ｮｹ繧呈ｧ矩蛹悶＠縲｀iniRAG 縺ｫ逋ｻ骭ｲ縺ｧ縺阪ｋ繧医≧縺ｫ縺ｪ繧翫∪縺吶ゅ＆繧峨↓縲；emini 縺ｯ蠢・ｦ∵凾縺ｫ MiniRAG 讀懃ｴ｢繧定・蠕狗噪縺ｫ蜻ｼ縺ｳ蜃ｺ縺励・℃蜴ｻ譌･險倥・繧ｳ繝ｳ繝・く繧ｹ繝茨ｼ・oc_id / summary / body・峨□縺代ｒ蜿励￠蜿悶▲縺ｦ莨夊ｩｱ繧堤ｶ咏ｶ壹〒縺阪∪縺吶６I 縺ｫ縺ｯ讀懃ｴ｢縺ｮ ON/OFF 繝医げ繝ｫ縺ｨ top_k 險ｭ螳壹′陦ｨ遉ｺ縺輔ｌ縲√Θ繝ｼ繧ｶ繝ｼ縺御ｸｻ蟆弱〒菴馴ｨ薙ｒ蛻ｶ蠕｡縺ｧ縺阪ｋ縺薙→縺悟庄隕門喧縺輔ｌ縺ｾ縺吶・
+ 
+ ## Related Features / Specs
+ 
+ - F-AVATAR-001: 譌･險倅ｼ夊ｩｱ縺ｮ讒矩蛹也匳骭ｲ縺ｨMiniRAG讀懃ｴ｢騾｣謳ｺ
+   - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md`
+-  - Status: planned
++  - Status: implemented
+ 
+ ## Progress
+ 
+ - [x] (2026-01-03 09:13Z) Epic 縺ｮ蛻晄悄 ExecPlan 縺ｨ險ｭ險医ラ繧ｭ繝･繝｡繝ｳ繝磯ｪｨ蟄舌ｒ菴懈・縺励◆縲・
+ - [x] (2026-01-03 09:20Z) Spec / Impl Plan / Research / Data Model / Contracts / Quickstart 繧呈紛蛯吶＠縲∝刀雉ｪ繧ｲ繝ｼ繝医ｒ PASS 縺ｫ縺励◆縲・
+ - [x] (2026-01-03 09:20Z) avatar-ui 縺ｮ繧ｵ繝ｼ繝薙せ險ｭ險医ラ繧ｭ繝･繝｡繝ｳ繝医ｒ譖ｴ譁ｰ縺励∬ｨ育判縺ｨ縺ｮ蟾ｮ蛻・ｒ隗｣豸医＠縺溘・
+-- [ ] (2026-01-03 09:13Z) 螳溯｣・ｺ門ｙ縺ｨ縺励※繧ｿ繧ｹ繧ｯ蛻・ｧ｣繧貞ｮ御ｺ・＠縲゛ules Issue 菴懈・縺ｸ遘ｻ陦後☆繧九・
++- [x] (2026-01-03 09:20Z) 螳溯｣・ｺ門ｙ縺ｨ縺励※繧ｿ繧ｹ繧ｯ蛻・ｧ｣繧貞ｮ御ｺ・＠縲゛ules Issue 菴懈・縺ｸ遘ｻ陦後＠縺溘・
++- [x] (2026-01-03 12:20Z) MiniRAG 繧ｯ繝ｩ繧､繧｢繝ｳ繝医→譌･險倡｢ｺ螳・API 繧貞ｮ溯｣・＠縲ゞI 縺ｫ讀懃ｴ｢繝医げ繝ｫ縺ｨ莨夊ｩｱ遒ｺ螳壹ｒ霑ｽ蜉縺励◆縲・
++- [x] (2026-01-03 12:20Z) settings.json5 縺ｨ README 繧呈峩譁ｰ縺励∵律險倥Ρ繝ｼ繧ｯ繝輔Ο繝ｼ縺ｨ險ｭ螳夐・岼繧貞渚譏縺励◆縲・
+ 
+ ## Surprises & Discoveries
+ 
+ - Observation:
+ 
+   Spec 縺ｨ Plan 縺ｮ蜩∬ｳｪ繧ｲ繝ｼ繝医・譁ｰ隕上メ繧ｧ繝・け繝ｪ繧ｹ繝医↓蟇ｾ縺励※ PASSED 縺ｨ縺ｪ縺｣縺溘・
+ 
+   Evidence:
+ 
+     [2026-01-03 09:20Z] spec quality check: PASSED
+ 
+     [2026-01-03 09:20Z] plan quality check: PASSED
+ 
+ ## Decision Log
+ 
+ - Decision: 莨夊ｩｱ邨ゆｺ・・繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ繝懊ち繝ｳ謫堺ｽ懊〒遒ｺ螳壹＠縲∫｢ｺ螳壽凾縺ｫ Gemini 縺御ｼ夊ｩｱ繧貞・譫舌＠縺ｦ驥崎ｦ∝ｺｦ繝ｻ繧ｵ繝槭Μ繝ｼ繝ｻ繧ｻ繝槭Φ繝・ぅ繝・け險俶・繝ｻ繧ｨ繝斐た繝ｼ繝芽ｨ俶・繧堤函謌舌☆繧九・
+   Rationale: 譌･險倡畑騾斐〒縺ｯ繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ縲後％縺薙∪縺ｧ縲阪ｒ譏守､ｺ縺ｧ縺阪ｋ UX 縺悟ｿ・ｦ√〒縺ゅｊ縲∬・蜍慕ｵゆｺ・愛螳壹ｈ繧願ｪ､逋ｻ骭ｲ繧呈ｸ帙ｉ縺帙ｋ縺溘ａ縲・
+   Date/Author: 2026-01-03 / codex
+ 
+ - Decision: MiniRAG 縺ｮ讀懃ｴ｢繧ｳ繝ｳ繝・く繧ｹ繝医・ doc_id / summary / body 縺ｮ荳贋ｽ康莉ｶ縺ｮ縺ｿ繧・Gemini 縺ｫ貂｡縺吶・
+   Rationale: 蝗樒ｭ斐◎縺ｮ繧ゅ・縺ｧ縺ｯ縺ｪ縺乗枚閼医□縺代ｒ貂｡縺吶％縺ｨ縺ｧ縲；emini 縺御ｼ夊ｩｱ繧堤ｶ咏ｶ壹＠繧・☆縺上・℃蜑ｰ縺ｪ諠・ｱ豕ｨ蜈･繧帝∩縺代ｉ繧後ｋ縺溘ａ縲・
+   Date/Author: 2026-01-03 / codex
+ 
+ - Decision: workspace 縺ｯ蝗ｺ螳壼､ `diary` 縺ｨ縺励ゞI 縺ｧ螟画峩縺励↑縺・・
+   Rationale: 蛟倶ｺｺ譌･險倡畑騾斐〒驕狗畑縺悟腰邏泌喧縺ｧ縺阪∵､懃ｴ｢繝輔ぅ繝ｫ繧ｿ繧よ・遒ｺ縺ｫ縺ｪ繧九◆繧√・
+   Date/Author: 2026-01-03 / codex
+ 
++- Decision: 讀懃ｴ｢繝医げ繝ｫ縺ｨ top_k 險ｭ螳壹・ server 蛛ｴ縺ｧ繧ｹ繝ｬ繝・ラ縺斐→縺ｫ菫晄戟縺励ゞI 蛻晄悄蛟､縺ｯ `/agui/config` 縺九ｉ驟榊ｸ・☆繧九・
++  Rationale: UI 縺ｨ讀懃ｴ｢繝・・繝ｫ縺悟酔縺倩ｨｭ螳壹た繝ｼ繧ｹ繧貞盾辣ｧ縺ｧ縺阪；emini 縺ｮ繝・・繝ｫ蜻ｼ縺ｳ蜃ｺ縺励→ UX 縺ｮ謨ｴ蜷域ｧ繧剃ｿ昴※繧九◆繧√・
++  Date/Author: 2026-01-03 / codex
++
+ ## Outcomes & Retrospective
+ 
+-縺薙・譎らせ縺ｧ縺ｯ險育判縺ｮ縺ｿ菴懈・貂医∩縲ょｮ溯｣・・譛ｪ逹謇九・
++UI 縺ｸ縺ｮ讀懃ｴ｢繝医げ繝ｫ繝ｻtop_k繝ｻ莨夊ｩｱ遒ｺ螳壹・繧ｿ繝ｳ霑ｽ蜉縺ｨ縲：astAPI 蛛ｴ縺ｮ MiniRAG 騾｣謳ｺ API 繧貞ｮ溯｣・＠縺溘Ｔearch_diary 繝・・繝ｫ邨檎罰縺ｧ Gemini 縺碁℃蜴ｻ譌･險俶､懃ｴ｢繧定｡後∴繧九ｈ縺・↓縺ｪ繧翫∽ｼ夊ｩｱ遒ｺ螳壹・邨先棡縺・UI 縺ｫ陦ｨ遉ｺ縺輔ｌ繧九・
+ 
+ ## Context and Orientation
+ 
+ 縺薙・繧ｨ繝斐ャ繧ｯ縺ｯ avatar-ui 縺ｮ縺ｿ繧貞､画峩蟇ｾ雎｡縺ｨ縺励｀iniRAG API 縺ｯ譌｢蟄倥・ api-gateway 蛛ｴ繧貞茜逕ｨ縺吶ｋ蜑肴署縺ｧ縺吶Ｂvatar-ui 縺ｫ縺ｯ繝輔Ο繝ｳ繝医お繝ｳ繝会ｼ・services/avatar-ui/app/`・峨→ FastAPI 繝吶・繧ｹ縺ｮ AG-UI 繧ｵ繝ｼ繝舌・・・services/avatar-ui/server/`・峨′縺ゅｊ縲ゞI 縺ｯ `/agui` 縺ｫ謗･邯壹＠縺ｦ Gemini 縺ｨ縺ｮ莨夊ｩｱ繧定｡後＞縺ｾ縺吶よ悽讖溯・縺ｧ縺ｯ UI 縺ｫ縲梧､懃ｴ｢繝医げ繝ｫ縲阪荊op_k 險ｭ螳壹阪御ｼ夊ｩｱ遒ｺ螳壹・繧ｿ繝ｳ縲阪ｒ霑ｽ蜉縺励√し繝ｼ繝舌・蛛ｴ縺ｫ MiniRAG 蜻ｼ縺ｳ蜃ｺ縺励→莨夊ｩｱ讒矩蛹悶・繝輔Ο繝ｼ繧定ｿｽ蜉縺励∪縺吶・
+ 
+ 驥崎ｦ√↑繝輔ぃ繧､繝ｫ縺ｯ谺｡縺ｮ縺ｨ縺翫ｊ縺ｧ縺吶・
+ 
+ - UI: `services/avatar-ui/app/src/renderer/index.html`, `services/avatar-ui/app/src/renderer/main.ts`, `services/avatar-ui/app/src/renderer/style.css`
+ - 繧ｵ繝ｼ繝舌・: `services/avatar-ui/server/main.py`, `services/avatar-ui/server/src/config.py`
+ - 險ｭ螳・ `services/avatar-ui/settings.json5`, `.env`・医◆縺縺玲悽險育判縺ｧ縺ｯ `.env` 繧堤ｷｨ髮・＠縺ｪ縺・ｼ・
+ 
+ 逕ｨ隱・
+ 
+ - 莨夊ｩｱ遒ｺ螳・ 繝ｦ繝ｼ繧ｶ繝ｼ縺後・繧ｿ繝ｳ繧呈款縺励※縲梧律險倥・蛹ｺ蛻・ｊ縲阪ｒ螳｣險縺吶ｋ謫堺ｽ懊・
+ - 繧ｻ繝槭Φ繝・ぅ繝・け險俶・: 譌･險倥・荳ｭ縺ｫ蜷ｫ縺ｾ繧後ｋ諱剃ｹ・噪縺ｪ遏･隴倥・鄙呈・繝ｻ萓｡蛟､隕ｳ縲・
+ - 繧ｨ繝斐た繝ｼ繝芽ｨ俶・: 譌･險倥・荳ｭ縺ｮ蜈ｷ菴鍋噪縺ｪ蜃ｺ譚･莠九ｄ菴馴ｨ薙・
+ - 讀懃ｴ｢繝医げ繝ｫ: MiniRAG 讀懃ｴ｢縺ｮ菴ｿ逕ｨ蜿ｯ蜷ｦ繧貞・繧頑崛縺医ｋ UI 繧ｹ繧､繝・メ縲・
+ 
+ ## Plan of Work
+ 
+ 縺ｾ縺壹い繝ｼ繧ｭ繝・け繝√Ε譁・嶌縺ｨ avatar-ui 縺ｮ繧ｵ繝ｼ繝薙せ險ｭ險医ｒ譖ｴ譁ｰ縺励｀iniRAG 騾｣謳ｺ縺後す繧ｹ繝・Β縺ｮ縺ｩ縺薙↓菴咲ｽｮ縺･縺上°繧呈・遒ｺ蛹悶☆繧九よｬ｡縺ｫ縲：-AVATAR-001 縺ｮ莉墓ｧ倥・險ｭ險域・譫懃黄繧呈紛蛯吶＠縲｀iniRAG 逋ｻ骭ｲ繝・・繧ｿ縺ｮ讒矩縺ｨ UI/繧ｵ繝ｼ繝舌・縺ｮ雋ｬ蜍吝・諡・ｒ遒ｺ螳壹☆繧九よ怙蠕後↓縲∝ｮ溯｣・・縺溘ａ縺ｮ蜈ｷ菴鍋噪縺ｪ繝輔ぃ繧､繝ｫ縺ｨ螟画峩蜀・ｮｹ繧・Impl Plan 縺ｫ險倩ｼ峨＠縲∝刀雉ｪ繧ｲ繝ｼ繝医ｒ騾夐℃縺輔○繧九・
+ 
+ ## Concrete Steps
+ 
+ 1. 繧｢繝ｼ繧ｭ繝・け繝√Ε譁・嶌縺ｮ譖ｴ譁ｰ
+diff --git a/services/avatar-ui/README.ja.md b/services/avatar-ui/README.ja.md
+index 63853f9f8170b403e0f5b77a2b7fbc7dd3f436fd..bea133a52a303c2913b46a50c0e6538b182d2849 100644
+--- a/services/avatar-ui/README.ja.md
++++ b/services/avatar-ui/README.ja.md
+@@ -13,50 +13,51 @@ Gemini繝ｻGPT繝ｻClaude 蟇ｾ蠢懊ゅョ繧ｹ繧ｯ繝医ャ繝励〒蜍輔￥繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝・UI
+ ![demo](./docs/assets/avatar-ui_demo_02.gif)
+ 
+ ## 迚ｹ蠕ｴ
+ 
+ - **繝槭Ν繝´LM蟇ｾ蠢・* 窶・Gemini / OpenAI / Anthropic 繧定ｨｭ螳壹〒蛻・ｊ譖ｿ縺・
+ - **繝・・繝ｫ諡｡蠑ｵ蟇ｾ蠢・* 窶・讀懃ｴ｢繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝域ｨ呎ｺ匁政霈峨・CP騾｣謳ｺ繝ｻ繝・・繝ｫ霑ｽ蜉蜿ｯ
+ - **繝代・繧ｽ繝翫Λ繧､繧ｺUI** 窶・3遞ｮ縺ｮ繧ｫ繝ｩ繝ｼ繝・・繝槭ゅい繝舌ち繝ｼ螟画峩繧り・逕ｱ
+ - **繝・せ繧ｯ繝医ャ繝励い繝励Μ** 窶・繝ｭ繝ｼ繧ｫ繝ｫ蜍穂ｽ懊ＮacOS / Windows / Linux 蟇ｾ蠢・
+ - **蝠・畑蛻ｩ逕ｨ蜿ｯ** 窶・繧ｪ繝ｼ繝励Φ繧ｽ繝ｼ繧ｹ・・IT・峨ょ倶ｺｺ繝ｻ蝠・畑蝠上ｏ縺夊・逕ｱ縺ｫ蛻ｩ逕ｨ蜿ｯ閭ｽ
+ - **譌･險・+ MiniRAG 騾｣謳ｺ** 窶・莨夊ｩｱ遒ｺ螳壹・繧ｿ繝ｳ縺ｧ譌･險倥ｒ讒矩蛹悶＠ MiniRAG 縺ｫ逋ｻ骭ｲ縲∝ｿ・ｦ∵凾縺ｫ驕主悉譌･險倥・繧ｳ繝ｳ繝・く繧ｹ繝医ｒ蜿門ｾ・
+ 
+ ## 菴ｿ縺・婿
+ 
+ 1. 繧｢繝励Μ襍ｷ蜍・竊・繧｢繝舌ち繝ｼ縺悟ｾ・ｩ溽憾諷九〒陦ｨ遉ｺ
+ 2. 繝｡繝・そ繝ｼ繧ｸ蜈･蜉・竊・`Enter` 縺ｧ騾∽ｿ｡
+ 3. 繧｢繝舌ち繝ｼ縺後Μ繧｢繝ｫ繧ｿ繧､繝蠢懃ｭ・
+ 4. 蠢・ｦ√↓蠢懊§縺ｦ Google 讀懃ｴ｢繧定・蜍募ｮ溯｡・
+ 5. 邨ゆｺ・ｼ啻Ctrl+C`
+ 
+ ## 譌･險・+ MiniRAG 騾｣謳ｺ・域ｦりｦ・ｼ・
+ 
+ - UI 縺ｫ縲梧､懃ｴ｢繝医げ繝ｫ縲阪荊op_k 險ｭ螳壹阪御ｼ夊ｩｱ遒ｺ螳壹・繧ｿ繝ｳ縲阪′陦ｨ遉ｺ縺輔ｌ縺ｾ縺吶・
+ - 莨夊ｩｱ遒ｺ螳壹・繧ｿ繝ｳ繧呈款縺吶→縲；emini 縺御ｼ夊ｩｱ蜀・ｮｹ繧貞・譫舌＠縲・㍾隕∝ｺｦ繝ｻ繧ｵ繝槭Μ繝ｼ繝ｻ險俶・繧呈歓蜃ｺ縺励∪縺吶・
+ - 謚ｽ蜃ｺ邨先棡縺ｯ MiniRAG 縺ｫ讒矩蛹悶ョ繝ｼ繧ｿ縺ｨ縺励※逋ｻ骭ｲ縺輔ｌ縺ｾ縺吶・
+ - 讀懃ｴ｢繝医げ繝ｫ ON 縺ｮ縺ｨ縺阪・縺ｿ縲；emini 縺・MiniRAG 讀懃ｴ｢縺ｧ驕主悉譌･險倥ｒ蜿ら・縺励∪縺吶・
++- top_k 縺ｨ讀懃ｴ｢繝医げ繝ｫ縺ｮ蛻晄悄蛟､縺ｯ `settings.json5` 縺ｮ `minirag` 繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ縺ｧ隱ｿ謨ｴ縺ｧ縺阪∪縺吶・
+ 
+ ## 繧ｯ繧､繝・け繧ｹ繧ｿ繝ｼ繝・
+ 
+ ## DeepAgentsSpec 縺ｧ縺ｮ驟咲ｽｮ
+ 
+ 縺薙・繝ｪ繝昴ず繝医Μ縺ｧ縺ｯ縲～services/avatar-ui/` 縺ｫ驟咲ｽｮ貂医∩縺ｧ縺吶・
+ 莉･荳九・縺薙・讒区・縺ｫ蜷医ｏ縺帙◆譛蟆乗焔鬆・〒縺吶・
+ 
+ ### 1. 迺ｰ蠅・､画焚繧堤畑諢擾ｼ亥ｿ・茨ｼ・
+ 
+ `services/avatar-ui/` 逶ｴ荳九↓ `.env` 繧剃ｽ懈・縺励∝ｿ・ｦ√↑迺ｰ蠅・､画焚繧定ｨｭ螳壹＠縺ｦ縺上□縺輔＞縲・
+ 荳ｻ縺ｪ蠢・磯・岼縺ｯ莉･荳九〒縺呻ｼ亥､縺ｯ縺ゅ↑縺溘・迺ｰ蠅・↓蜷医ｏ縺帙※險ｭ螳夲ｼ・
+ 
+ - `GOOGLE_API_KEY`・域､懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝医ｒ菴ｿ縺・ｴ蜷茨ｼ・
+ - `AGENT_ID`
+ - `THREAD_ID`
+ - `SERVER_HOST`
+ - `SERVER_BIND_HOST`・井ｻｻ諢上仝SL 縺ｪ縺ｩ縺ｧ 0.0.0.0 繝舌う繝ｳ繝峨＠縺溘＞蝣ｴ蜷茨ｼ・
+ - `SERVER_PORT`
+ - `CLIENT_PORT`
+ - `APP_ENV`
+ - `SESSION_TIMEOUT_SECONDS`
+ - `CLEANUP_INTERVAL_SECONDS`
+ 
+ > 豕ｨ諢・ 迴ｾ陦後・繧ｵ繝ｼ繝舌・螳溯｣・・ `GOOGLE_API_KEY` 縺梧悴險ｭ螳壹□縺ｨ襍ｷ蜍墓凾縺ｫ繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ繧翫∪縺吶・
+@@ -189,50 +190,63 @@ cp settings.default.json5 settings.json5
+ 
+ ### LLM 縺ｮ蛻・ｊ譖ｿ縺・
+ 
+ ```json5
+ "server": {
+   "llmProvider": "gemini",       // gemini | openai | anthropic
+   "llmModel": "gemini-2.5-flash"
+ }
+ ```
+ 
+ 蟇ｾ蠢懊☆繧・API 繧ｭ繝ｼ繧・`.env` 縺ｫ險ｭ螳壹＠縲√し繝ｼ繝舌・繧貞・襍ｷ蜍輔＠縺ｦ縺上□縺輔＞縲・
+ 
+ ### 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝・
+ 
+ 繝・ヵ繧ｩ繝ｫ繝医〒 Google 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝医′譛牙柑縺ｧ縺呻ｼ・emini 繝｢繝・Ν縺ｧ蜍穂ｽ懶ｼ峨・ 
+ 辟｡蜉ｹ蛹悶☆繧句ｴ蜷・
+ 
+ ```json5
+ "searchSubAgent": {
+   "enabled": false
+ }
+ ```
+ 
+ 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝医・ Gemini API 繧剃ｽｿ逕ｨ縺吶ｋ縺溘ａ縲∝茜逕ｨ縺ｫ縺ｯ `GOOGLE_API_KEY` 縺ｮ險ｭ螳壹′蠢・ｦ√〒縺吶・
+ 
++### 譌･險・+ MiniRAG 險ｭ螳・
++
++`settings.json5` 縺ｮ `minirag` 繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ縺ｧ縲｀iniRAG 縺ｮ謗･邯壼・縺ｨ UI 縺ｮ繝・ヵ繧ｩ繝ｫ繝亥､繧定ｨｭ螳壹〒縺阪∪縺吶・
++
++```json5
++minirag: {
++  baseUrl: "http://localhost:8165",
++  workspace: "diary",
++  searchEnabledDefault: true,
++  topKDefault: 3,
++}
++```
++
+ ### 繧ｫ繧ｹ繧ｿ繝槭う繧ｺ荳隕ｧ
+ 
+ | 鬆・岼 | 險ｭ螳壼ｴ謇 |
+ |------|----------|
+ | 繧ｷ繧ｹ繝・Β繝励Ο繝ｳ繝励ヨ | `settings.json5` 竊・`server.systemPrompt` |
+ | 繝・・繝槭・濶ｲ | `settings.json5` 竊・`ui.theme`, `ui.themes` |
+ | 繧｢繝舌ち繝ｼ逕ｻ蜒・| `app/src/renderer/assets/` 縺ｫ驟咲ｽｮ |
+ | 繝・・繝ｫ霑ｽ蜉 | `server/main.py` 竊・`tools` 繝ｪ繧ｹ繝・|
+ 
+ ## 繝峨く繝･繝｡繝ｳ繝・
+ 
+ - [險ｭ險域嶌](./docs/project.md) 窶・繧｢繝ｼ繧ｭ繝・け繝√Ε縲∝ｮ溯｣・ｩｳ邏ｰ縲√Ο繝ｼ繝峨・繝・・
+ - [AG-UI Protocol](https://docs.ag-ui.com/) 窶・繝励Ο繝医さ繝ｫ莉墓ｧ假ｼ亥・蠑擾ｼ・
+ - [Google ADK](https://google.github.io/adk-docs/) 窶・繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝磯幕逋ｺ繧ｭ繝・ヨ・亥・蠑擾ｼ・
+ 
+ ## 繝ｩ繧､繧ｻ繝ｳ繧ｹ
+ 
+ [MIT License](LICENSE)
+ 
+ ﾂｩ 2025 [SIQI](https://siqi.jp) (Sito Sikino)
+ 
+ ## 繝｡繝｢
+ 
+ 繝輔Ο繝ｳ繝医お繝ｳ繝会ｼ・ite/繝悶Λ繧ｦ繧ｶ・峨→ Python・・astAPI・峨・縲√◎繧後◇繧悟挨繝励Ο繧ｻ繧ｹ縺ｨ縺励※蜷梧凾縺ｫ襍ｷ蜍輔＠縺ｦ縺・∪縺吶・ 
+ `services/avatar-ui/scripts/run_dev.sh` 縺ｯ縲√∪縺・Python 繧ｵ繝ｼ繝舌・・・astAPI・峨ｒ繝舌ャ繧ｯ繧ｰ繝ｩ繧ｦ繝ｳ繝峨〒襍ｷ蜍輔＠縲∵ｬ｡縺ｫ Vite・医ヵ繝ｭ繝ｳ繝医お繝ｳ繝会ｼ峨ｒ繝輔か繧｢繧ｰ繝ｩ繧ｦ繝ｳ繝峨〒襍ｷ蜍輔＠縺ｾ縺吶・
+diff --git a/services/avatar-ui/app/src/renderer/config.ts b/services/avatar-ui/app/src/renderer/config.ts
+index 3b381d59c55cd2cb2f6a563cd6bb6f90996b3b06..4ef2a1fadba911040ec4550d23c6978c8c61651d 100644
+--- a/services/avatar-ui/app/src/renderer/config.ts
++++ b/services/avatar-ui/app/src/renderer/config.ts
+@@ -14,64 +14,74 @@ export interface UiConfig {
+   mouthInterval: number;
+   beepFrequency: number;
+   beepDuration: number;
+   beepVolumeEnd: number;
+   avatarOverlayOpacity?: number;
+   avatarBrightness?: number;
+   glowText?: number;
+   glowBox?: number;
+   brightness?: number;
+   nameTags: {
+     user: string;
+     avatar: string;
+     avatarFullName: string;
+   };
+   systemMessages: {
+     banner1: string;
+     banner2: string;
+   };
+ }
+ 
+ // 繧｢繝励Μ蜈ｨ菴薙・險ｭ螳夲ｼ医し繝ｼ繝舌・繝ｻ繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医・UI 繧堤ｵｱ蜷茨ｼ・
+ export interface AppConfig {
+   server: {
+     url: string;
+   };
++  minirag: {
++    workspace: string;
++    searchEnabledDefault: boolean;
++    topKDefault: number;
++  };
+   agent: {
+     url: string;
+     agentId: string;
+     threadId: string;
+   };
+   clientLogVerbose: boolean;
+   ui: UiConfig;
+ }
+ 
+ // 蛻晄悄迥ｶ諷・(譛ｪ繝ｭ繝ｼ繝画凾縺ｫ菴ｿ縺・ョ繝輔か繝ｫ繝亥､)
+ const defaults: AppConfig = {
+   server: {
+     url: "", // 繝励Ο繧ｭ繧ｷ菴ｿ逕ｨ (/agui/config)
+   },
++  minirag: {
++    workspace: "diary",
++    searchEnabledDefault: true,
++    topKDefault: 3,
++  },
+   agent: {
+     url: "",
+     agentId: "",
+     threadId: "",
+   },
+   clientLogVerbose: false,
+   ui: {
+     themeColor: "#33ff99",    // UI 縺ｮ蝓ｺ隱ｿ濶ｲ
+     userColor: "#64ffff",     // 繝ｦ繝ｼ繧ｶ繝ｼ繝｡繝・そ繝ｼ繧ｸ濶ｲ
+     toolColor: "#ffaa00",     // 繝・・繝ｫ繝｡繝・そ繝ｼ繧ｸ濶ｲ
+     typeSpeed: 0,             // 0=蜊ｳ譎よ緒逕ｻ
+     opacity: 0.7,             // 繝｡繧､繝ｳ繝代ロ繝ｫ縺ｮ騾乗・蠎ｦ
+     soundVolume: 0,           // 蜉ｹ譫憺浹繝懊Μ繝･繝ｼ繝蛻晄悄蛟､
+     mouthInterval: 0,         // 繝ｪ繝・・繧ｷ繝ｳ繧ｯ髢馴囈蛻晄悄蛟､
+     beepFrequency: 0,         // 繝薙・繝怜捉豕｢謨ｰ蛻晄悄蛟､
+     beepDuration: 0,          // 繝薙・繝鈴聞縺募・譛溷､
+     beepVolumeEnd: 0,         // 繝薙・繝礼ｵゆｺ・凾髻ｳ驥丞・譛溷､
+     nameTags: {
+       user: "",               // 陦ｨ遉ｺ蜷・ 繝ｦ繝ｼ繧ｶ繝ｼ
+       avatar: "",             // 陦ｨ遉ｺ蜷・ 繧｢繝舌ち繝ｼ
+       avatarFullName: "",     // 陦ｨ遉ｺ蜷・ 繝輔Ν繝阪・繝
+     },
+     systemMessages: {
+       banner1: "",            // 繧ｷ繧ｹ繝・Β繝｡繝・そ繝ｼ繧ｸ1
+       banner2: "",            // 繧ｷ繧ｹ繝・Β繝｡繝・そ繝ｼ繧ｸ2
+@@ -82,46 +92,53 @@ const defaults: AppConfig = {
+ // 繧ｷ繝ｳ繧ｰ繝ｫ繝医Φ: 繧｢繝励Μ蜈ｨ菴薙〒蜈ｱ譛峨☆繧玖ｨｭ螳壹が繝悶ず繧ｧ繧ｯ繝・
+ export let config: AppConfig = { ...defaults };
+ 
+ export interface FetchConfigOptions {
+   /** 險ｭ螳壼叙蠕励↓螟ｱ謨励＠縺ｦ繧・console.error 繧貞・縺輔↑縺・ｼ医Μ繝医Λ繧､蠕・ｩ溽畑・・*/
+   silent?: boolean;
+ }
+ 
+ /**
+  * 繧ｵ繝ｼ繝舌・縺九ｉ險ｭ螳壹ｒ蜿門ｾ励＠縲…onfig 繧呈峩譁ｰ縺吶ｋ
+  * @throws 蜿門ｾ怜､ｱ謨玲凾縺ｯ萓句､悶ｒ繧ｹ繝ｭ繝ｼ縺励∝他縺ｳ蜃ｺ縺怜・縺ｧ繧ｨ繝ｩ繝ｼ陦ｨ遉ｺ繧定｡後≧
+  */
+ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<void> {
+   try {
+     // dev: /agui/config (Vite proxy) / prod: http://127.0.0.1:8000/agui/config
+     const base = typeof __AGUI_BASE__ !== "undefined" ? __AGUI_BASE__ : "";
+     const response = await fetch(`${base}/agui/config`);
+     if (!response.ok) {
+       throw new Error(`Config fetch failed: ${response.status} ${response.statusText}`);
+     }
+     const serverConfig = await response.json();
+ 
+     // 譁ｰ蠖｢蠑・ { ui, clientLogVerbose, agent }, 譌ｧ蠖｢蠑・ ui縺ｮ縺ｿ
+     const ui = serverConfig.ui ?? serverConfig;
+     const agent = serverConfig.agent ?? defaults.agent;
++    const minirag = serverConfig.minirag ?? defaults.minirag;
+     config.ui = ui;
+     const agentUrl = agent.url ?? `${base}/agui`;
+     config.agent = {
+       url: agentUrl,
+       agentId: agent.agentId ?? "",
+       threadId: agent.threadId ?? "",
+     };
++    config.minirag = {
++      workspace: minirag.workspace ?? defaults.minirag.workspace,
++      searchEnabledDefault: Boolean(minirag.searchEnabledDefault ?? defaults.minirag.searchEnabledDefault),
++      topKDefault: Number(minirag.topKDefault ?? defaults.minirag.topKDefault),
++    };
+     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
+ 
+ 	    console.info("Config loaded from server:", {
+ 	      ui: config.ui,
++	      minirag: config.minirag,
+ 	      agent: config.agent,
+ 	      clientLogVerbose: config.clientLogVerbose,
+ 	    });
+ 	  } catch (error) {
+ 	    if (!options.silent) {
+ 	      console.error("Failed to load config from server:", error);
+ 	    }
+ 	    throw error; // Main蛛ｴ縺ｧ繧ｭ繝｣繝・メ縺励※繧ｨ繝ｩ繝ｼ逕ｻ髱｢繧定｡ｨ遉ｺ
+ 	  }
+ }
+diff --git a/services/avatar-ui/app/src/renderer/index.html b/services/avatar-ui/app/src/renderer/index.html
+index 8ce121dc9cdc92645f5c3de4bfb459e97c07f346..0a21eee7e5d1fd4b1105a881b7c487a68f81aea8 100644
+--- a/services/avatar-ui/app/src/renderer/index.html
++++ b/services/avatar-ui/app/src/renderer/index.html
+@@ -1,50 +1,64 @@
+ <!-- 繝ｬ繝ｳ繝繝ｩ繝ｼ縺ｮ繝ｬ繧､繧｢繧ｦ繝亥ｮ夂ｾｩ・亥・蜉帙・蜈･蜉帙・繧｢繝舌ち繝ｼ縺ｮ3繝壹う繝ｳ・・-->
+ <!doctype html>
+ <html lang="ja">
+   <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <!-- 髢狗匱逕ｨ縺ｫ localhost 縺ｸ縺ｮ謗･邯壹ｒ險ｱ蜿ｯ縺吶ｋ CSP -->
+     <meta
+       http-equiv="Content-Security-Policy"
+       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' http://localhost:* http://127.0.0.1:* https: ws: wss:;"
+     />
+     <title>Avatar UI</title>
+     <link rel="stylesheet" href="./style.css" />
+   </head>
+   <body>
+     <main class="app split">
+       <section data-slot="output" id="pane-output">
+         <div class="surface-host" id="surface-host">
+           <div class="surface surface--text">
+             <div class="text-scroll" id="output"></div>
+           </div>
+         </div>
+       </section>
+ 
+       <footer data-slot="input" id="pane-input">
+-        <span class="prompt">&gt;</span>
+-        <input type="text" id="input" autofocus />
++        <div class="diary-controls">
++          <label class="toggle">
++            <input type="checkbox" id="search-toggle" />
++            <span>讀懃ｴ｢</span>
++          </label>
++          <label class="top-k">
++            top_k
++            <input type="number" id="search-top-k" min="1" max="10" step="1" />
++          </label>
++          <button type="button" id="finalize-button">莨夊ｩｱ遒ｺ螳・/button>
++          <span class="finalize-status" id="finalize-status"></span>
++        </div>
++        <div class="input-row">
++          <span class="prompt">&gt;</span>
++          <input type="text" id="input" autofocus />
++        </div>
+       </footer>
+ 
+       <aside data-slot="avatar" id="pane-avatar">
+         <div id="avatar-wrap">
+           <!-- 繧｢繝舌ち繝ｼ逕ｻ蜒擾ｼ・dle/talk 繧・data 螻樊ｧ縺ｧ謖√■譖ｿ縺茨ｼ・-->
+           <img
+             id="avatar-img"
+             src="./idle.png"
+             data-idle="./idle.png"
+             data-talk="./talk.png"
+             alt="avatar"
+           />
+         </div>
+         <div id="avatar-label" class="avatar-label">Spectra</div>
+       </aside>
+ 
+       <!-- 逕ｻ髱｢荳矩Κ縺ｮ繝舌・繧ｸ繝ｧ繝ｳ陦ｨ遉ｺ・・ain.ts 縺ｧ package.json 縺九ｉ荳頑嶌縺搾ｼ・-->
+       <div class="meta-bar" id="meta">avatar-ui</div>
+     </main>
+ 
+     <script type="module" src="./main.ts"></script>
+   </body>
+ </html>
+diff --git a/services/avatar-ui/app/src/renderer/main.ts b/services/avatar-ui/app/src/renderer/main.ts
+index f6b7aee2982c1589c119bff21a5c124bb2faa3f9..6fbdb786d8b65a01899179becbdb7e64bef4e7b6 100644
+--- a/services/avatar-ui/app/src/renderer/main.ts
++++ b/services/avatar-ui/app/src/renderer/main.ts
+@@ -1,43 +1,55 @@
+ // 繝ｬ繝ｳ繝繝ｩ繝ｼ縺ｮ繝｡繧､繝ｳ蜃ｦ逅・ 險ｭ螳夊ｪｭ縺ｿ霎ｼ縺ｿ繝ｻUI蛻晄悄蛹悶・繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝亥ｮ溯｡後ｒ縺ｾ縺ｨ繧√ｋ
+ import { config, fetchConfig } from "./config";
+ import { createAgent } from "../core/agent";
+ import { loggerSubscriber } from "../core/loggerSubscriber";
+ import { createUiSubscriber, renderMarkdown } from "./subscriber";
+ import { TerminalEngine } from "./engine/TerminalEngine";
+ import { createAutoScrollController } from "./autoScroll";
+ import pkg from "../../package.json"; // 繝舌・繧ｸ繝ｧ繝ｳ諠・ｱ縺ｮ蜿門ｾ・
+ 
+ // 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医・繧､繝ｳ繧ｹ繧ｿ繝ｳ繧ｹ繧剃ｿ晄戟縺吶ｋ
+ let agentInstance = null as ReturnType<typeof createAgent> | null;
+ 
+ // UI 隕∫ｴ縺ｸ縺ｮ蜿ら・繧堤｢ｺ菫・
+ const inputEl = document.getElementById("input") as HTMLInputElement | null;
+ const outputEl = document.querySelector("#pane-output .text-scroll") as HTMLElement | null;
+ const avatarImg = document.getElementById("avatar-img") as HTMLImageElement | null;
+ const metaBar = document.getElementById("meta");
+ const avatarLabel = document.getElementById("avatar-label");
++const searchToggle = document.getElementById("search-toggle") as HTMLInputElement | null;
++const topKInput = document.getElementById("search-top-k") as HTMLInputElement | null;
++const finalizeButton = document.getElementById("finalize-button") as HTMLButtonElement | null;
++const finalizeStatus = document.getElementById("finalize-status") as HTMLSpanElement | null;
++
++type DiaryMessage = {
++  role: "user" | "assistant" | "system";
++  content: string;
++  created_at?: string;
++};
++
++const transcript: DiaryMessage[] = [];
+ 
+ async function initApp() {
+   if (!inputEl || !outputEl || !avatarImg || !avatarLabel) {
+     throw new Error("UI elements missing");
+   }
+ 
+   // 繝｡繧ｿ繝舌・縺ｯ繝励Ο繝繧ｯ繝亥錐 + 繝舌・繧ｸ繝ｧ繝ｳ・・ackage.json 逕ｱ譚･・・
+   if (metaBar) {
+     metaBar.textContent = `${pkg.name} v${pkg.version}`;
+   }
+ 
+   // 1. 繧ｵ繝ｼ繝舌・縺九ｉ險ｭ螳壹ｒ蜿門ｾ暦ｼ医し繝ｼ繝舌・襍ｷ蜍募燕縺ｧ繧り誠縺ｨ縺輔★縺ｫ蠕・ｩ滂ｼ・
+   inputEl.disabled = true;
+   outputEl.textContent = "";
+   {
+     const line = document.createElement("div");
+     line.className = "text-line text-line--system";
+     line.textContent = "> Starting server...";
+     outputEl.appendChild(line);
+   }
+ 
+   const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+   let retryDelayMs = 250;
+   while (true) {
+     try {
+@@ -121,102 +133,227 @@ async function initApp() {
+   if (config.ui.glowText !== undefined) {
+     root.style.setProperty("--glow-text-alpha1", String(0.6 * config.ui.glowText)); // 蠑ｷ繧√・繧ｰ繝ｭ繝ｼ菫よ焚
+     root.style.setProperty("--glow-text-alpha2", String(0.4 * config.ui.glowText)); // 蠑ｱ繧√・繧ｰ繝ｭ繝ｼ菫よ焚
+   }
+   if (config.ui.glowBox !== undefined) {
+     root.style.setProperty("--glow-box-alpha1", String(0.4 * config.ui.glowBox)); // 螟匁棧縺ｮ蠑ｷ繧√げ繝ｭ繝ｼ菫よ焚
+     root.style.setProperty("--glow-box-alpha2", String(0.2 * config.ui.glowBox)); // 螟匁棧縺ｮ蠑ｱ繧√げ繝ｭ繝ｼ菫よ焚
+   }
+   if (config.ui.brightness !== undefined) {
+     root.style.setProperty("--ui-brightness", String(config.ui.brightness));
+   }
+ 
+   // 3. UI繧ｨ繝ｳ繧ｸ繝ｳ (Game Loop) 縺ｮ蛻晄悄蛹・
+   // 縺薙ｌ縺ｲ縺ｨ縺､縺ｧ繧ｿ繧､繝励Λ繧､繧ｿ繝ｼ繝ｻ繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ繝ｻ髻ｳ螢ｰ縺吶∋縺ｦ繧貞宛蠕｡縺吶ｋ
+   const autoScroll = createAutoScrollController(outputEl);
+   const engine = new TerminalEngine(outputEl, avatarImg, renderMarkdown, autoScroll);
+ 
+   // 4. 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝亥・譛溷喧・医し繝ｼ繝占ｨｭ螳壹↓蠕薙≧・・
+   agentInstance = createAgent({
+     agentId: config.agent.agentId,
+     url: config.agent.url,
+     threadId: config.agent.threadId,
+   });
+   agentInstance.subscribe(loggerSubscriber);
+ 
++  const serverBase = config.agent.url.replace(/\/agui\/?$/, "");
++  const diaryWorkspace = config.minirag.workspace;
++  const diarySearchSettings = {
++    enabled: config.minirag.searchEnabledDefault,
++    top_k: config.minirag.topKDefault,
++  };
++
+   // 繝・く繧ｹ繝郁｡後ｒ霑ｽ蜉・医お繝ｳ繧ｸ繝ｳ繧剃ｻ九＆縺ｪ縺・叉譎り｡ｨ遉ｺ逕ｨ・・
+   const appendLine = (className: string, text: string) => {
+     const line = document.createElement("div");
+     line.className = `text-line ${className}`;
+     line.textContent = text;
+     outputEl.appendChild(line);
+     outputEl.scrollTop = outputEl.scrollHeight;
+   };
+ 
+   let isRunning = false; // 螟夐㍾螳溯｡碁亟豁｢繝輔Λ繧ｰ
++  let isFinalizing = false;
++
++  const updateFinalizeStatus = (text: string, isError = false) => {
++    if (!finalizeStatus) return;
++    finalizeStatus.textContent = text;
++    finalizeStatus.style.color = isError ? "rgba(255, 102, 102, 1)" : "";
++  };
++
++  const applySearchSettings = async () => {
++    if (!config.agent.threadId) {
++      return;
++    }
++    try {
++      const response = await fetch(`${serverBase}/agui/diary/search-settings`, {
++        method: "POST",
++        headers: { "Content-Type": "application/json" },
++        body: JSON.stringify({
++          thread_id: config.agent.threadId,
++          settings: diarySearchSettings,
++        }),
++      });
++      if (!response.ok) {
++        throw new Error(`Search settings update failed: ${response.status}`);
++      }
++      updateFinalizeStatus("讀懃ｴ｢險ｭ螳壹ｒ譖ｴ譁ｰ縺励∪縺励◆");
++    } catch (error) {
++      updateFinalizeStatus(
++        `讀懃ｴ｢險ｭ螳壹・譖ｴ譁ｰ縺ｫ螟ｱ謨励＠縺ｾ縺励◆: ${error instanceof Error ? error.message : String(error)}`,
++        true,
++      );
++    }
++  };
++
++  if (searchToggle) {
++    searchToggle.checked = diarySearchSettings.enabled;
++    searchToggle.addEventListener("change", async () => {
++      diarySearchSettings.enabled = searchToggle.checked;
++      await applySearchSettings();
++    });
++  }
++
++  if (topKInput) {
++    topKInput.value = String(diarySearchSettings.top_k);
++    topKInput.addEventListener("change", async () => {
++      const value = Number(topKInput.value);
++      diarySearchSettings.top_k = Number.isNaN(value)
++        ? config.minirag.topKDefault
++        : Math.min(Math.max(value, 1), 10);
++      topKInput.value = String(diarySearchSettings.top_k);
++      await applySearchSettings();
++    });
++  }
++
++  if (searchToggle || topKInput) {
++    await applySearchSettings();
++  }
+ 
+   // 繝ｦ繝ｼ繧ｶ繝ｼ蜈･蜉帙ｒ蜃ｦ逅・＠縺ｦ繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医↓騾∽ｿ｡
+   inputEl.addEventListener("keydown", async (event) => {
+     if (event.isComposing || event.key !== "Enter") {
+       return;
+     }
+     event.preventDefault();
+ 
+     if (isRunning) {
+       return;
+     }
+ 
+     const value = inputEl.value.trim();
+     if (!value) {
+       return;
+     }
+ 
+     // 繝ｦ繝ｼ繧ｶ繝ｼ蜈･蜉帙・陦ｨ遉ｺ: 險ｭ螳壹＆繧後◆繝ｦ繝ｼ繧ｶ繝ｼ繧ｿ繧ｰ繧剃ｽｿ縺・
+     const userTag = config.ui.nameTags.user ? `${config.ui.nameTags.user}> ` : "> ";
+     appendLine("text-line--user", `${userTag}${value}`);
+     inputEl.value = "";
+ 
+     const userMessage = {
+       id: crypto.randomUUID(),
+       role: "user" as const,
+       content: value,
+     };
+ 
+     agentInstance!.messages.push(userMessage);
++    transcript.push({
++      role: "user",
++      content: value,
++      created_at: new Date().toISOString(),
++    });
+ 
+     isRunning = true;
+     try {
+       await agentInstance!.runAgent(
+         {
+           runId: crypto.randomUUID(),
+         },
+         createUiSubscriber({
+           outputEl,
+           engine, // 繧ｨ繝ｳ繧ｸ繝ｳ繧呈ｸ｡縺・
+           autoScroll,
++          onAssistantMessageComplete: (message) => {
++            transcript.push({
++              role: "assistant",
++              content: message,
++              created_at: new Date().toISOString(),
++            });
++          },
+         }),
+       );
+     } catch (error) {
+       // 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝亥ｮ溯｡後お繝ｩ繝ｼ縺ｮ陦ｨ遉ｺ
+       console.error(error);
+       appendLine(
+         "text-line--error",
+         `笶・${error instanceof Error ? error.message : String(error)}`,
+       );
+     } finally {
+       isRunning = false;
+     }
+   });
++
++  if (finalizeButton) {
++    finalizeButton.addEventListener("click", async () => {
++      if (isFinalizing) {
++        return;
++      }
++      if (!transcript.length) {
++        appendLine("text-line--error", "笶・莨夊ｩｱ螻･豁ｴ縺後≠繧翫∪縺帙ｓ縲・);
++        return;
++      }
++      isFinalizing = true;
++      finalizeButton.disabled = true;
++      updateFinalizeStatus("莨夊ｩｱ繧堤｢ｺ螳壹＠縺ｦ縺・∪縺・..");
++      try {
++        const response = await fetch(`${serverBase}/agui/diary/finalize`, {
++          method: "POST",
++          headers: { "Content-Type": "application/json" },
++          body: JSON.stringify({
++            workspace: diaryWorkspace,
++            thread_id: config.agent.threadId,
++            messages: transcript,
++            search_settings: diarySearchSettings,
++          }),
++        });
++        if (!response.ok) {
++          const payload = await response.json().catch(() => ({}));
++          throw new Error(payload.detail || `Finalize failed: ${response.status}`);
++        }
++        const payload = await response.json();
++        appendLine(
++          "text-line--system",
++          `> 譌･險倥ｒ逋ｻ骭ｲ縺励∪縺励◆: ${payload.doc_id} (驥崎ｦ∝ｺｦ ${payload.analysis.importance_score})`,
++        );
++        appendLine(
++          "text-line--system",
++          `> 繧ｵ繝槭Μ繝ｼ: ${payload.analysis.summary}`,
++        );
++        updateFinalizeStatus("莨夊ｩｱ遒ｺ螳壹′螳御ｺ・＠縺ｾ縺励◆");
++      } catch (error) {
++        appendLine(
++          "text-line--error",
++          `笶・莨夊ｩｱ遒ｺ螳壹↓螟ｱ謨励＠縺ｾ縺励◆: ${error instanceof Error ? error.message : String(error)}`,
++        );
++        updateFinalizeStatus("莨夊ｩｱ遒ｺ螳壹↓螟ｱ謨励＠縺ｾ縺励◆", true);
++      } finally {
++        isFinalizing = false;
++        finalizeButton.disabled = false;
++      }
++    });
++  }
+   
+   // 蛻晄悄繝｡繝・そ繝ｼ繧ｸ: 險ｭ螳壹＆繧後◆繧ｷ繧ｹ繝・Β繝｡繝・そ繝ｼ繧ｸ繧剃ｽｿ縺・
+   const fullName = config.ui.nameTags.avatarFullName || config.ui.nameTags.avatar || "AGENT";
+   if (config.ui.systemMessages.banner1) {
+     const banner1 = config.ui.systemMessages.banner1.replace("{avatarFullName}", fullName);
+     appendLine("text-line--system", `> ${banner1}`);
+   }
+   if (config.ui.systemMessages.banner2) {
+     appendLine("text-line--system", `> ${config.ui.systemMessages.banner2}`);
+   }
+ }
+ 
+ // 繧｢繝励Μ襍ｷ蜍・
+ initApp().catch(err => console.error("Fatal Error:", err));
+diff --git a/services/avatar-ui/app/src/renderer/style.css b/services/avatar-ui/app/src/renderer/style.css
+index cb3175a105b574271a2ce72dbe9d05e5316c8272..b07d7bdac55a54bc280d79d5af26f86fe7cebbdf 100644
+--- a/services/avatar-ui/app/src/renderer/style.css
++++ b/services/avatar-ui/app/src/renderer/style.css
+@@ -203,59 +203,116 @@ body {
+ .text-line--error {
+   color: rgba(var(--error-color-r), var(--error-color-g), var(--error-color-b), 1);
+ }
+ 
+ /* AI 縺ｮ謠先｡域枚縺ｪ縺ｩ繧貞峇縺・せ繧ｿ繧､繝ｫ */
+ .text-line--proposed {
+   color: var(--col-theme-text);
+   font-family: Consolas, Menlo, monospace;
+   background: rgba(0, 20, 10, 0.4);
+   padding: 8px;
+   border: 1px solid rgba(var(--theme-color-r), var(--theme-color-g), var(--theme-color-b), 0.3);
+ }
+ 
+ .text-line--user { color: var(--col-user-text); }
+ .text-line--assistant { color: var(--col-theme-text); }
+ .text-line--tool { 
+   color: var(--col-tool-text);
+   font-style: italic;
+ }
+ 
+ /* 蜈･蜉帙お繝ｪ繧｢・育判髱｢荳具ｼ・*/
+ #pane-input {
+   grid-column: 1 / 3;
+   grid-row: 2 / 3;
+   display: flex;
+-  align-items: center;
++  flex-direction: column;
++  align-items: stretch;
+   gap: 8px;
+   padding: 10px 12px; /* 蜈･蜉帶棧縺ｮ菴咏區 */
+   border: 1px solid var(--col-border-main);
+   box-shadow: var(--glow-box);
+   background: var(--col-panel-bg);
+   filter: brightness(var(--ui-brightness));
+ }
+ 
++.diary-controls {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: center;
++  gap: 10px;
++  font-size: 12px;
++  color: var(--col-theme-dim);
++}
++
++.diary-controls label {
++  display: inline-flex;
++  align-items: center;
++  gap: 6px;
++}
++
++.diary-controls input[type="checkbox"] {
++  accent-color: var(--col-theme-main);
++}
++
++.diary-controls input[type="number"] {
++  width: 64px;
++  background: rgba(0, 0, 0, 0.4);
++  border: 1px solid var(--col-border-main);
++  color: inherit;
++  font: inherit;
++  padding: 2px 6px;
++  border-radius: 4px;
++}
++
++#finalize-button {
++  background: rgba(var(--theme-color-r), var(--theme-color-g), var(--theme-color-b), 0.15);
++  border: 1px solid var(--col-border-high);
++  color: var(--col-theme-text);
++  font: inherit;
++  padding: 4px 10px;
++  border-radius: 4px;
++  cursor: pointer;
++  text-shadow: var(--glow-text);
++}
++
++#finalize-button:disabled {
++  opacity: 0.5;
++  cursor: not-allowed;
++}
++
++.finalize-status {
++  color: var(--col-theme-text);
++  opacity: 0.8;
++}
++
++.input-row {
++  display: flex;
++  align-items: center;
++  gap: 8px;
++}
++
+ #input {
+   flex: 1;
+   background: transparent;
+   border: none;
+   color: inherit;
+   font: inherit;
+   outline: none;
+ }
+ 
+ /* 繧｢繝舌ち繝ｼ繧ｨ繝ｪ繧｢・亥承繧ｫ繝ｩ繝・・*/
+ #pane-avatar {
+   grid-column: 2 / 3;
+   grid-row: 1 / 2;
+   border: 1px solid var(--col-border-main);
+   box-shadow: var(--glow-box);
+   background: rgba(0, 40, 20, 0.25); /* 譛ｬ譁・ｈ繧雁ｰ代＠豼・＞閭梧勹縺ｧ蛹ｺ蛻・ｋ */
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   padding: 4px; /* 逕ｻ蜒上→縺ｮ菴咏區繧堤｢ｺ菫・*/
+   box-sizing: border-box;
+   gap: 12px; /* 逕ｻ蜒上→繝ｩ繝吶Ν縺ｮ髢馴囈 */
+ }
+ 
+diff --git a/services/avatar-ui/app/src/renderer/subscriber.ts b/services/avatar-ui/app/src/renderer/subscriber.ts
+index b18e41350c40f155aede73525fd765bd21e7d261..bb22a53aa9e825a80fb9392e3602aafc6b9e482b 100644
+--- a/services/avatar-ui/app/src/renderer/subscriber.ts
++++ b/services/avatar-ui/app/src/renderer/subscriber.ts
+@@ -1,97 +1,105 @@
+ // 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医う繝吶Φ繝医ｒ蜿励￠蜿悶ｊ縲√Ξ繝ｳ繝繝ｩ繝ｼ縺ｮ陦ｨ遉ｺ繝ｻ髻ｳ繝ｻ繝ｭ繧ｰ繧呈峩譁ｰ縺吶ｋ雉ｼ隱ｭ蜃ｦ逅・
+ import type { AgentSubscriber } from "@ag-ui/client";
+ import { TerminalEngine } from "./engine/TerminalEngine";
+ import { config } from "./config";
+ import { marked } from "marked";
+ import DOMPurify from "dompurify";
+ import type { AutoScrollController } from "./autoScroll";
+ 
+ /**
+  * Markdown 竊・繧ｵ繝九ち繧､繧ｺ貂医∩ HTML 縺ｸ螟画鋤・亥・騾夐未謨ｰ・・
+  */
+ export function renderMarkdown(md: string): string {
+   let html = marked.parse(md) as string;
+   // 繧ｿ繧ｰ髢薙・譛ｫ蟆ｾ縺ｮ遨ｺ逋ｽ繧帝勁蜴ｻ・・hite-space: pre-wrap 蟇ｾ遲厄ｼ・
+   html = html.replace(/>\s+</g, "><").trimEnd();
+   return DOMPurify.sanitize(html);
+ }
+ 
+ // UI 繧ｵ繝悶せ繧ｯ繝ｩ繧､繝舌・縺ｮ蛻晄悄蛹悶が繝励す繝ｧ繝ｳ
+ interface UiSubscriberOptions {
+   outputEl: HTMLElement;  // 繝・く繧ｹ繝亥・蜉帛・
+   engine: TerminalEngine; // 繧ｿ繧､繝励Λ繧､繧ｿ繝ｼ繧ｨ繝ｳ繧ｸ繝ｳ
+   autoScroll: AutoScrollController; // 荳狗ｫｯ霑ｽ蠕薙さ繝ｳ繝医Ο繝ｼ繝ｫ
++  onAssistantMessageComplete?: (message: string) => void;
+ }
+ 
+ /**
+  * 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医う繝吶Φ繝医ｒ雉ｼ隱ｭ縺励ゞI 繧呈峩譁ｰ縺吶ｋ繧ｵ繝悶せ繧ｯ繝ｩ繧､繝舌・繧堤函謌・
+  */
+ export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscriber {
+   const { outputEl, engine, autoScroll } = options;
++  const { onAssistantMessageComplete } = options;
+ 
+   // 繝・・繝ｫ蜻ｼ縺ｳ蜃ｺ縺苓｡ｨ遉ｺ逕ｨ縺ｮ迥ｶ諷・
+   let activeToolDetails: HTMLDetailsElement | null = null;
+   let activeToolName = "";
+   let argsBuffer = "";
++  let assistantBuffer = "";
+ 
+   // 繝・く繧ｹ繝郁｡後ｒ霑ｽ蜉
+   const appendLine = (className: string, text: string) => {
+     const line = document.createElement("div");
+     line.className = `text-line ${className}`;
+     line.textContent = text;
+     outputEl.appendChild(line);
+     autoScroll.maybeScroll();
+     return line;
+   };
+ 
+   // 繧ｪ繝悶ず繧ｧ繧ｯ繝医°繧画怙蛻昴↓隕九▽縺九▲縺滓枚蟄怜・蛟､繧貞叙繧雁・縺呻ｼ域ｱ守畑・・
+   const extractFirstString = (obj: unknown): string => {
+     if (typeof obj === "string") return obj;
+     if (obj && typeof obj === "object") {
+       for (const v of Object.values(obj as Record<string, unknown>)) {
+         if (typeof v === "string") return v;
+       }
+     }
+     return JSON.stringify(obj, null, 2);
+   };
+ 
+   return {
+     onTextMessageStartEvent() {
+       // 險ｭ螳壹＆繧後◆繧｢繝舌ち繝ｼ繧ｿ繧ｰ繧貞叙蠕・
+       const tag = config.ui.nameTags.avatar ? `${config.ui.nameTags.avatar}> ` : "";
+ 
+       // 繧｢繧ｷ繧ｹ繧ｿ繝ｳ繝医・繝｡繝・そ繝ｼ繧ｸ髢句ｧ具ｼ壽眠縺励＞陦後ｒ菴懈・縺励※繧ｨ繝ｳ繧ｸ繝ｳ縺ｫ繧ｻ繝・ヨ・医ち繧ｰ縺ｯ蜊ｳ譎り｡ｨ遉ｺ・・
+       engine.startNewMessage("text-line text-line--assistant", tag);
++      assistantBuffer = "";
+     },
+     onTextMessageContentEvent({ event }) {
+       // 譁・ｭ怜・繧偵お繝ｳ繧ｸ繝ｳ縺ｫ貂｡縺呻ｼ医お繝ｳ繧ｸ繝ｳ縺悟ｰ代＠縺壹▽陦ｨ遉ｺ縺吶ｋ・・
+       // Markdown 縺ｯ迴ｾ迥ｶ縺ｮ繧ｨ繝ｳ繧ｸ繝ｳ縺ｧ縺ｯ繝励Ξ繝ｼ繝ｳ繝・く繧ｹ繝郁｡ｨ遉ｺ縲ゅ％縺薙・蠕捺擂縺ｩ縺翫ｊ縲・
+       engine.pushText(event.delta);
++      assistantBuffer += event.delta;
+     },
+     onTextMessageEndEvent() {
+       // 莉翫・縺ｨ縺薙ｍ迚ｹ縺ｫ縺ｪ縺・(繧ｨ繝ｳ繧ｸ繝ｳ縺ｮ繧ｭ繝･繝ｼ縺檎ｩｺ縺ｫ縺ｪ繧後・豁｢縺ｾ繧・
++      if (assistantBuffer.trim() && onAssistantMessageComplete) {
++        onAssistantMessageComplete(assistantBuffer.trim());
++      }
+     },
+     
+     // 繝・・繝ｫ螳溯｡後う繝吶Φ繝茨ｼ域釜繧翫◆縺溘∩陦ｨ遉ｺ・・
+     onToolCallStartEvent({ event }) {
+       activeToolName = event.toolCallName;
+       argsBuffer = "";
+ 
+       const details = document.createElement("details");
+       details.className = "tool-call text-line--tool";
+ 
+       const summary = document.createElement("summary");
+       summary.textContent = `肌 ${event.toolCallName}...`;
+       details.appendChild(summary);
+ 
+       outputEl.appendChild(details);
+       autoScroll.maybeScroll();
+ 
+       activeToolDetails = details;
+     },
+     // 繝・・繝ｫ蠑墓焚縺ｮ譁ｭ迚・ｒ蜿励￠蜿悶ｋ・医せ繝医Μ繝ｼ繝溘Φ繧ｰ・・
+     onToolCallArgsEvent({ event }) {
+       if (event.delta) {
+         argsBuffer += event.delta;
+       }
+     },
+diff --git a/services/avatar-ui/server/main.py b/services/avatar-ui/server/main.py
+index 3af7cbb4920af2ca33b7a25a0260ed3dc474eca2..7139c90dd3a2d81a5bbc175604360a39482e0c31 100644
+--- a/services/avatar-ui/server/main.py
++++ b/services/avatar-ui/server/main.py
+@@ -1,91 +1,96 @@
+ # AG-UI 繧ｵ繝ｼ繝舌・縺ｮ繧ｨ繝ｳ繝医Μ繝ｼ繝昴う繝ｳ繝茨ｼ・astAPI + Google ADK・・
+ import logging
+ from logging.handlers import RotatingFileHandler
+ from pathlib import Path
+ from fastapi import FastAPI, Request
+ from fastapi.middleware.cors import CORSMiddleware
+ from fastapi.responses import JSONResponse
+ from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
+ from google.adk.agents import LlmAgent
+ from google.adk import tools as adk_tools
+ from google.adk.models.lite_llm import LiteLlm
+ from google.adk.tools.agent_tool import AgentTool
+ from google.adk.tools.google_search_tool import GoogleSearchTool
++from google.adk.tools import FunctionTool
+ 
+ from src import config
++from src.routes.diary import router as diary_router, search_diary
+ 
+ # 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝医ｒ菴ｿ縺・ｴ蜷医・ GOOGLE_API_KEY 縺悟ｿ・・
+ if config.SEARCH_SUBAGENT_ENABLED and not config.GOOGLE_API_KEY:
+     raise RuntimeError("GOOGLE_API_KEY is not set. Please add it to .env in project root")
+ 
+ # ---------- 繝ｭ繧ｮ繝ｳ繧ｰ險ｭ螳・----------
+ logs_dir = Path(__file__).resolve().parent / "logs"
+ logs_dir.mkdir(exist_ok=True)
+ log_file = logs_dir / "app.log"
+ 
+ log_level = logging.INFO
+ logging.basicConfig(
+     level=log_level,
+     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+     handlers=[RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT)],
+ )
+ logger = logging.getLogger("agui-adk-bridge")
+ 
+ # ---------- 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝域ｧ狗ｯ・----------
+ 
+ def resolve_model(provider: str, model: str):
+     """繝励Ο繝舌う繝縺ｫ蠢懊§縺溘Δ繝・Ν繧､繝ｳ繧ｹ繧ｿ繝ｳ繧ｹ繧定ｿ斐☆・・emini 縺ｯ逶ｴ謗･縲∽ｻ悶・ LiteLlm 邨檎罰・・""
+     provider = provider.lower()
+     if provider == "gemini":
+         return model
+     # openai / anthropic 縺ｪ縺ｩ縺ｯ LiteLlm 邨檎罰
+     if "/" in model:
+         return LiteLlm(model=model)
+     return LiteLlm(model=f"{provider}/{model}")
+ 
+ 
+ def build_agent() -> ADKAgent:
+     """繝｡繧､繝ｳ繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医ｒ讒狗ｯ会ｼ域､懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝井ｻ倥″縺ｮ蝣ｴ蜷医≠繧奇ｼ・""
+-    search_tool = None
++    search_subagent_tool = None
+     if config.SEARCH_SUBAGENT_ENABLED:
+         search_agent = LlmAgent(
+             name="search_agent",
+             model=config.SEARCH_SUBAGENT_MODEL,
+             description="Performs web searches using Google Search",
+             instruction=(
+                 "Search the web and return concise results. "
+                 "Use the same language as the latest user message. Phrase the search query in that language."
+             ),
+             tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
+         )
+-        search_tool = AgentTool(agent=search_agent)
++        search_subagent_tool = AgentTool(agent=search_agent)
+ 
+     main_model = resolve_model(config.LLM_PROVIDER, config.LLM_MODEL)
+-    tools = [adk_tools.preload_memory]
+-    if search_tool:
+-        tools.append(search_tool)
++    tools = [
++        adk_tools.preload_memory,
++        FunctionTool(search_diary),
++    ]
++    if search_subagent_tool:
++        tools.append(search_subagent_tool)
+ 
+     main_agent = LlmAgent(
+         name="assistant",
+         model=main_model,
+         instruction=config.SYSTEM_PROMPT,
+         tools=tools,
+     )
+ 
+     return ADKAgent(
+         adk_agent=main_agent,
+         app_name="agents",
+         user_id="cli_user",
+         use_in_memory_services=True,
+         session_timeout_seconds=config.SESSION_TIMEOUT_SECONDS,
+         cleanup_interval_seconds=config.CLEANUP_INTERVAL_SECONDS,
+     )
+ 
+ 
+ # 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医う繝ｳ繧ｹ繧ｿ繝ｳ繧ｹ・医し繝ｼ繝舌・襍ｷ蜍墓凾縺ｫ讒狗ｯ会ｼ・
+ agent = build_agent()
+ 
+ # ---------- FastAPI 繧｢繝励Μ繧ｱ繝ｼ繧ｷ繝ｧ繝ｳ ----------
+ app = FastAPI(title="AG-UI ADK Bridge")
+ app.add_middleware(
+     CORSMiddleware,
+@@ -99,55 +104,63 @@ app.add_middleware(
+ @app.middleware("http")
+ async def log_agui_request(request: Request, call_next):
+     if request.url.path == "/agui" and request.method == "POST":
+         if config.APP_ENV == "dev" or config.LOG_BODY is True:
+             body = await request.body()
+             logger.info("AGUI request body: %s", body.decode("utf-8", errors="replace"))
+             request._body = body
+     try:
+         response = await call_next(request)
+         return response
+     except Exception as exc:
+         logger.exception("Unhandled server error")
+         return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+ 
+ # Config API Endpoint
+ @app.get("/agui/config")
+ def get_config():
+     """
+     UI逕ｨ縺ｮ險ｭ螳壹ｒ霑斐☆繧ｨ繝ｳ繝峨・繧､繝ｳ繝医・
+     Server險ｭ螳・config.py)縺九ｉ縲ゞI縺ｫ蠢・ｦ√↑驛ｨ蛻・□縺代ｒ謚ｽ蜃ｺ縺励※霑斐☆縲・
+     """
+     # UI險ｭ螳壹↓蜉縺医※縲√け繝ｩ繧､繧｢繝ｳ繝亥・繝ｭ繧ｰ縺ｮ隧ｳ邏ｰ蜿ｯ蜷ｦ繝輔Λ繧ｰ縺ｨ繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝域磁邯壽ュ蝣ｱ繧りｿ斐☆
+     return {
+         "ui": config._ui_settings,
+         "clientLogVerbose": config.CLIENT_LOG_VERBOSE,
++        "minirag": {
++            "workspace": config.MINIRAG_WORKSPACE,
++            "searchEnabledDefault": config.MINIRAG_SEARCH_ENABLED_DEFAULT,
++            "topKDefault": config.MINIRAG_TOP_K_DEFAULT,
++        },
+         "agent": {
+             "url": config.AGENT_URL,
+             "agentId": config.AGENT_ID,
+             "threadId": config.THREAD_ID,
+         },
+     }
+ 
++
++app.include_router(diary_router)
++
+ # AG-UI 繝励Ο繝医さ繝ｫ縺ｮ繧ｨ繝ｳ繝峨・繧､繝ｳ繝医ｒ逋ｻ骭ｲ
+ add_adk_fastapi_endpoint(app, agent, path="/agui")
+ 
+ # 繝倥Ν繧ｹ繝√ぉ繝・け・医Ο繝ｼ繝峨ヰ繝ｩ繝ｳ繧ｵ繝ｼ遲峨°繧我ｽｿ逕ｨ・・
+ @app.get("/healthz")
+ async def healthz():
+     return {"status": "ok"}
+ 
+ # 繝ｫ繝ｼ繝医ヱ繧ｹ・・PI 縺ｮ蟄伜惠遒ｺ隱咲畑・・
+ @app.get("/")
+ def root():
+     return {"status": "ok", "endpoint": "/agui"}
+ 
+ # 繧ｹ繧ｯ繝ｪ繝励ヨ縺ｨ縺励※襍ｷ蜍輔☆繧句ｴ蜷医・ .env 縺ｮ蛟､縺ｧ繝舌う繝ｳ繝峨☆繧・
+ if __name__ == "__main__":
+     import uvicorn
+ 
+     uvicorn.run(
+         "main:app",
+         host=config.SERVER_BIND_HOST,
+         port=config.SERVER_PORT,
+         reload=(config.APP_ENV == "dev"),
+     )
+diff --git a/services/avatar-ui/server/src/config.py b/services/avatar-ui/server/src/config.py
+index 2508a53853edfe3293111d5d411477a4d1473df1..bd732981558997929469f7d2bdb9d444f9c6ba72 100644
+--- a/services/avatar-ui/server/src/config.py
++++ b/services/avatar-ui/server/src/config.py
+@@ -66,54 +66,63 @@ class UiSettings(BaseModel, extra="forbid"):
+ 
+ # 繧ｫ繝ｩ繝ｼ繝・・繝槭・繝励Μ繧ｻ繝・ヨ螳夂ｾｩ
+ class ThemePreset(BaseModel, extra="forbid"):
+     name: str
+     themeColor: str
+     userColor: str
+     toolColor: str
+ 
+ 
+ # 繧ｵ繝ｼ繝舌・蛛ｴ縺ｮ險ｭ螳夲ｼ・LM 繝励Ο繝舌う繝縲√・繝ｭ繝ｳ繝励ヨ遲会ｼ・
+ class ServerSettings(BaseModel, extra="forbid"):
+     llmProvider: str = "gemini"  # gemini | openai | anthropic
+     llmModel: str
+     searchSubAgent: "SearchSubAgent" = Field(default_factory=lambda: SearchSubAgent())
+     systemPrompt: str
+     logMaxBytes: int = Field(gt=0)
+     logBackupCount: int = Field(ge=0)
+ 
+ 
+ # 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝医・險ｭ螳夲ｼ・emini + google_search 繧剃ｽｿ逕ｨ・・
+ class SearchSubAgent(BaseModel, extra="forbid"):
+     enabled: bool = True
+     model: str = "gemini-2.5-flash"
+ 
+ 
++# MiniRAG 騾｣謳ｺ險ｭ螳・
++class MiniRagSettings(BaseModel, extra="forbid"):
++    baseUrl: str
++    workspace: str = "diary"
++    searchEnabledDefault: bool = True
++    topKDefault: int = Field(ge=1, le=10, default=3)
++
++
+ # settings.json5 縺ｮ繝ｫ繝ｼ繝医せ繧ｭ繝ｼ繝・
+ class AppSettings(BaseModel, extra="forbid"):
+     server: ServerSettings
+     ui: UiSettings
++    minirag: MiniRagSettings
+ 
+ 
+ # ---------- 繝・・繝櫁ｧ｣豎ｺ ----------
+ 
+ def resolve_theme(ui: UiSettings) -> dict:
+     """
+     繝・・繝槭・繝ｪ繧ｻ繝・ヨ繧定ｧ｣豎ｺ縺励∝ｮ滄圀縺ｫ菴ｿ縺・牡繧呈ｱｺ螳壹☆繧九・
+     - ui.theme 縺ｧ謖・ｮ壹＆繧後◆繝励Μ繧ｻ繝・ヨ縺後≠繧後・縺昴ｌ繧貞渕貅悶↓縺吶ｋ
+     - 蛟句挨謖・ｮ夲ｼ・hemeColor 縺ｪ縺ｩ・峨′縺ゅｌ縺ｰ繝励Μ繧ｻ繝・ヨ繧医ｊ蜆ｪ蜈医☆繧・
+     """
+     resolved = ui.model_dump()
+     if ui.themes:
+         for preset in ui.themes:
+             if preset.name == ui.theme:
+                 resolved["themeColor"] = preset.themeColor
+                 resolved["userColor"] = preset.userColor
+                 resolved["toolColor"] = preset.toolColor
+                 break
+     resolved.pop("themes", None)
+     return resolved
+ 
+ 
+ # .env 縺九ｉ隱ｭ縺ｿ霎ｼ繧迺ｰ蠅・､画焚縺ｮ繧ｹ繧ｭ繝ｼ繝・
+ class EnvSettings(BaseSettings):
+     google_api_key: str = Field(alias="GOOGLE_API_KEY")
+@@ -208,27 +217,33 @@ allowed_origins_env = os.getenv("ALLOWED_ORIGINS")
+ if allowed_origins_env:
+     CORS_ORIGINS: List[str] = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+ else:
+     CORS_ORIGINS: List[str] = [o.format(port=CLIENT_PORT) for o in DEFAULT_ALLOWED_ORIGINS_DEV]
+ 
+ LLM_MODEL = app_settings.server.llmModel
+ LLM_PROVIDER = app_settings.server.llmProvider
+ SYSTEM_PROMPT = app_settings.server.systemPrompt
+ LOG_MAX_BYTES = app_settings.server.logMaxBytes
+ LOG_BACKUP_COUNT = app_settings.server.logBackupCount
+ 
+ # Session/HITL 險ｭ螳・
+ SESSION_TIMEOUT_SECONDS = env_settings.session_timeout_seconds
+ CLEANUP_INTERVAL_SECONDS = env_settings.cleanup_interval_seconds
+ 
+ # FastAPI 縺ｮ /agui/config 縺ｧ霑斐☆縺溘ａ縺ｫ dict 縺ｧ菫晄戟
+ _ui_settings = resolve_theme(app_settings.ui)
+ 
+ # 繧ｯ繝ｩ繧､繧｢繝ｳ繝医・繝ｭ繧ｰ隧ｳ邏ｰ蜿ｯ蜷ｦ・医し繝ｼ繝占ｨｭ螳壹→騾｣蜍包ｼ・
+ CLIENT_LOG_VERBOSE = (APP_ENV == "dev") or (LOG_BODY is True)
+ 
+ # 讀懃ｴ｢繧ｵ繝悶お繝ｼ繧ｸ繧ｧ繝ｳ繝郁ｨｭ螳・
+ SEARCH_SUBAGENT_ENABLED = app_settings.server.searchSubAgent.enabled
+ SEARCH_SUBAGENT_MODEL = app_settings.server.searchSubAgent.model
+ 
++# MiniRAG 險ｭ螳・
++MINIRAG_BASE_URL = app_settings.minirag.baseUrl
++MINIRAG_WORKSPACE = app_settings.minirag.workspace
++MINIRAG_SEARCH_ENABLED_DEFAULT = app_settings.minirag.searchEnabledDefault
++MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
++
+ # AG-UI 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝域磁邯壽ュ蝣ｱ・医し繝ｼ繝舌ｒ蜚ｯ荳縺ｮ逵溷ｮ滓ｺ舌→縺吶ｋ・・
+ AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"
+diff --git a/services/avatar-ui/server/src/diary_service.py b/services/avatar-ui/server/src/diary_service.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..f9571685a7e5c153ea02b67044185d3a5e9aa318
+--- /dev/null
++++ b/services/avatar-ui/server/src/diary_service.py
+@@ -0,0 +1,248 @@
++import json
++import logging
++import re
++import uuid
++from dataclasses import dataclass
++from datetime import datetime, timezone
++from typing import Any
++
++from google import genai
++
++from src import config
++from src.minirag_client import MiniRagClient, MiniRagConfig, MiniRagError
++
++
++logger = logging.getLogger(__name__)
++
++
++class DiaryValidationError(ValueError):
++    pass
++
++
++class DiaryAnalysisError(RuntimeError):
++    pass
++
++
++@dataclass(frozen=True)
++class SearchSettings:
++    enabled: bool
++    top_k: int
++
++
++@dataclass(frozen=True)
++class DiaryAnalysis:
++    title: str
++    importance_score: int
++    summary: str
++    semantic_memory: str
++    episodic_memory: str
++
++
++_MINIRAG_CLIENT = MiniRagClient(
++    MiniRagConfig(
++        base_url=config.MINIRAG_BASE_URL,
++        workspace=config.MINIRAG_WORKSPACE,
++    )
++)
++
++_search_settings_by_thread: dict[str, SearchSettings] = {}
++
++
++def get_search_settings(thread_id: str) -> SearchSettings:
++    return _search_settings_by_thread.get(
++        thread_id,
++        SearchSettings(
++            enabled=config.MINIRAG_SEARCH_ENABLED_DEFAULT,
++            top_k=config.MINIRAG_TOP_K_DEFAULT,
++        ),
++    )
++
++
++def set_search_settings(thread_id: str, settings: SearchSettings) -> SearchSettings:
++    clamped = SearchSettings(
++        enabled=settings.enabled,
++        top_k=max(1, min(settings.top_k, 10)),
++    )
++    _search_settings_by_thread[thread_id] = clamped
++    return clamped
++
++
++def format_transcript(messages: list[dict[str, Any]]) -> str:
++    lines: list[str] = []
++    for message in messages:
++        role = message.get("role", "user")
++        content = (message.get("content") or "").strip()
++        if not content:
++            continue
++        label = "User" if role == "user" else "Assistant" if role == "assistant" else "System"
++        lines.append(f"{label}: {content}")
++    return "\n".join(lines)
++
++
++def build_analysis_prompt(messages: list[dict[str, Any]]) -> str:
++    transcript = format_transcript(messages)
++    return (
++        "縺ゅ↑縺溘・譌･險倅ｼ夊ｩｱ繧呈紛逅・☆繧九い繧ｷ繧ｹ繧ｿ繝ｳ繝医〒縺吶・
++        "莉･荳九・莨夊ｩｱ縺九ｉ譌･險倥ち繧､繝医Ν縲・㍾隕∝ｺｦ(1-10)縲√し繝槭Μ繝ｼ縲・
++        "繧ｻ繝槭Φ繝・ぅ繝・け險俶・縲√お繝斐た繝ｼ繝芽ｨ俶・繧呈歓蜃ｺ縺励※縺上□縺輔＞縲・
++        "蠢・★ JSON 縺ｮ縺ｿ繧定ｿ斐＠縲√く繝ｼ縺ｯ谺｡縺ｮ騾壹ｊ縺ｫ縺吶ｋ縺薙→:\n"
++        "title, importance_score, summary, semantic_memory, episodic_memory\n\n"
++        "莨夊ｩｱ:\n"
++        f"{transcript}"
++    )
++
++
++def _extract_response_text(response: Any) -> str:
++    text = getattr(response, "text", None)
++    if isinstance(text, str):
++        return text
++    candidates = getattr(response, "candidates", None)
++    if candidates:
++        content = getattr(candidates[0], "content", None)
++        parts = getattr(content, "parts", None) if content else None
++        if parts and hasattr(parts[0], "text"):
++            return parts[0].text
++    return ""
++
++
++def _extract_json_payload(text: str) -> dict[str, Any]:
++    match = re.search(r"\{.*\}", text, re.DOTALL)
++    if not match:
++        raise DiaryAnalysisError("Gemini response did not include JSON payload.")
++    try:
++        return json.loads(match.group(0))
++    except json.JSONDecodeError as exc:
++        raise DiaryAnalysisError(f"Failed to parse JSON payload: {exc}") from exc
++
++
++async def analyze_diary(messages: list[dict[str, Any]]) -> DiaryAnalysis:
++    if not messages:
++        raise DiaryValidationError("No messages provided for diary analysis.")
++    prompt = build_analysis_prompt(messages)
++    client = genai.Client(api_key=config.GOOGLE_API_KEY)
++    response = client.models.generate_content(
++        model=config.LLM_MODEL,
++        contents=prompt,
++    )
++    text = _extract_response_text(response)
++    if not text:
++        raise DiaryAnalysisError("Gemini response was empty.")
++    payload = _extract_json_payload(text)
++    try:
++        importance_score = int(payload["importance_score"])
++    except (KeyError, ValueError, TypeError) as exc:
++        raise DiaryAnalysisError("importance_score is missing or invalid.") from exc
++    return DiaryAnalysis(
++        title=str(payload.get("title", "")).strip(),
++        importance_score=importance_score,
++        summary=str(payload.get("summary", "")).strip(),
++        semantic_memory=str(payload.get("semantic_memory", "")).strip(),
++        episodic_memory=str(payload.get("episodic_memory", "")).strip(),
++    )
++
++
++def _generate_doc_id(now: datetime) -> str:
++    short_id = uuid.uuid4().hex[:8]
++    return f"journal-{now.strftime('%Y%m%d-%H%M%S')}-{short_id}"
++
++
++def build_diary_document(
++    *,
++    messages: list[dict[str, Any]],
++    analysis: DiaryAnalysis,
++    thread_id: str,
++    search_settings: SearchSettings,
++) -> dict[str, Any]:
++    now = datetime.now(timezone.utc)
++    transcript = format_transcript(messages)
++    body = "\n\n".join(
++        [
++            "## Conversation",
++            transcript,
++            "## Semantic Memory",
++            analysis.semantic_memory,
++            "## Episodic Memory",
++            analysis.episodic_memory,
++        ]
++    )
++    return {
++        "workspace": config.MINIRAG_WORKSPACE,
++        "doc_id": _generate_doc_id(now),
++        "title": analysis.title,
++        "summary": analysis.summary,
++        "body": body,
++        "importance_score": analysis.importance_score,
++        "semantic_memory": analysis.semantic_memory,
++        "episodic_memory": analysis.episodic_memory,
++        "created_at": now.isoformat(),
++        "metadata": {
++            "model": config.LLM_MODEL,
++            "message_count": len(messages),
++            "search_enabled": search_settings.enabled,
++            "top_k": search_settings.top_k,
++            "thread_id": thread_id,
++        },
++    }
++
++
++async def finalize_diary(
++    *,
++    messages: list[dict[str, Any]],
++    thread_id: str,
++    search_settings: SearchSettings,
++) -> tuple[str, int, DiaryAnalysis]:
++    analysis = await analyze_diary(messages)
++    document = build_diary_document(
++        messages=messages,
++        analysis=analysis,
++        thread_id=thread_id,
++        search_settings=search_settings,
++    )
++    try:
++        result = await _MINIRAG_CLIENT.bulk_insert([document])
++    except MiniRagError as exc:
++        raise DiaryAnalysisError(f"MiniRAG bulk insert failed: {exc}") from exc
++    inserted = int(result.get("inserted", 1))
++    return document["doc_id"], inserted, analysis
++
++
++def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
++    candidates = (
++        payload.get("items")
++        or payload.get("results")
++        or payload.get("documents")
++        or []
++    )
++    items: list[dict[str, Any]] = []
++    for entry in candidates:
++        if not isinstance(entry, dict):
++            continue
++        items.append(
++            {
++                "doc_id": entry.get("doc_id") or entry.get("id") or "",
++                "summary": entry.get("summary") or "",
++                "body": entry.get("body") or "",
++            }
++        )
++    return items
++
++
++async def search_diary(
++    *,
++    query: str,
++    thread_id: str,
++    top_k: int | None = None,
++) -> dict[str, Any]:
++    settings = get_search_settings(thread_id)
++    if not settings.enabled:
++        return {"items": [], "disabled": True}
++    query = query.strip()
++    if not query:
++        raise DiaryValidationError("Search query is empty.")
++    effective_top_k = top_k if top_k is not None else settings.top_k
++    try:
++        payload = await _MINIRAG_CLIENT.search(query, effective_top_k)
++    except MiniRagError as exc:
++        logger.warning("MiniRAG search failed: %s", exc)
++        return {"items": [], "error": "MiniRAG unavailable"}
++    return {"items": _extract_search_items(payload)}
+diff --git a/services/avatar-ui/server/src/minirag_client.py b/services/avatar-ui/server/src/minirag_client.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a6c6c433b587b98a4a8b6b82e95df8fcb7a59b5
+--- /dev/null
++++ b/services/avatar-ui/server/src/minirag_client.py
+@@ -0,0 +1,54 @@
++import logging
++from dataclasses import dataclass
++from typing import Any
++
++import aiohttp
++
++
++logger = logging.getLogger(__name__)
++
++
++class MiniRagError(RuntimeError):
++    pass
++
++
++@dataclass(frozen=True)
++class MiniRagConfig:
++    base_url: str
++    workspace: str
++    timeout_seconds: int = 30
++
++
++class MiniRagClient:
++    def __init__(self, config: MiniRagConfig) -> None:
++        self._config = config
++        self._base_url = config.base_url.rstrip("/")
++
++    async def bulk_insert(self, documents: list[dict[str, Any]]) -> dict[str, Any]:
++        payload = {
++            "workspace": self._config.workspace,
++            "documents": documents,
++        }
++        return await self._post("/minirag/documents/bulk", payload)
++
++    async def search(self, query: str, top_k: int) -> dict[str, Any]:
++        payload = {
++            "workspace": self._config.workspace,
++            "query": query,
++            "top_k": top_k,
++        }
++        return await self._post("/minirag/search", payload)
++
++    async def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
++        url = f"{self._base_url}{path}"
++        timeout = aiohttp.ClientTimeout(total=self._config.timeout_seconds)
++        try:
++            async with aiohttp.ClientSession(timeout=timeout) as session:
++                async with session.post(url, json=payload) as response:
++                    if response.status >= 400:
++                        text = await response.text()
++                        raise MiniRagError(f"MiniRAG error {response.status}: {text}")
++                    return await response.json()
++        except aiohttp.ClientError as exc:
++            logger.exception("MiniRAG request failed: %s", exc)
++            raise MiniRagError(f"MiniRAG request failed: {exc}") from exc
+diff --git a/services/avatar-ui/server/src/routes/__init__.py b/services/avatar-ui/server/src/routes/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/services/avatar-ui/server/src/routes/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/services/avatar-ui/server/src/routes/diary.py b/services/avatar-ui/server/src/routes/diary.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a08c9b9133b00c9f4f3b938f26fcae16de14590d
+--- /dev/null
++++ b/services/avatar-ui/server/src/routes/diary.py
+@@ -0,0 +1,139 @@
++from datetime import datetime
++from typing import Literal
++
++from fastapi import APIRouter, HTTPException, status
++from pydantic import BaseModel, Field
++
++from src import config
++from src.diary_service import (
++    DiaryAnalysisError,
++    DiaryValidationError,
++    SearchSettings,
++    finalize_diary,
++    search_diary as run_search_diary,
++    set_search_settings,
++)
++
++
++router = APIRouter()
++
++
++class DiaryMessage(BaseModel):
++    role: Literal["user", "assistant", "system"]
++    content: str
++    created_at: datetime | None = None
++
++
++class SearchSettingsModel(BaseModel):
++    enabled: bool
++    top_k: int = Field(ge=1, le=10)
++
++
++class DiaryAnalysisModel(BaseModel):
++    title: str
++    importance_score: int = Field(ge=1, le=10)
++    summary: str
++    semantic_memory: str
++    episodic_memory: str
++
++
++class FinalizeDiaryRequest(BaseModel):
++    workspace: str
++    thread_id: str
++    messages: list[DiaryMessage]
++    search_settings: SearchSettingsModel
++
++
++class FinalizeDiaryResponse(BaseModel):
++    doc_id: str
++    inserted: int
++    analysis: DiaryAnalysisModel
++
++
++class SearchSettingsRequest(BaseModel):
++    thread_id: str
++    settings: SearchSettingsModel
++
++
++class SearchSettingsResponse(BaseModel):
++    applied: bool
++
++
++class ErrorResponse(BaseModel):
++    message: str
++
++
++@router.post(
++    "/agui/diary/finalize",
++    response_model=FinalizeDiaryResponse,
++    responses={
++        400: {"model": ErrorResponse},
++        503: {"model": ErrorResponse},
++    },
++)
++async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryResponse:
++    if request.workspace != config.MINIRAG_WORKSPACE:
++        raise HTTPException(
++            status_code=status.HTTP_400_BAD_REQUEST,
++            detail="Invalid workspace.",
++        )
++    settings = SearchSettings(
++        enabled=request.search_settings.enabled,
++        top_k=request.search_settings.top_k,
++    )
++    set_search_settings(request.thread_id, settings)
++    try:
++        doc_id, inserted, analysis = await finalize_diary(
++            messages=[message.model_dump() for message in request.messages],
++            thread_id=request.thread_id,
++            search_settings=settings,
++        )
++    except DiaryValidationError as exc:
++        raise HTTPException(
++            status_code=status.HTTP_400_BAD_REQUEST,
++            detail=str(exc),
++        ) from exc
++    except DiaryAnalysisError as exc:
++        raise HTTPException(
++            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
++            detail=str(exc),
++        ) from exc
++
++    return FinalizeDiaryResponse(
++        doc_id=doc_id,
++        inserted=inserted,
++        analysis=DiaryAnalysisModel(
++            title=analysis.title,
++            importance_score=analysis.importance_score,
++            summary=analysis.summary,
++            semantic_memory=analysis.semantic_memory,
++            episodic_memory=analysis.episodic_memory,
++        ),
++    )
++
++
++@router.post(
++    "/agui/diary/search-settings",
++    response_model=SearchSettingsResponse,
++    responses={400: {"model": ErrorResponse}},
++)
++async def update_search_settings(request: SearchSettingsRequest) -> SearchSettingsResponse:
++    settings = SearchSettings(
++        enabled=request.settings.enabled,
++        top_k=request.settings.top_k,
++    )
++    set_search_settings(request.thread_id, settings)
++    return SearchSettingsResponse(applied=True)
++
++
++async def search_diary(
++    query: str,
++    thread_id: str | None = None,
++    top_k: int | None = None,
++) -> dict:
++    """Search past diary entries and return doc_id/summary/body items."""
++    thread = thread_id or config.THREAD_ID
++    try:
++        return await run_search_diary(query=query, thread_id=thread, top_k=top_k)
++    except DiaryValidationError as exc:
++        return {"items": [], "error": str(exc)}
+diff --git a/services/avatar-ui/settings.default.json5 b/services/avatar-ui/settings.default.json5
+new file mode 100644
+index 0000000000000000000000000000000000000000..f5f5ef520bcc5f62b9df2367ee544dcbe401a109
+--- /dev/null
++++ b/services/avatar-ui/settings.default.json5
+@@ -0,0 +1,43 @@
++{
++  server: {
++    llmProvider: "gemini",
++    llmModel: "gemini-2.5-flash",
++    searchSubAgent: {
++      enabled: true,
++      model: "gemini-2.5-flash",
++    },
++    systemPrompt: "縺ゅ↑縺溘・譌･險倅ｼ夊ｩｱ繧呈髪謠ｴ縺吶ｋ繧｢繧ｷ繧ｹ繧ｿ繝ｳ繝医〒縺吶ゅΘ繝ｼ繧ｶ繝ｼ縺碁℃蜴ｻ縺ｮ譌･險倥↓髢｢縺吶ｋ雉ｪ蝠上ｒ縺励◆繧頑枚閼医′蠢・ｦ√↑縺ｨ縺阪・縺ｿ search_diary 繝・・繝ｫ繧剃ｽｿ縺・∝ｾ励ｉ繧後◆ doc_id/summary/body 繧貞盾閠・↓蝗樒ｭ斐＠縺ｦ縺上□縺輔＞縲よ､懃ｴ｢繝医げ繝ｫ縺・OFF 縺ｮ蝣ｴ蜷医・ search_diary 縺檎ｩｺ繧定ｿ斐☆縺溘ａ縲∫┌逅・↓讀懃ｴ｢縺励↑縺・〒縺上□縺輔＞縲・,
++    logMaxBytes: 1048576,
++    logBackupCount: 3,
++  },
++  ui: {
++    typeSpeed: 0,
++    opacity: 0.7,
++    soundVolume: 0,
++    mouthInterval: 0,
++    beepFrequency: 0,
++    beepDuration: 0,
++    beepVolumeEnd: 0,
++    avatarOverlayOpacity: 0.4,
++    avatarBrightness: 1,
++    glowText: 1,
++    glowBox: 1,
++    brightness: 1,
++    nameTags: {
++      user: "YOU",
++      avatar: "SPECTRA",
++      avatarFullName: "Spectra",
++    },
++    systemMessages: {
++      banner1: "{avatarFullName} online.",
++      banner2: "Type a message to begin.",
++    },
++    theme: "classic",
++  },
++  minirag: {
++    baseUrl: "http://localhost:8165",
++    workspace: "diary",
++    searchEnabledDefault: true,
++    topKDefault: 3,
++  },
++}
+ 
+EOF

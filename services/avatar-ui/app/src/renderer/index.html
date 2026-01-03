@@ -23,8 +23,22 @@
       </section>
 
       <footer data-slot="input" id="pane-input">
-        <span class="prompt">&gt;</span>
-        <input type="text" id="input" autofocus />
+        <div class="diary-controls">
+          <label class="toggle">
+            <input type="checkbox" id="search-toggle" />
+            <span>検索</span>
+          </label>
+          <label class="top-k">
+            top_k
+            <input type="number" id="search-top-k" min="1" max="10" step="1" />
+          </label>
+          <button type="button" id="finalize-button">会話確定</button>
+          <span class="finalize-status" id="finalize-status"></span>
+        </div>
+        <div class="input-row">
+          <span class="prompt">&gt;</span>
+          <input type="text" id="input" autofocus />
+        </div>
       </footer>
 
       <aside data-slot="avatar" id="pane-avatar">

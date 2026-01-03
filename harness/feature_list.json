@@ -101,7 +101,7 @@
       "title": "Diary conversation structuring + MiniRAG search integration",
       "description": "Gemini conversations are finalized into structured diary entries and stored in MiniRAG; Gemini can retrieve past diary context on demand.",
       "services": ["avatar-ui", "api-gateway"],
-      "status": "failing",
+      "status": "passing",
       "tags": ["frontend", "agent", "rag"],
 
       "spec_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md",

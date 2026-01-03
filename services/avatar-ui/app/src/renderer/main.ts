@@ -16,6 +16,18 @@ const outputEl = document.querySelector("#pane-output .text-scroll") as HTMLElem
 const avatarImg = document.getElementById("avatar-img") as HTMLImageElement | null;
 const metaBar = document.getElementById("meta");
 const avatarLabel = document.getElementById("avatar-label");
+const searchToggle = document.getElementById("search-toggle") as HTMLInputElement | null;
+const topKInput = document.getElementById("search-top-k") as HTMLInputElement | null;
+const finalizeButton = document.getElementById("finalize-button") as HTMLButtonElement | null;
+const finalizeStatus = document.getElementById("finalize-status") as HTMLSpanElement | null;
+
+type DiaryMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+  created_at?: string;
+};
+
+const transcript: DiaryMessage[] = [];
 
 async function initApp() {
   if (!inputEl || !outputEl || !avatarImg || !avatarLabel) {
@@ -143,6 +155,13 @@ async function initApp() {
   });
   agentInstance.subscribe(loggerSubscriber);
 
+  const serverBase = config.agent.url.replace(/\/agui\/?$/, "");
+  const diaryWorkspace = config.minirag.workspace;
+  const diarySearchSettings = {
+    enabled: config.minirag.searchEnabledDefault,
+    top_k: config.minirag.topKDefault,
+  };
+
   // テキスト行を追加（エンジンを介さない即時表示用）
   const appendLine = (className: string, text: string) => {
     const line = document.createElement("div");
@@ -153,6 +172,62 @@ async function initApp() {
   };
 
   let isRunning = false; // 多重実行防止フラグ
+  let isFinalizing = false;
+
+  const updateFinalizeStatus = (text: string, isError = false) => {
+    if (!finalizeStatus) return;
+    finalizeStatus.textContent = text;
+    finalizeStatus.style.color = isError ? "rgba(255, 102, 102, 1)" : "";
+  };
+
+  const applySearchSettings = async () => {
+    if (!config.agent.threadId) {
+      return;
+    }
+    try {
+      const response = await fetch(`${serverBase}/agui/diary/search-settings`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thread_id: config.agent.threadId,
+          settings: diarySearchSettings,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`Search settings update failed: ${response.status}`);
+      }
+      updateFinalizeStatus("検索設定を更新しました");
+    } catch (error) {
+      updateFinalizeStatus(
+        `検索設定の更新に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+        true,
+      );
+    }
+  };
+
+  if (searchToggle) {
+    searchToggle.checked = diarySearchSettings.enabled;
+    searchToggle.addEventListener("change", async () => {
+      diarySearchSettings.enabled = searchToggle.checked;
+      await applySearchSettings();
+    });
+  }
+
+  if (topKInput) {
+    topKInput.value = String(diarySearchSettings.top_k);
+    topKInput.addEventListener("change", async () => {
+      const value = Number(topKInput.value);
+      diarySearchSettings.top_k = Number.isNaN(value)
+        ? config.minirag.topKDefault
+        : Math.min(Math.max(value, 1), 10);
+      topKInput.value = String(diarySearchSettings.top_k);
+      await applySearchSettings();
+    });
+  }
+
+  if (searchToggle || topKInput) {
+    await applySearchSettings();
+  }
 
   // ユーザー入力を処理してエージェントに送信
   inputEl.addEventListener("keydown", async (event) => {
@@ -182,6 +257,11 @@ async function initApp() {
     };
 
     agentInstance!.messages.push(userMessage);
+    transcript.push({
+      role: "user",
+      content: value,
+      created_at: new Date().toISOString(),
+    });
 
     isRunning = true;
     try {
@@ -193,6 +273,13 @@ async function initApp() {
           outputEl,
           engine, // エンジンを渡す
           autoScroll,
+          onAssistantMessageComplete: (message) => {
+            transcript.push({
+              role: "assistant",
+              content: message,
+              created_at: new Date().toISOString(),
+            });
+          },
         }),
       );
     } catch (error) {
@@ -206,6 +293,56 @@ async function initApp() {
       isRunning = false;
     }
   });
+
+  if (finalizeButton) {
+    finalizeButton.addEventListener("click", async () => {
+      if (isFinalizing) {
+        return;
+      }
+      if (!transcript.length) {
+        appendLine("text-line--error", "❌ 会話履歴がありません。");
+        return;
+      }
+      isFinalizing = true;
+      finalizeButton.disabled = true;
+      updateFinalizeStatus("会話を確定しています...");
+      try {
+        const response = await fetch(`${serverBase}/agui/diary/finalize`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            workspace: diaryWorkspace,
+            thread_id: config.agent.threadId,
+            messages: transcript,
+            search_settings: diarySearchSettings,
+          }),
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.detail || `Finalize failed: ${response.status}`);
+        }
+        const payload = await response.json();
+        appendLine(
+          "text-line--system",
+          `> 日記を登録しました: ${payload.doc_id} (重要度 ${payload.analysis.importance_score})`,
+        );
+        appendLine(
+          "text-line--system",
+          `> サマリー: ${payload.analysis.summary}`,
+        );
+        updateFinalizeStatus("会話確定が完了しました");
+      } catch (error) {
+        appendLine(
+          "text-line--error",
+          `❌ 会話確定に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        updateFinalizeStatus("会話確定に失敗しました", true);
+      } finally {
+        isFinalizing = false;
+        finalizeButton.disabled = false;
+      }
+    });
+  }
   
   // 初期メッセージ: 設定されたシステムメッセージを使う
   const fullName = config.ui.nameTags.avatarFullName || config.ui.nameTags.avatar || "AGENT";

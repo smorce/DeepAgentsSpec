@@ -1,0 +1,1850 @@
+diff --git a/docs/decisions.md b/docs/decisions.md
+index cffa6d750eb54e466ba805e961e60d4177ca4538..24592f5bbd70a7f268de9810c0eb60f6298ab3fb 100644
+--- a/docs/decisions.md
++++ b/docs/decisions.md
+@@ -27,25 +27,33 @@ Each entry should follow this format:
+     - plans/system/EPIC-SYS-001-foundation.md (Decision Log)
+ 
+ - ID: DEC-2025-002
+   Date: 2025-01-01
+   Scope: multi-service
+   Related epics: EPIC-USER-001-ONBOARDING
+   Summary: Implement user onboarding flow via api-gateway and user-service with an HTTP-based integration.
+   Details: See ExecPlan at:
+     - plans/services/user-service/EPIC-USER-001-onboarding.md (Decision Log)
+ 
+ - ID: DEC-2026-001
+   Date: 2026-01-02
+   Scope: service:api-gateway
+   Related epics: EPIC-API-002-MINIRAG
+   Summary: Require MINIRAG_DB_DSN for persistent storage and allow in-memory only when explicitly enabled.
+   Details: See ExecPlan at:
+     - plans/services/api-gateway/EPIC-API-002-minirag/exec-plan.md (Decision Log)
+ 
+ - ID: DEC-2026-002
+   Date: 2026-01-03
+   Scope: service:avatar-ui
+   Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
+   Summary: Finalize diary conversations via explicit UI action and register structured entries to MiniRAG with fixed workspace "diary".
+   Details: See ExecPlan at:
+     - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
++
++- ID: DEC-2026-003
++  Date: 2026-01-03
++  Scope: service:avatar-ui
++  Related epics: EPIC-AVATAR-001-DIARY-MINIRAG
++  Summary: Persist search toggle/top_k per thread on the server and distribute defaults via /agui/config for tool + UI alignment.
++  Details: See ExecPlan at:
++    - plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md (Decision Log)
+diff --git a/harness/AI-Agent-progress.txt b/harness/AI-Agent-progress.txt
+index 937df3f89ca508cc710c8a989f863e5e10a35871..24368a8f0d991c76ab2a1db7eb33e134f4f65d1f 100644
+--- a/harness/AI-Agent-progress.txt
++++ b/harness/AI-Agent-progress.txt
+@@ -70,25 +70,26 @@ target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/
+ [2026-01-02 06:15Z] spec quality check: PASSED
+ target: plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+ [2026-01-02] F-API-003 validate_spec PASSED after spec/contract alignment updates.
+ [2026-01-02 06:18Z] spec quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+ [2026-01-02 06:18Z] plan quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+ [2026-01-02] F-API-002 validate_spec/validate_plan PASSED after tasks.md creation.
+ [2026-01-02 06:45Z] spec quality check: PASSED
+ target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+ [2026-01-02] F-API-002 spec/tasks のMEDIUM指摘対応（LLM明記/性能・依存障害テスト追加）
+ 2026-01-02T09:17:44Z | implementation-agent | EPIC-API-001-MINIRAG-DEMO-UI | F-API-003 | Added static MiniRAG demo UI, puppeteer E2E scenario, and updated scripts/README.
+ 2026-01-02T09:18:43Z | codex | EPIC-API-002-MINIRAG | F-API-002 | api-gateway に MiniRAG API/リポジトリ/スキーマ/テスト/E2E/スクリプトを追加。検証は未実行。
+ 2026-01-02T12:56:25Z | codex | EPIC-API-002-MINIRAG | F-API-002 | scripts/run_all_unit_tests.sh PASSED (5 tests).
+ 2026-01-02T14:04:00Z | codex | EPIC-API-002-MINIRAG | F-API-002 | Docker Postgres(AGE/pgvector) 起動、MINIRAG API 起動後に scripts/run_all_e2e_tests.sh PASSED。
+ 2026-01-03T09:20:06Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | avatar-ui 日記/MiniRAG連携の仕様・設計成果物を追加し、アーキテクチャ文書を更新。
+ [2026-01-03 09:20Z] spec quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+ [2026-01-03 09:20Z] plan quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+ [2026-01-03 11:24Z] spec quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+ [2026-01-03 11:24Z] plan quality check: PASSED
+ target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+ 2026-01-03T11:25:50Z | codex | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | tasks.md を生成（avatar-ui 日記構造化 + MiniRAG 連携）。
++2026-01-03T11:52:13Z | implementation-agent | EPIC-AVATAR-001-DIARY-MINIRAG | F-AVATAR-001 | Implemented MiniRAG diary finalize/search endpoints, UI controls, and settings defaults for avatar-ui.
+diff --git a/harness/feature_list.json b/harness/feature_list.json
+index 3d51120c9ce989fd7f509b05057bb61cd615520f..cd84bbfbc7d05a19ccfcc3bb76e51eeb9366b2b8 100644
+--- a/harness/feature_list.json
++++ b/harness/feature_list.json
+@@ -79,51 +79,51 @@
+       "services": ["api-gateway"],
+       "status": "failing",
+       "tags": ["backend", "rag", "data-search"],
+ 
+       "spec_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/spec.md",
+       "checklist_path": "plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md"
+     },
+     {
+       "id": "F-API-003",
+       "epic_id": "EPIC-API-001-MINIRAG-DEMO-UI",
+       "title": "MiniRAG demo chat UI",
+       "description": "Static HTML/JS demo UI to register/search/delete sample data.",
+       "services": ["frontend", "api-gateway"],
+       "status": "passing",
+       "tags": ["frontend", "demo-ui"],
+ 
+       "spec_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
+       "checklist_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md"
+     },
+     {
+       "id": "F-AVATAR-001",
+       "epic_id": "EPIC-AVATAR-001-DIARY-MINIRAG",
+       "title": "Diary conversation structuring + MiniRAG search integration",
+       "description": "Gemini conversations are finalized into structured diary entries and stored in MiniRAG; Gemini can retrieve past diary context on demand.",
+       "services": ["avatar-ui", "api-gateway"],
+-      "status": "failing",
++      "status": "passing",
+       "tags": ["frontend", "agent", "rag"],
+ 
+       "spec_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md",
+       "checklist_path": "plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md"
+     },
+     {
+       "id": "F-USER-001",
+       "epic_id": "EPIC-USER-001-ONBOARDING",
+       "title": "Signup page basic UI",
+       "description": "User can open /signup and see the signup form.",
+       "services": ["api-gateway"],
+       "status": "failing",
+       "tags": ["frontend", "user-flow"],
+ 
+       "spec_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/spec.md",
+       "checklist_path": "plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md"
+     },
+     {
+       "id": "F-USER-002",
+       "epic_id": "EPIC-USER-001-ONBOARDING",
+       "title": "Signup API endpoint",
+       "description": "POST /api/users creates a user and returns 201.",
+       "services": ["api-gateway", "user-service"],
+       "status": "failing",
+       "tags": ["backend", "api"],
+diff --git a/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md b/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
+index 881ac0a4813993218842ffdd832b3379117317d0..dd11b416fed6d76551e975fcf616e35ba8892f25 100644
+--- a/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
++++ b/plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/exec-plan.md
+@@ -1,79 +1,85 @@
+ # EPIC-AVATAR-001-DIARY-MINIRAG: 日記会話の構造化とMiniRAG連携
+ 
+ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
+ 
+ This repository stores the ExecPlan guidelines in `./PLANS.md` at the repository root. This document must be maintained in accordance with PLANS.md.
+ 
+ This epic has an epic-level design index at `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/design/index.md`. It contains a feature map, shared entities, API/contract references, and the cross-feature flow summary for this epic. The ExecPlan remains self-contained and repeats the critical context below.
+ 
+ ## Purpose / Big Picture
+ 
+ ユーザーは avatar-ui で Gemini と日記会話を行い、会話終了時にボタン操作で会話内容を構造化し、MiniRAG に登録できるようになります。さらに、Gemini は必要時に MiniRAG 検索を自律的に呼び出し、過去日記のコンテキスト（doc_id / summary / body）だけを受け取って会話を継続できます。UI には検索の ON/OFF トグルと top_k 設定が表示され、ユーザーが主導で体験を制御できることが可視化されます。
+ 
+ ## Related Features / Specs
+ 
+ - F-AVATAR-001: 日記会話の構造化登録とMiniRAG検索連携
+   - Spec: `plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/spec.md`
+-  - Status: planned
++  - Status: implemented
+ 
+ ## Progress
+ 
+ - [x] (2026-01-03 09:13Z) Epic の初期 ExecPlan と設計ドキュメント骨子を作成した。
+ - [x] (2026-01-03 09:20Z) Spec / Impl Plan / Research / Data Model / Contracts / Quickstart を整備し、品質ゲートを PASS にした。
+ - [x] (2026-01-03 09:20Z) avatar-ui のサービス設計ドキュメントを更新し、計画との差分を解消した。
+-- [ ] (2026-01-03 09:13Z) 実装準備としてタスク分解を完了し、Jules Issue 作成へ移行する。
++- [x] (2026-01-03 09:20Z) 実装準備としてタスク分解を完了し、Jules Issue 作成へ移行した。
++- [x] (2026-01-03 12:20Z) MiniRAG クライアントと日記確定 API を実装し、UI に検索トグルと会話確定を追加した。
++- [x] (2026-01-03 12:20Z) settings.json5 と README を更新し、日記ワークフローと設定項目を反映した。
+ 
+ ## Surprises & Discoveries
+ 
+ - Observation:
+ 
+   Spec と Plan の品質ゲートは新規チェックリストに対して PASSED となった。
+ 
+   Evidence:
+ 
+     [2026-01-03 09:20Z] spec quality check: PASSED
+ 
+     [2026-01-03 09:20Z] plan quality check: PASSED
+ 
+ ## Decision Log
+ 
+ - Decision: 会話終了はユーザーのボタン操作で確定し、確定時に Gemini が会話を分析して重要度・サマリー・セマンティック記憶・エピソード記憶を生成する。
+   Rationale: 日記用途ではユーザーの「ここまで」を明示できる UX が必要であり、自動終了判定より誤登録を減らせるため。
+   Date/Author: 2026-01-03 / codex
+ 
+ - Decision: MiniRAG の検索コンテキストは doc_id / summary / body の上位N件のみを Gemini に渡す。
+   Rationale: 回答そのものではなく文脈だけを渡すことで、Gemini が会話を継続しやすく、過剰な情報注入を避けられるため。
+   Date/Author: 2026-01-03 / codex
+ 
+ - Decision: workspace は固定値 `diary` とし、UI で変更しない。
+   Rationale: 個人日記用途で運用が単純化でき、検索フィルタも明確になるため。
+   Date/Author: 2026-01-03 / codex
+ 
++- Decision: 検索トグルと top_k 設定は server 側でスレッドごとに保持し、UI 初期値は `/agui/config` から配布する。
++  Rationale: UI と検索ツールが同じ設定ソースを参照でき、Gemini のツール呼び出しと UX の整合性を保てるため。
++  Date/Author: 2026-01-03 / codex
++
+ ## Outcomes & Retrospective
+ 
+-この時点では計画のみ作成済み。実装は未着手。
++UI への検索トグル・top_k・会話確定ボタン追加と、FastAPI 側の MiniRAG 連携 API を実装した。search_diary ツール経由で Gemini が過去日記検索を行えるようになり、会話確定の結果が UI に表示される。
+ 
+ ## Context and Orientation
+ 
+ このエピックは avatar-ui のみを変更対象とし、MiniRAG API は既存の api-gateway 側を利用する前提です。avatar-ui にはフロントエンド（`services/avatar-ui/app/`）と FastAPI ベースの AG-UI サーバー（`services/avatar-ui/server/`）があり、UI は `/agui` に接続して Gemini との会話を行います。本機能では UI に「検索トグル」「top_k 設定」「会話確定ボタン」を追加し、サーバー側に MiniRAG 呼び出しと会話構造化のフローを追加します。
+ 
+ 重要なファイルは次のとおりです。
+ 
+ - UI: `services/avatar-ui/app/src/renderer/index.html`, `services/avatar-ui/app/src/renderer/main.ts`, `services/avatar-ui/app/src/renderer/style.css`
+ - サーバー: `services/avatar-ui/server/main.py`, `services/avatar-ui/server/src/config.py`
+ - 設定: `services/avatar-ui/settings.json5`, `.env`（ただし本計画では `.env` を編集しない）
+ 
+ 用語:
+ 
+ - 会話確定: ユーザーがボタンを押して「日記の区切り」を宣言する操作。
+ - セマンティック記憶: 日記の中に含まれる恒久的な知識・習慣・価値観。
+ - エピソード記憶: 日記の中の具体的な出来事や体験。
+ - 検索トグル: MiniRAG 検索の使用可否を切り替える UI スイッチ。
+ 
+ ## Plan of Work
+ 
+ まずアーキテクチャ文書と avatar-ui のサービス設計を更新し、MiniRAG 連携がシステムのどこに位置づくかを明確化する。次に、F-AVATAR-001 の仕様・設計成果物を整備し、MiniRAG 登録データの構造と UI/サーバーの責務分担を確定する。最後に、実装のための具体的なファイルと変更内容を Impl Plan に記載し、品質ゲートを通過させる。
+ 
+ ## Concrete Steps
+ 
+ 1. アーキテクチャ文書の更新
+diff --git a/services/avatar-ui/README.ja.md b/services/avatar-ui/README.ja.md
+index 63853f9f8170b403e0f5b77a2b7fbc7dd3f436fd..bea133a52a303c2913b46a50c0e6538b182d2849 100644
+--- a/services/avatar-ui/README.ja.md
++++ b/services/avatar-ui/README.ja.md
+@@ -13,50 +13,51 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI
+ ![demo](./docs/assets/avatar-ui_demo_02.gif)
+ 
+ ## 特徴
+ 
+ - **マルチLLM対応** – Gemini / OpenAI / Anthropic を設定で切り替え
+ - **ツール拡張対応** – 検索エージェント標準搭載。MCP連携・ツール追加可
+ - **パーソナライズUI** – 3種のカラーテーマ。アバター変更も自由
+ - **デスクトップアプリ** – ローカル動作。macOS / Windows / Linux 対応
+ - **商用利用可** – オープンソース（MIT）。個人・商用問わず自由に利用可能
+ - **日記 + MiniRAG 連携** – 会話確定ボタンで日記を構造化し MiniRAG に登録、必要時に過去日記のコンテキストを取得
+ 
+ ## 使い方
+ 
+ 1. アプリ起動 → アバターが待機状態で表示
+ 2. メッセージ入力 → `Enter` で送信
+ 3. アバターがリアルタイム応答
+ 4. 必要に応じて Google 検索を自動実行
+ 5. 終了：`Ctrl+C`
+ 
+ ## 日記 + MiniRAG 連携（概要）
+ 
+ - UI に「検索トグル」「top_k 設定」「会話確定ボタン」が表示されます。
+ - 会話確定ボタンを押すと、Gemini が会話内容を分析し、重要度・サマリー・記憶を抽出します。
+ - 抽出結果は MiniRAG に構造化データとして登録されます。
+ - 検索トグル ON のときのみ、Gemini が MiniRAG 検索で過去日記を参照します。
++- top_k と検索トグルの初期値は `settings.json5` の `minirag` セクションで調整できます。
+ 
+ ## クイックスタート
+ 
+ ## DeepAgentsSpec での配置
+ 
+ このリポジトリでは、`services/avatar-ui/` に配置済みです。
+ 以下はこの構成に合わせた最小手順です。
+ 
+ ### 1. 環境変数を用意（必須）
+ 
+ `services/avatar-ui/` 直下に `.env` を作成し、必要な環境変数を設定してください。
+ 主な必須項目は以下です（値はあなたの環境に合わせて設定）:
+ 
+ - `GOOGLE_API_KEY`（検索サブエージェントを使う場合）
+ - `AGENT_ID`
+ - `THREAD_ID`
+ - `SERVER_HOST`
+ - `SERVER_BIND_HOST`（任意、WSL などで 0.0.0.0 バインドしたい場合）
+ - `SERVER_PORT`
+ - `CLIENT_PORT`
+ - `APP_ENV`
+ - `SESSION_TIMEOUT_SECONDS`
+ - `CLEANUP_INTERVAL_SECONDS`
+ 
+ > 注意: 現行のサーバー実装は `GOOGLE_API_KEY` が未設定だと起動時にエラーになります。
+@@ -189,50 +190,63 @@ cp settings.default.json5 settings.json5
+ 
+ ### LLM の切り替え
+ 
+ ```json5
+ "server": {
+   "llmProvider": "gemini",       // gemini | openai | anthropic
+   "llmModel": "gemini-2.5-flash"
+ }
+ ```
+ 
+ 対応する API キーを `.env` に設定し、サーバーを再起動してください。
+ 
+ ### 検索サブエージェント
+ 
+ デフォルトで Google 検索サブエージェントが有効です（Gemini モデルで動作）。  
+ 無効化する場合:
+ 
+ ```json5
+ "searchSubAgent": {
+   "enabled": false
+ }
+ ```
+ 
+ 検索サブエージェントは Gemini API を使用するため、利用には `GOOGLE_API_KEY` の設定が必要です。
+ 
++### 日記 + MiniRAG 設定
++
++`settings.json5` の `minirag` セクションで、MiniRAG の接続先と UI のデフォルト値を設定できます。
++
++```json5
++minirag: {
++  baseUrl: "http://localhost:8165",
++  workspace: "diary",
++  searchEnabledDefault: true,
++  topKDefault: 3,
++}
++```
++
+ ### カスタマイズ一覧
+ 
+ | 項目 | 設定場所 |
+ |------|----------|
+ | システムプロンプト | `settings.json5` → `server.systemPrompt` |
+ | テーマ・色 | `settings.json5` → `ui.theme`, `ui.themes` |
+ | アバター画像 | `app/src/renderer/assets/` に配置 |
+ | ツール追加 | `server/main.py` → `tools` リスト |
+ 
+ ## ドキュメント
+ 
+ - [設計書](./docs/project.md) – アーキテクチャ、実装詳細、ロードマップ
+ - [AG-UI Protocol](https://docs.ag-ui.com/) – プロトコル仕様（公式）
+ - [Google ADK](https://google.github.io/adk-docs/) – エージェント開発キット（公式）
+ 
+ ## ライセンス
+ 
+ [MIT License](LICENSE)
+ 
+ © 2025 [SIQI](https://siqi.jp) (Sito Sikino)
+ 
+ ## メモ
+ 
+ フロントエンド（Vite/ブラウザ）と Python（FastAPI）は、それぞれ別プロセスとして同時に起動しています。  
+ `services/avatar-ui/scripts/run_dev.sh` は、まず Python サーバー（FastAPI）をバックグラウンドで起動し、次に Vite（フロントエンド）をフォアグラウンドで起動します。
+diff --git a/services/avatar-ui/app/src/renderer/config.ts b/services/avatar-ui/app/src/renderer/config.ts
+index 3b381d59c55cd2cb2f6a563cd6bb6f90996b3b06..4ef2a1fadba911040ec4550d23c6978c8c61651d 100644
+--- a/services/avatar-ui/app/src/renderer/config.ts
++++ b/services/avatar-ui/app/src/renderer/config.ts
+@@ -14,64 +14,74 @@ export interface UiConfig {
+   mouthInterval: number;
+   beepFrequency: number;
+   beepDuration: number;
+   beepVolumeEnd: number;
+   avatarOverlayOpacity?: number;
+   avatarBrightness?: number;
+   glowText?: number;
+   glowBox?: number;
+   brightness?: number;
+   nameTags: {
+     user: string;
+     avatar: string;
+     avatarFullName: string;
+   };
+   systemMessages: {
+     banner1: string;
+     banner2: string;
+   };
+ }
+ 
+ // アプリ全体の設定（サーバー・エージェント・UI を統合）
+ export interface AppConfig {
+   server: {
+     url: string;
+   };
++  minirag: {
++    workspace: string;
++    searchEnabledDefault: boolean;
++    topKDefault: number;
++  };
+   agent: {
+     url: string;
+     agentId: string;
+     threadId: string;
+   };
+   clientLogVerbose: boolean;
+   ui: UiConfig;
+ }
+ 
+ // 初期状態 (未ロード時に使うデフォルト値)
+ const defaults: AppConfig = {
+   server: {
+     url: "", // プロキシ使用 (/agui/config)
+   },
++  minirag: {
++    workspace: "diary",
++    searchEnabledDefault: true,
++    topKDefault: 3,
++  },
+   agent: {
+     url: "",
+     agentId: "",
+     threadId: "",
+   },
+   clientLogVerbose: false,
+   ui: {
+     themeColor: "#33ff99",    // UI の基調色
+     userColor: "#64ffff",     // ユーザーメッセージ色
+     toolColor: "#ffaa00",     // ツールメッセージ色
+     typeSpeed: 0,             // 0=即時描画
+     opacity: 0.7,             // メインパネルの透明度
+     soundVolume: 0,           // 効果音ボリューム初期値
+     mouthInterval: 0,         // リップシンク間隔初期値
+     beepFrequency: 0,         // ビープ周波数初期値
+     beepDuration: 0,          // ビープ長さ初期値
+     beepVolumeEnd: 0,         // ビープ終了時音量初期値
+     nameTags: {
+       user: "",               // 表示名: ユーザー
+       avatar: "",             // 表示名: アバター
+       avatarFullName: "",     // 表示名: フルネーム
+     },
+     systemMessages: {
+       banner1: "",            // システムメッセージ1
+       banner2: "",            // システムメッセージ2
+@@ -82,46 +92,53 @@ const defaults: AppConfig = {
+ // シングルトン: アプリ全体で共有する設定オブジェクト
+ export let config: AppConfig = { ...defaults };
+ 
+ export interface FetchConfigOptions {
+   /** 設定取得に失敗しても console.error を出さない（リトライ待機用） */
+   silent?: boolean;
+ }
+ 
+ /**
+  * サーバーから設定を取得し、config を更新する
+  * @throws 取得失敗時は例外をスローし、呼び出し元でエラー表示を行う
+  */
+ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<void> {
+   try {
+     // dev: /agui/config (Vite proxy) / prod: http://127.0.0.1:8000/agui/config
+     const base = typeof __AGUI_BASE__ !== "undefined" ? __AGUI_BASE__ : "";
+     const response = await fetch(`${base}/agui/config`);
+     if (!response.ok) {
+       throw new Error(`Config fetch failed: ${response.status} ${response.statusText}`);
+     }
+     const serverConfig = await response.json();
+ 
+     // 新形式: { ui, clientLogVerbose, agent }, 旧形式: uiのみ
+     const ui = serverConfig.ui ?? serverConfig;
+     const agent = serverConfig.agent ?? defaults.agent;
++    const minirag = serverConfig.minirag ?? defaults.minirag;
+     config.ui = ui;
+     const agentUrl = agent.url ?? `${base}/agui`;
+     config.agent = {
+       url: agentUrl,
+       agentId: agent.agentId ?? "",
+       threadId: agent.threadId ?? "",
+     };
++    config.minirag = {
++      workspace: minirag.workspace ?? defaults.minirag.workspace,
++      searchEnabledDefault: Boolean(minirag.searchEnabledDefault ?? defaults.minirag.searchEnabledDefault),
++      topKDefault: Number(minirag.topKDefault ?? defaults.minirag.topKDefault),
++    };
+     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
+ 
+ 	    console.info("Config loaded from server:", {
+ 	      ui: config.ui,
++	      minirag: config.minirag,
+ 	      agent: config.agent,
+ 	      clientLogVerbose: config.clientLogVerbose,
+ 	    });
+ 	  } catch (error) {
+ 	    if (!options.silent) {
+ 	      console.error("Failed to load config from server:", error);
+ 	    }
+ 	    throw error; // Main側でキャッチしてエラー画面を表示
+ 	  }
+ }
+diff --git a/services/avatar-ui/app/src/renderer/index.html b/services/avatar-ui/app/src/renderer/index.html
+index 8ce121dc9cdc92645f5c3de4bfb459e97c07f346..0a21eee7e5d1fd4b1105a881b7c487a68f81aea8 100644
+--- a/services/avatar-ui/app/src/renderer/index.html
++++ b/services/avatar-ui/app/src/renderer/index.html
+@@ -1,50 +1,64 @@
+ <!-- レンダラーのレイアウト定義（出力・入力・アバターの3ペイン） -->
+ <!doctype html>
+ <html lang="ja">
+   <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <!-- 開発用に localhost への接続を許可する CSP -->
+     <meta
+       http-equiv="Content-Security-Policy"
+       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' http://localhost:* http://127.0.0.1:* https: ws: wss:;"
+     />
+     <title>Avatar UI</title>
+     <link rel="stylesheet" href="./style.css" />
+   </head>
+   <body>
+     <main class="app split">
+       <section data-slot="output" id="pane-output">
+         <div class="surface-host" id="surface-host">
+           <div class="surface surface--text">
+             <div class="text-scroll" id="output"></div>
+           </div>
+         </div>
+       </section>
+ 
+       <footer data-slot="input" id="pane-input">
+-        <span class="prompt">&gt;</span>
+-        <input type="text" id="input" autofocus />
++        <div class="diary-controls">
++          <label class="toggle">
++            <input type="checkbox" id="search-toggle" />
++            <span>検索</span>
++          </label>
++          <label class="top-k">
++            top_k
++            <input type="number" id="search-top-k" min="1" max="10" step="1" />
++          </label>
++          <button type="button" id="finalize-button">会話確定</button>
++          <span class="finalize-status" id="finalize-status"></span>
++        </div>
++        <div class="input-row">
++          <span class="prompt">&gt;</span>
++          <input type="text" id="input" autofocus />
++        </div>
+       </footer>
+ 
+       <aside data-slot="avatar" id="pane-avatar">
+         <div id="avatar-wrap">
+           <!-- アバター画像（idle/talk を data 属性で持ち替え） -->
+           <img
+             id="avatar-img"
+             src="./idle.png"
+             data-idle="./idle.png"
+             data-talk="./talk.png"
+             alt="avatar"
+           />
+         </div>
+         <div id="avatar-label" class="avatar-label">Spectra</div>
+       </aside>
+ 
+       <!-- 画面下部のバージョン表示（main.ts で package.json から上書き） -->
+       <div class="meta-bar" id="meta">avatar-ui</div>
+     </main>
+ 
+     <script type="module" src="./main.ts"></script>
+   </body>
+ </html>
+diff --git a/services/avatar-ui/app/src/renderer/main.ts b/services/avatar-ui/app/src/renderer/main.ts
+index f6b7aee2982c1589c119bff21a5c124bb2faa3f9..6fbdb786d8b65a01899179becbdb7e64bef4e7b6 100644
+--- a/services/avatar-ui/app/src/renderer/main.ts
++++ b/services/avatar-ui/app/src/renderer/main.ts
+@@ -1,43 +1,55 @@
+ // レンダラーのメイン処理: 設定読み込み・UI初期化・エージェント実行をまとめる
+ import { config, fetchConfig } from "./config";
+ import { createAgent } from "../core/agent";
+ import { loggerSubscriber } from "../core/loggerSubscriber";
+ import { createUiSubscriber, renderMarkdown } from "./subscriber";
+ import { TerminalEngine } from "./engine/TerminalEngine";
+ import { createAutoScrollController } from "./autoScroll";
+ import pkg from "../../package.json"; // バージョン情報の取得
+ 
+ // エージェントのインスタンスを保持する
+ let agentInstance = null as ReturnType<typeof createAgent> | null;
+ 
+ // UI 要素への参照を確保
+ const inputEl = document.getElementById("input") as HTMLInputElement | null;
+ const outputEl = document.querySelector("#pane-output .text-scroll") as HTMLElement | null;
+ const avatarImg = document.getElementById("avatar-img") as HTMLImageElement | null;
+ const metaBar = document.getElementById("meta");
+ const avatarLabel = document.getElementById("avatar-label");
++const searchToggle = document.getElementById("search-toggle") as HTMLInputElement | null;
++const topKInput = document.getElementById("search-top-k") as HTMLInputElement | null;
++const finalizeButton = document.getElementById("finalize-button") as HTMLButtonElement | null;
++const finalizeStatus = document.getElementById("finalize-status") as HTMLSpanElement | null;
++
++type DiaryMessage = {
++  role: "user" | "assistant" | "system";
++  content: string;
++  created_at?: string;
++};
++
++const transcript: DiaryMessage[] = [];
+ 
+ async function initApp() {
+   if (!inputEl || !outputEl || !avatarImg || !avatarLabel) {
+     throw new Error("UI elements missing");
+   }
+ 
+   // メタバーはプロダクト名 + バージョン（package.json 由来）
+   if (metaBar) {
+     metaBar.textContent = `${pkg.name} v${pkg.version}`;
+   }
+ 
+   // 1. サーバーから設定を取得（サーバー起動前でも落とさずに待機）
+   inputEl.disabled = true;
+   outputEl.textContent = "";
+   {
+     const line = document.createElement("div");
+     line.className = "text-line text-line--system";
+     line.textContent = "> Starting server...";
+     outputEl.appendChild(line);
+   }
+ 
+   const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+   let retryDelayMs = 250;
+   while (true) {
+     try {
+@@ -121,102 +133,227 @@ async function initApp() {
+   if (config.ui.glowText !== undefined) {
+     root.style.setProperty("--glow-text-alpha1", String(0.6 * config.ui.glowText)); // 強めのグロー係数
+     root.style.setProperty("--glow-text-alpha2", String(0.4 * config.ui.glowText)); // 弱めのグロー係数
+   }
+   if (config.ui.glowBox !== undefined) {
+     root.style.setProperty("--glow-box-alpha1", String(0.4 * config.ui.glowBox)); // 外枠の強めグロー係数
+     root.style.setProperty("--glow-box-alpha2", String(0.2 * config.ui.glowBox)); // 外枠の弱めグロー係数
+   }
+   if (config.ui.brightness !== undefined) {
+     root.style.setProperty("--ui-brightness", String(config.ui.brightness));
+   }
+ 
+   // 3. UIエンジン (Game Loop) の初期化
+   // これひとつでタイプライター・アニメーション・音声すべてを制御する
+   const autoScroll = createAutoScrollController(outputEl);
+   const engine = new TerminalEngine(outputEl, avatarImg, renderMarkdown, autoScroll);
+ 
+   // 4. エージェント初期化（サーバ設定に従う）
+   agentInstance = createAgent({
+     agentId: config.agent.agentId,
+     url: config.agent.url,
+     threadId: config.agent.threadId,
+   });
+   agentInstance.subscribe(loggerSubscriber);
+ 
++  const serverBase = config.agent.url.replace(/\/agui\/?$/, "");
++  const diaryWorkspace = config.minirag.workspace;
++  const diarySearchSettings = {
++    enabled: config.minirag.searchEnabledDefault,
++    top_k: config.minirag.topKDefault,
++  };
++
+   // テキスト行を追加（エンジンを介さない即時表示用）
+   const appendLine = (className: string, text: string) => {
+     const line = document.createElement("div");
+     line.className = `text-line ${className}`;
+     line.textContent = text;
+     outputEl.appendChild(line);
+     outputEl.scrollTop = outputEl.scrollHeight;
+   };
+ 
+   let isRunning = false; // 多重実行防止フラグ
++  let isFinalizing = false;
++
++  const updateFinalizeStatus = (text: string, isError = false) => {
++    if (!finalizeStatus) return;
++    finalizeStatus.textContent = text;
++    finalizeStatus.style.color = isError ? "rgba(255, 102, 102, 1)" : "";
++  };
++
++  const applySearchSettings = async () => {
++    if (!config.agent.threadId) {
++      return;
++    }
++    try {
++      const response = await fetch(`${serverBase}/agui/diary/search-settings`, {
++        method: "POST",
++        headers: { "Content-Type": "application/json" },
++        body: JSON.stringify({
++          thread_id: config.agent.threadId,
++          settings: diarySearchSettings,
++        }),
++      });
++      if (!response.ok) {
++        throw new Error(`Search settings update failed: ${response.status}`);
++      }
++      updateFinalizeStatus("検索設定を更新しました");
++    } catch (error) {
++      updateFinalizeStatus(
++        `検索設定の更新に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
++        true,
++      );
++    }
++  };
++
++  if (searchToggle) {
++    searchToggle.checked = diarySearchSettings.enabled;
++    searchToggle.addEventListener("change", async () => {
++      diarySearchSettings.enabled = searchToggle.checked;
++      await applySearchSettings();
++    });
++  }
++
++  if (topKInput) {
++    topKInput.value = String(diarySearchSettings.top_k);
++    topKInput.addEventListener("change", async () => {
++      const value = Number(topKInput.value);
++      diarySearchSettings.top_k = Number.isNaN(value)
++        ? config.minirag.topKDefault
++        : Math.min(Math.max(value, 1), 10);
++      topKInput.value = String(diarySearchSettings.top_k);
++      await applySearchSettings();
++    });
++  }
++
++  if (searchToggle || topKInput) {
++    await applySearchSettings();
++  }
+ 
+   // ユーザー入力を処理してエージェントに送信
+   inputEl.addEventListener("keydown", async (event) => {
+     if (event.isComposing || event.key !== "Enter") {
+       return;
+     }
+     event.preventDefault();
+ 
+     if (isRunning) {
+       return;
+     }
+ 
+     const value = inputEl.value.trim();
+     if (!value) {
+       return;
+     }
+ 
+     // ユーザー入力の表示: 設定されたユーザータグを使う
+     const userTag = config.ui.nameTags.user ? `${config.ui.nameTags.user}> ` : "> ";
+     appendLine("text-line--user", `${userTag}${value}`);
+     inputEl.value = "";
+ 
+     const userMessage = {
+       id: crypto.randomUUID(),
+       role: "user" as const,
+       content: value,
+     };
+ 
+     agentInstance!.messages.push(userMessage);
++    transcript.push({
++      role: "user",
++      content: value,
++      created_at: new Date().toISOString(),
++    });
+ 
+     isRunning = true;
+     try {
+       await agentInstance!.runAgent(
+         {
+           runId: crypto.randomUUID(),
+         },
+         createUiSubscriber({
+           outputEl,
+           engine, // エンジンを渡す
+           autoScroll,
++          onAssistantMessageComplete: (message) => {
++            transcript.push({
++              role: "assistant",
++              content: message,
++              created_at: new Date().toISOString(),
++            });
++          },
+         }),
+       );
+     } catch (error) {
+       // エージェント実行エラーの表示
+       console.error(error);
+       appendLine(
+         "text-line--error",
+         `❌ ${error instanceof Error ? error.message : String(error)}`,
+       );
+     } finally {
+       isRunning = false;
+     }
+   });
++
++  if (finalizeButton) {
++    finalizeButton.addEventListener("click", async () => {
++      if (isFinalizing) {
++        return;
++      }
++      if (!transcript.length) {
++        appendLine("text-line--error", "❌ 会話履歴がありません。");
++        return;
++      }
++      isFinalizing = true;
++      finalizeButton.disabled = true;
++      updateFinalizeStatus("会話を確定しています...");
++      try {
++        const response = await fetch(`${serverBase}/agui/diary/finalize`, {
++          method: "POST",
++          headers: { "Content-Type": "application/json" },
++          body: JSON.stringify({
++            workspace: diaryWorkspace,
++            thread_id: config.agent.threadId,
++            messages: transcript,
++            search_settings: diarySearchSettings,
++          }),
++        });
++        if (!response.ok) {
++          const payload = await response.json().catch(() => ({}));
++          throw new Error(payload.detail || `Finalize failed: ${response.status}`);
++        }
++        const payload = await response.json();
++        appendLine(
++          "text-line--system",
++          `> 日記を登録しました: ${payload.doc_id} (重要度 ${payload.analysis.importance_score})`,
++        );
++        appendLine(
++          "text-line--system",
++          `> サマリー: ${payload.analysis.summary}`,
++        );
++        updateFinalizeStatus("会話確定が完了しました");
++      } catch (error) {
++        appendLine(
++          "text-line--error",
++          `❌ 会話確定に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
++        );
++        updateFinalizeStatus("会話確定に失敗しました", true);
++      } finally {
++        isFinalizing = false;
++        finalizeButton.disabled = false;
++      }
++    });
++  }
+   
+   // 初期メッセージ: 設定されたシステムメッセージを使う
+   const fullName = config.ui.nameTags.avatarFullName || config.ui.nameTags.avatar || "AGENT";
+   if (config.ui.systemMessages.banner1) {
+     const banner1 = config.ui.systemMessages.banner1.replace("{avatarFullName}", fullName);
+     appendLine("text-line--system", `> ${banner1}`);
+   }
+   if (config.ui.systemMessages.banner2) {
+     appendLine("text-line--system", `> ${config.ui.systemMessages.banner2}`);
+   }
+ }
+ 
+ // アプリ起動
+ initApp().catch(err => console.error("Fatal Error:", err));
+diff --git a/services/avatar-ui/app/src/renderer/style.css b/services/avatar-ui/app/src/renderer/style.css
+index cb3175a105b574271a2ce72dbe9d05e5316c8272..b07d7bdac55a54bc280d79d5af26f86fe7cebbdf 100644
+--- a/services/avatar-ui/app/src/renderer/style.css
++++ b/services/avatar-ui/app/src/renderer/style.css
+@@ -203,59 +203,116 @@ body {
+ .text-line--error {
+   color: rgba(var(--error-color-r), var(--error-color-g), var(--error-color-b), 1);
+ }
+ 
+ /* AI の提案文などを囲うスタイル */
+ .text-line--proposed {
+   color: var(--col-theme-text);
+   font-family: Consolas, Menlo, monospace;
+   background: rgba(0, 20, 10, 0.4);
+   padding: 8px;
+   border: 1px solid rgba(var(--theme-color-r), var(--theme-color-g), var(--theme-color-b), 0.3);
+ }
+ 
+ .text-line--user { color: var(--col-user-text); }
+ .text-line--assistant { color: var(--col-theme-text); }
+ .text-line--tool { 
+   color: var(--col-tool-text);
+   font-style: italic;
+ }
+ 
+ /* 入力エリア（画面下） */
+ #pane-input {
+   grid-column: 1 / 3;
+   grid-row: 2 / 3;
+   display: flex;
+-  align-items: center;
++  flex-direction: column;
++  align-items: stretch;
+   gap: 8px;
+   padding: 10px 12px; /* 入力枠の余白 */
+   border: 1px solid var(--col-border-main);
+   box-shadow: var(--glow-box);
+   background: var(--col-panel-bg);
+   filter: brightness(var(--ui-brightness));
+ }
+ 
++.diary-controls {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: center;
++  gap: 10px;
++  font-size: 12px;
++  color: var(--col-theme-dim);
++}
++
++.diary-controls label {
++  display: inline-flex;
++  align-items: center;
++  gap: 6px;
++}
++
++.diary-controls input[type="checkbox"] {
++  accent-color: var(--col-theme-main);
++}
++
++.diary-controls input[type="number"] {
++  width: 64px;
++  background: rgba(0, 0, 0, 0.4);
++  border: 1px solid var(--col-border-main);
++  color: inherit;
++  font: inherit;
++  padding: 2px 6px;
++  border-radius: 4px;
++}
++
++#finalize-button {
++  background: rgba(var(--theme-color-r), var(--theme-color-g), var(--theme-color-b), 0.15);
++  border: 1px solid var(--col-border-high);
++  color: var(--col-theme-text);
++  font: inherit;
++  padding: 4px 10px;
++  border-radius: 4px;
++  cursor: pointer;
++  text-shadow: var(--glow-text);
++}
++
++#finalize-button:disabled {
++  opacity: 0.5;
++  cursor: not-allowed;
++}
++
++.finalize-status {
++  color: var(--col-theme-text);
++  opacity: 0.8;
++}
++
++.input-row {
++  display: flex;
++  align-items: center;
++  gap: 8px;
++}
++
+ #input {
+   flex: 1;
+   background: transparent;
+   border: none;
+   color: inherit;
+   font: inherit;
+   outline: none;
+ }
+ 
+ /* アバターエリア（右カラム） */
+ #pane-avatar {
+   grid-column: 2 / 3;
+   grid-row: 1 / 2;
+   border: 1px solid var(--col-border-main);
+   box-shadow: var(--glow-box);
+   background: rgba(0, 40, 20, 0.25); /* 本文より少し濃い背景で区切る */
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   padding: 4px; /* 画像との余白を確保 */
+   box-sizing: border-box;
+   gap: 12px; /* 画像とラベルの間隔 */
+ }
+ 
+diff --git a/services/avatar-ui/app/src/renderer/subscriber.ts b/services/avatar-ui/app/src/renderer/subscriber.ts
+index b18e41350c40f155aede73525fd765bd21e7d261..bb22a53aa9e825a80fb9392e3602aafc6b9e482b 100644
+--- a/services/avatar-ui/app/src/renderer/subscriber.ts
++++ b/services/avatar-ui/app/src/renderer/subscriber.ts
+@@ -1,97 +1,105 @@
+ // エージェントイベントを受け取り、レンダラーの表示・音・ログを更新する購読処理
+ import type { AgentSubscriber } from "@ag-ui/client";
+ import { TerminalEngine } from "./engine/TerminalEngine";
+ import { config } from "./config";
+ import { marked } from "marked";
+ import DOMPurify from "dompurify";
+ import type { AutoScrollController } from "./autoScroll";
+ 
+ /**
+  * Markdown → サニタイズ済み HTML へ変換（共通関数）
+  */
+ export function renderMarkdown(md: string): string {
+   let html = marked.parse(md) as string;
+   // タグ間・末尾の空白を除去（white-space: pre-wrap 対策）
+   html = html.replace(/>\s+</g, "><").trimEnd();
+   return DOMPurify.sanitize(html);
+ }
+ 
+ // UI サブスクライバーの初期化オプション
+ interface UiSubscriberOptions {
+   outputEl: HTMLElement;  // テキスト出力先
+   engine: TerminalEngine; // タイプライターエンジン
+   autoScroll: AutoScrollController; // 下端追従コントロール
++  onAssistantMessageComplete?: (message: string) => void;
+ }
+ 
+ /**
+  * エージェントイベントを購読し、UI を更新するサブスクライバーを生成
+  */
+ export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscriber {
+   const { outputEl, engine, autoScroll } = options;
++  const { onAssistantMessageComplete } = options;
+ 
+   // ツール呼び出し表示用の状態
+   let activeToolDetails: HTMLDetailsElement | null = null;
+   let activeToolName = "";
+   let argsBuffer = "";
++  let assistantBuffer = "";
+ 
+   // テキスト行を追加
+   const appendLine = (className: string, text: string) => {
+     const line = document.createElement("div");
+     line.className = `text-line ${className}`;
+     line.textContent = text;
+     outputEl.appendChild(line);
+     autoScroll.maybeScroll();
+     return line;
+   };
+ 
+   // オブジェクトから最初に見つかった文字列値を取り出す（汎用）
+   const extractFirstString = (obj: unknown): string => {
+     if (typeof obj === "string") return obj;
+     if (obj && typeof obj === "object") {
+       for (const v of Object.values(obj as Record<string, unknown>)) {
+         if (typeof v === "string") return v;
+       }
+     }
+     return JSON.stringify(obj, null, 2);
+   };
+ 
+   return {
+     onTextMessageStartEvent() {
+       // 設定されたアバタータグを取得
+       const tag = config.ui.nameTags.avatar ? `${config.ui.nameTags.avatar}> ` : "";
+ 
+       // アシスタントのメッセージ開始：新しい行を作成してエンジンにセット（タグは即時表示）
+       engine.startNewMessage("text-line text-line--assistant", tag);
++      assistantBuffer = "";
+     },
+     onTextMessageContentEvent({ event }) {
+       // 文字列をエンジンに渡す（エンジンが少しずつ表示する）
+       // Markdown は現状のエンジンではプレーンテキスト表示。ここは従来どおり。
+       engine.pushText(event.delta);
++      assistantBuffer += event.delta;
+     },
+     onTextMessageEndEvent() {
+       // 今のところ特になし (エンジンのキューが空になれば止まる)
++      if (assistantBuffer.trim() && onAssistantMessageComplete) {
++        onAssistantMessageComplete(assistantBuffer.trim());
++      }
+     },
+     
+     // ツール実行イベント（折りたたみ表示）
+     onToolCallStartEvent({ event }) {
+       activeToolName = event.toolCallName;
+       argsBuffer = "";
+ 
+       const details = document.createElement("details");
+       details.className = "tool-call text-line--tool";
+ 
+       const summary = document.createElement("summary");
+       summary.textContent = `🔧 ${event.toolCallName}...`;
+       details.appendChild(summary);
+ 
+       outputEl.appendChild(details);
+       autoScroll.maybeScroll();
+ 
+       activeToolDetails = details;
+     },
+     // ツール引数の断片を受け取る（ストリーミング）
+     onToolCallArgsEvent({ event }) {
+       if (event.delta) {
+         argsBuffer += event.delta;
+       }
+     },
+diff --git a/services/avatar-ui/server/main.py b/services/avatar-ui/server/main.py
+index 3af7cbb4920af2ca33b7a25a0260ed3dc474eca2..7139c90dd3a2d81a5bbc175604360a39482e0c31 100644
+--- a/services/avatar-ui/server/main.py
++++ b/services/avatar-ui/server/main.py
+@@ -1,91 +1,96 @@
+ # AG-UI サーバーのエントリーポイント（FastAPI + Google ADK）
+ import logging
+ from logging.handlers import RotatingFileHandler
+ from pathlib import Path
+ from fastapi import FastAPI, Request
+ from fastapi.middleware.cors import CORSMiddleware
+ from fastapi.responses import JSONResponse
+ from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
+ from google.adk.agents import LlmAgent
+ from google.adk import tools as adk_tools
+ from google.adk.models.lite_llm import LiteLlm
+ from google.adk.tools.agent_tool import AgentTool
+ from google.adk.tools.google_search_tool import GoogleSearchTool
++from google.adk.tools import FunctionTool
+ 
+ from src import config
++from src.routes.diary import router as diary_router, search_diary
+ 
+ # 検索サブエージェントを使う場合は GOOGLE_API_KEY が必須
+ if config.SEARCH_SUBAGENT_ENABLED and not config.GOOGLE_API_KEY:
+     raise RuntimeError("GOOGLE_API_KEY is not set. Please add it to .env in project root")
+ 
+ # ---------- ロギング設定 ----------
+ logs_dir = Path(__file__).resolve().parent / "logs"
+ logs_dir.mkdir(exist_ok=True)
+ log_file = logs_dir / "app.log"
+ 
+ log_level = logging.INFO
+ logging.basicConfig(
+     level=log_level,
+     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+     handlers=[RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT)],
+ )
+ logger = logging.getLogger("agui-adk-bridge")
+ 
+ # ---------- エージェント構築 ----------
+ 
+ def resolve_model(provider: str, model: str):
+     """プロバイダに応じたモデルインスタンスを返す（gemini は直接、他は LiteLlm 経由）"""
+     provider = provider.lower()
+     if provider == "gemini":
+         return model
+     # openai / anthropic などは LiteLlm 経由
+     if "/" in model:
+         return LiteLlm(model=model)
+     return LiteLlm(model=f"{provider}/{model}")
+ 
+ 
+ def build_agent() -> ADKAgent:
+     """メインエージェントを構築（検索サブエージェント付きの場合あり）"""
+-    search_tool = None
++    search_subagent_tool = None
+     if config.SEARCH_SUBAGENT_ENABLED:
+         search_agent = LlmAgent(
+             name="search_agent",
+             model=config.SEARCH_SUBAGENT_MODEL,
+             description="Performs web searches using Google Search",
+             instruction=(
+                 "Search the web and return concise results. "
+                 "Use the same language as the latest user message. Phrase the search query in that language."
+             ),
+             tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
+         )
+-        search_tool = AgentTool(agent=search_agent)
++        search_subagent_tool = AgentTool(agent=search_agent)
+ 
+     main_model = resolve_model(config.LLM_PROVIDER, config.LLM_MODEL)
+-    tools = [adk_tools.preload_memory]
+-    if search_tool:
+-        tools.append(search_tool)
++    tools = [
++        adk_tools.preload_memory,
++        FunctionTool(search_diary),
++    ]
++    if search_subagent_tool:
++        tools.append(search_subagent_tool)
+ 
+     main_agent = LlmAgent(
+         name="assistant",
+         model=main_model,
+         instruction=config.SYSTEM_PROMPT,
+         tools=tools,
+     )
+ 
+     return ADKAgent(
+         adk_agent=main_agent,
+         app_name="agents",
+         user_id="cli_user",
+         use_in_memory_services=True,
+         session_timeout_seconds=config.SESSION_TIMEOUT_SECONDS,
+         cleanup_interval_seconds=config.CLEANUP_INTERVAL_SECONDS,
+     )
+ 
+ 
+ # エージェントインスタンス（サーバー起動時に構築）
+ agent = build_agent()
+ 
+ # ---------- FastAPI アプリケーション ----------
+ app = FastAPI(title="AG-UI ADK Bridge")
+ app.add_middleware(
+     CORSMiddleware,
+@@ -99,55 +104,63 @@ app.add_middleware(
+ @app.middleware("http")
+ async def log_agui_request(request: Request, call_next):
+     if request.url.path == "/agui" and request.method == "POST":
+         if config.APP_ENV == "dev" or config.LOG_BODY is True:
+             body = await request.body()
+             logger.info("AGUI request body: %s", body.decode("utf-8", errors="replace"))
+             request._body = body
+     try:
+         response = await call_next(request)
+         return response
+     except Exception as exc:
+         logger.exception("Unhandled server error")
+         return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+ 
+ # Config API Endpoint
+ @app.get("/agui/config")
+ def get_config():
+     """
+     UI用の設定を返すエンドポイント。
+     Server設定(config.py)から、UIに必要な部分だけを抽出して返す。
+     """
+     # UI設定に加えて、クライアント側ログの詳細可否フラグとエージェント接続情報も返す
+     return {
+         "ui": config._ui_settings,
+         "clientLogVerbose": config.CLIENT_LOG_VERBOSE,
++        "minirag": {
++            "workspace": config.MINIRAG_WORKSPACE,
++            "searchEnabledDefault": config.MINIRAG_SEARCH_ENABLED_DEFAULT,
++            "topKDefault": config.MINIRAG_TOP_K_DEFAULT,
++        },
+         "agent": {
+             "url": config.AGENT_URL,
+             "agentId": config.AGENT_ID,
+             "threadId": config.THREAD_ID,
+         },
+     }
+ 
++
++app.include_router(diary_router)
++
+ # AG-UI プロトコルのエンドポイントを登録
+ add_adk_fastapi_endpoint(app, agent, path="/agui")
+ 
+ # ヘルスチェック（ロードバランサー等から使用）
+ @app.get("/healthz")
+ async def healthz():
+     return {"status": "ok"}
+ 
+ # ルートパス（API の存在確認用）
+ @app.get("/")
+ def root():
+     return {"status": "ok", "endpoint": "/agui"}
+ 
+ # スクリプトとして起動する場合は .env の値でバインドする
+ if __name__ == "__main__":
+     import uvicorn
+ 
+     uvicorn.run(
+         "main:app",
+         host=config.SERVER_BIND_HOST,
+         port=config.SERVER_PORT,
+         reload=(config.APP_ENV == "dev"),
+     )
+diff --git a/services/avatar-ui/server/src/config.py b/services/avatar-ui/server/src/config.py
+index 2508a53853edfe3293111d5d411477a4d1473df1..bd732981558997929469f7d2bdb9d444f9c6ba72 100644
+--- a/services/avatar-ui/server/src/config.py
++++ b/services/avatar-ui/server/src/config.py
+@@ -66,54 +66,63 @@ class UiSettings(BaseModel, extra="forbid"):
+ 
+ # カラーテーマのプリセット定義
+ class ThemePreset(BaseModel, extra="forbid"):
+     name: str
+     themeColor: str
+     userColor: str
+     toolColor: str
+ 
+ 
+ # サーバー側の設定（LLM プロバイダ、プロンプト等）
+ class ServerSettings(BaseModel, extra="forbid"):
+     llmProvider: str = "gemini"  # gemini | openai | anthropic
+     llmModel: str
+     searchSubAgent: "SearchSubAgent" = Field(default_factory=lambda: SearchSubAgent())
+     systemPrompt: str
+     logMaxBytes: int = Field(gt=0)
+     logBackupCount: int = Field(ge=0)
+ 
+ 
+ # 検索サブエージェントの設定（Gemini + google_search を使用）
+ class SearchSubAgent(BaseModel, extra="forbid"):
+     enabled: bool = True
+     model: str = "gemini-2.5-flash"
+ 
+ 
++# MiniRAG 連携設定
++class MiniRagSettings(BaseModel, extra="forbid"):
++    baseUrl: str
++    workspace: str = "diary"
++    searchEnabledDefault: bool = True
++    topKDefault: int = Field(ge=1, le=10, default=3)
++
++
+ # settings.json5 のルートスキーマ
+ class AppSettings(BaseModel, extra="forbid"):
+     server: ServerSettings
+     ui: UiSettings
++    minirag: MiniRagSettings
+ 
+ 
+ # ---------- テーマ解決 ----------
+ 
+ def resolve_theme(ui: UiSettings) -> dict:
+     """
+     テーマプリセットを解決し、実際に使う色を決定する。
+     - ui.theme で指定されたプリセットがあればそれを基準にする
+     - 個別指定（themeColor など）があればプリセットより優先する
+     """
+     resolved = ui.model_dump()
+     if ui.themes:
+         for preset in ui.themes:
+             if preset.name == ui.theme:
+                 resolved["themeColor"] = preset.themeColor
+                 resolved["userColor"] = preset.userColor
+                 resolved["toolColor"] = preset.toolColor
+                 break
+     resolved.pop("themes", None)
+     return resolved
+ 
+ 
+ # .env から読み込む環境変数のスキーマ
+ class EnvSettings(BaseSettings):
+     google_api_key: str = Field(alias="GOOGLE_API_KEY")
+@@ -208,27 +217,33 @@ allowed_origins_env = os.getenv("ALLOWED_ORIGINS")
+ if allowed_origins_env:
+     CORS_ORIGINS: List[str] = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+ else:
+     CORS_ORIGINS: List[str] = [o.format(port=CLIENT_PORT) for o in DEFAULT_ALLOWED_ORIGINS_DEV]
+ 
+ LLM_MODEL = app_settings.server.llmModel
+ LLM_PROVIDER = app_settings.server.llmProvider
+ SYSTEM_PROMPT = app_settings.server.systemPrompt
+ LOG_MAX_BYTES = app_settings.server.logMaxBytes
+ LOG_BACKUP_COUNT = app_settings.server.logBackupCount
+ 
+ # Session/HITL 設定
+ SESSION_TIMEOUT_SECONDS = env_settings.session_timeout_seconds
+ CLEANUP_INTERVAL_SECONDS = env_settings.cleanup_interval_seconds
+ 
+ # FastAPI の /agui/config で返すために dict で保持
+ _ui_settings = resolve_theme(app_settings.ui)
+ 
+ # クライアントのログ詳細可否（サーバ設定と連動）
+ CLIENT_LOG_VERBOSE = (APP_ENV == "dev") or (LOG_BODY is True)
+ 
+ # 検索サブエージェント設定
+ SEARCH_SUBAGENT_ENABLED = app_settings.server.searchSubAgent.enabled
+ SEARCH_SUBAGENT_MODEL = app_settings.server.searchSubAgent.model
+ 
++# MiniRAG 設定
++MINIRAG_BASE_URL = app_settings.minirag.baseUrl
++MINIRAG_WORKSPACE = app_settings.minirag.workspace
++MINIRAG_SEARCH_ENABLED_DEFAULT = app_settings.minirag.searchEnabledDefault
++MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
++
+ # AG-UI エージェント接続情報（サーバを唯一の真実源とする）
+ AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"
+diff --git a/services/avatar-ui/server/src/diary_service.py b/services/avatar-ui/server/src/diary_service.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..f9571685a7e5c153ea02b67044185d3a5e9aa318
+--- /dev/null
++++ b/services/avatar-ui/server/src/diary_service.py
+@@ -0,0 +1,248 @@
++import json
++import logging
++import re
++import uuid
++from dataclasses import dataclass
++from datetime import datetime, timezone
++from typing import Any
++
++from google import genai
++
++from src import config
++from src.minirag_client import MiniRagClient, MiniRagConfig, MiniRagError
++
++
++logger = logging.getLogger(__name__)
++
++
++class DiaryValidationError(ValueError):
++    pass
++
++
++class DiaryAnalysisError(RuntimeError):
++    pass
++
++
++@dataclass(frozen=True)
++class SearchSettings:
++    enabled: bool
++    top_k: int
++
++
++@dataclass(frozen=True)
++class DiaryAnalysis:
++    title: str
++    importance_score: int
++    summary: str
++    semantic_memory: str
++    episodic_memory: str
++
++
++_MINIRAG_CLIENT = MiniRagClient(
++    MiniRagConfig(
++        base_url=config.MINIRAG_BASE_URL,
++        workspace=config.MINIRAG_WORKSPACE,
++    )
++)
++
++_search_settings_by_thread: dict[str, SearchSettings] = {}
++
++
++def get_search_settings(thread_id: str) -> SearchSettings:
++    return _search_settings_by_thread.get(
++        thread_id,
++        SearchSettings(
++            enabled=config.MINIRAG_SEARCH_ENABLED_DEFAULT,
++            top_k=config.MINIRAG_TOP_K_DEFAULT,
++        ),
++    )
++
++
++def set_search_settings(thread_id: str, settings: SearchSettings) -> SearchSettings:
++    clamped = SearchSettings(
++        enabled=settings.enabled,
++        top_k=max(1, min(settings.top_k, 10)),
++    )
++    _search_settings_by_thread[thread_id] = clamped
++    return clamped
++
++
++def format_transcript(messages: list[dict[str, Any]]) -> str:
++    lines: list[str] = []
++    for message in messages:
++        role = message.get("role", "user")
++        content = (message.get("content") or "").strip()
++        if not content:
++            continue
++        label = "User" if role == "user" else "Assistant" if role == "assistant" else "System"
++        lines.append(f"{label}: {content}")
++    return "\n".join(lines)
++
++
++def build_analysis_prompt(messages: list[dict[str, Any]]) -> str:
++    transcript = format_transcript(messages)
++    return (
++        "あなたは日記会話を整理するアシスタントです。"
++        "以下の会話から日記タイトル、重要度(1-10)、サマリー、"
++        "セマンティック記憶、エピソード記憶を抽出してください。"
++        "必ず JSON のみを返し、キーは次の通りにすること:\n"
++        "title, importance_score, summary, semantic_memory, episodic_memory\n\n"
++        "会話:\n"
++        f"{transcript}"
++    )
++
++
++def _extract_response_text(response: Any) -> str:
++    text = getattr(response, "text", None)
++    if isinstance(text, str):
++        return text
++    candidates = getattr(response, "candidates", None)
++    if candidates:
++        content = getattr(candidates[0], "content", None)
++        parts = getattr(content, "parts", None) if content else None
++        if parts and hasattr(parts[0], "text"):
++            return parts[0].text
++    return ""
++
++
++def _extract_json_payload(text: str) -> dict[str, Any]:
++    match = re.search(r"\{.*\}", text, re.DOTALL)
++    if not match:
++        raise DiaryAnalysisError("Gemini response did not include JSON payload.")
++    try:
++        return json.loads(match.group(0))
++    except json.JSONDecodeError as exc:
++        raise DiaryAnalysisError(f"Failed to parse JSON payload: {exc}") from exc
++
++
++async def analyze_diary(messages: list[dict[str, Any]]) -> DiaryAnalysis:
++    if not messages:
++        raise DiaryValidationError("No messages provided for diary analysis.")
++    prompt = build_analysis_prompt(messages)
++    client = genai.Client(api_key=config.GOOGLE_API_KEY)
++    response = client.models.generate_content(
++        model=config.LLM_MODEL,
++        contents=prompt,
++    )
++    text = _extract_response_text(response)
++    if not text:
++        raise DiaryAnalysisError("Gemini response was empty.")
++    payload = _extract_json_payload(text)
++    try:
++        importance_score = int(payload["importance_score"])
++    except (KeyError, ValueError, TypeError) as exc:
++        raise DiaryAnalysisError("importance_score is missing or invalid.") from exc
++    return DiaryAnalysis(
++        title=str(payload.get("title", "")).strip(),
++        importance_score=importance_score,
++        summary=str(payload.get("summary", "")).strip(),
++        semantic_memory=str(payload.get("semantic_memory", "")).strip(),
++        episodic_memory=str(payload.get("episodic_memory", "")).strip(),
++    )
++
++
++def _generate_doc_id(now: datetime) -> str:
++    short_id = uuid.uuid4().hex[:8]
++    return f"journal-{now.strftime('%Y%m%d-%H%M%S')}-{short_id}"
++
++
++def build_diary_document(
++    *,
++    messages: list[dict[str, Any]],
++    analysis: DiaryAnalysis,
++    thread_id: str,
++    search_settings: SearchSettings,
++) -> dict[str, Any]:
++    now = datetime.now(timezone.utc)
++    transcript = format_transcript(messages)
++    body = "\n\n".join(
++        [
++            "## Conversation",
++            transcript,
++            "## Semantic Memory",
++            analysis.semantic_memory,
++            "## Episodic Memory",
++            analysis.episodic_memory,
++        ]
++    )
++    return {
++        "workspace": config.MINIRAG_WORKSPACE,
++        "doc_id": _generate_doc_id(now),
++        "title": analysis.title,
++        "summary": analysis.summary,
++        "body": body,
++        "importance_score": analysis.importance_score,
++        "semantic_memory": analysis.semantic_memory,
++        "episodic_memory": analysis.episodic_memory,
++        "created_at": now.isoformat(),
++        "metadata": {
++            "model": config.LLM_MODEL,
++            "message_count": len(messages),
++            "search_enabled": search_settings.enabled,
++            "top_k": search_settings.top_k,
++            "thread_id": thread_id,
++        },
++    }
++
++
++async def finalize_diary(
++    *,
++    messages: list[dict[str, Any]],
++    thread_id: str,
++    search_settings: SearchSettings,
++) -> tuple[str, int, DiaryAnalysis]:
++    analysis = await analyze_diary(messages)
++    document = build_diary_document(
++        messages=messages,
++        analysis=analysis,
++        thread_id=thread_id,
++        search_settings=search_settings,
++    )
++    try:
++        result = await _MINIRAG_CLIENT.bulk_insert([document])
++    except MiniRagError as exc:
++        raise DiaryAnalysisError(f"MiniRAG bulk insert failed: {exc}") from exc
++    inserted = int(result.get("inserted", 1))
++    return document["doc_id"], inserted, analysis
++
++
++def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
++    candidates = (
++        payload.get("items")
++        or payload.get("results")
++        or payload.get("documents")
++        or []
++    )
++    items: list[dict[str, Any]] = []
++    for entry in candidates:
++        if not isinstance(entry, dict):
++            continue
++        items.append(
++            {
++                "doc_id": entry.get("doc_id") or entry.get("id") or "",
++                "summary": entry.get("summary") or "",
++                "body": entry.get("body") or "",
++            }
++        )
++    return items
++
++
++async def search_diary(
++    *,
++    query: str,
++    thread_id: str,
++    top_k: int | None = None,
++) -> dict[str, Any]:
++    settings = get_search_settings(thread_id)
++    if not settings.enabled:
++        return {"items": [], "disabled": True}
++    query = query.strip()
++    if not query:
++        raise DiaryValidationError("Search query is empty.")
++    effective_top_k = top_k if top_k is not None else settings.top_k
++    try:
++        payload = await _MINIRAG_CLIENT.search(query, effective_top_k)
++    except MiniRagError as exc:
++        logger.warning("MiniRAG search failed: %s", exc)
++        return {"items": [], "error": "MiniRAG unavailable"}
++    return {"items": _extract_search_items(payload)}
+diff --git a/services/avatar-ui/server/src/minirag_client.py b/services/avatar-ui/server/src/minirag_client.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a6c6c433b587b98a4a8b6b82e95df8fcb7a59b5
+--- /dev/null
++++ b/services/avatar-ui/server/src/minirag_client.py
+@@ -0,0 +1,54 @@
++import logging
++from dataclasses import dataclass
++from typing import Any
++
++import aiohttp
++
++
++logger = logging.getLogger(__name__)
++
++
++class MiniRagError(RuntimeError):
++    pass
++
++
++@dataclass(frozen=True)
++class MiniRagConfig:
++    base_url: str
++    workspace: str
++    timeout_seconds: int = 30
++
++
++class MiniRagClient:
++    def __init__(self, config: MiniRagConfig) -> None:
++        self._config = config
++        self._base_url = config.base_url.rstrip("/")
++
++    async def bulk_insert(self, documents: list[dict[str, Any]]) -> dict[str, Any]:
++        payload = {
++            "workspace": self._config.workspace,
++            "documents": documents,
++        }
++        return await self._post("/minirag/documents/bulk", payload)
++
++    async def search(self, query: str, top_k: int) -> dict[str, Any]:
++        payload = {
++            "workspace": self._config.workspace,
++            "query": query,
++            "top_k": top_k,
++        }
++        return await self._post("/minirag/search", payload)
++
++    async def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
++        url = f"{self._base_url}{path}"
++        timeout = aiohttp.ClientTimeout(total=self._config.timeout_seconds)
++        try:
++            async with aiohttp.ClientSession(timeout=timeout) as session:
++                async with session.post(url, json=payload) as response:
++                    if response.status >= 400:
++                        text = await response.text()
++                        raise MiniRagError(f"MiniRAG error {response.status}: {text}")
++                    return await response.json()
++        except aiohttp.ClientError as exc:
++            logger.exception("MiniRAG request failed: %s", exc)
++            raise MiniRagError(f"MiniRAG request failed: {exc}") from exc
+diff --git a/services/avatar-ui/server/src/routes/__init__.py b/services/avatar-ui/server/src/routes/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/services/avatar-ui/server/src/routes/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/services/avatar-ui/server/src/routes/diary.py b/services/avatar-ui/server/src/routes/diary.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a08c9b9133b00c9f4f3b938f26fcae16de14590d
+--- /dev/null
++++ b/services/avatar-ui/server/src/routes/diary.py
+@@ -0,0 +1,139 @@
++from datetime import datetime
++from typing import Literal
++
++from fastapi import APIRouter, HTTPException, status
++from pydantic import BaseModel, Field
++
++from src import config
++from src.diary_service import (
++    DiaryAnalysisError,
++    DiaryValidationError,
++    SearchSettings,
++    finalize_diary,
++    search_diary as run_search_diary,
++    set_search_settings,
++)
++
++
++router = APIRouter()
++
++
++class DiaryMessage(BaseModel):
++    role: Literal["user", "assistant", "system"]
++    content: str
++    created_at: datetime | None = None
++
++
++class SearchSettingsModel(BaseModel):
++    enabled: bool
++    top_k: int = Field(ge=1, le=10)
++
++
++class DiaryAnalysisModel(BaseModel):
++    title: str
++    importance_score: int = Field(ge=1, le=10)
++    summary: str
++    semantic_memory: str
++    episodic_memory: str
++
++
++class FinalizeDiaryRequest(BaseModel):
++    workspace: str
++    thread_id: str
++    messages: list[DiaryMessage]
++    search_settings: SearchSettingsModel
++
++
++class FinalizeDiaryResponse(BaseModel):
++    doc_id: str
++    inserted: int
++    analysis: DiaryAnalysisModel
++
++
++class SearchSettingsRequest(BaseModel):
++    thread_id: str
++    settings: SearchSettingsModel
++
++
++class SearchSettingsResponse(BaseModel):
++    applied: bool
++
++
++class ErrorResponse(BaseModel):
++    message: str
++
++
++@router.post(
++    "/agui/diary/finalize",
++    response_model=FinalizeDiaryResponse,
++    responses={
++        400: {"model": ErrorResponse},
++        503: {"model": ErrorResponse},
++    },
++)
++async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryResponse:
++    if request.workspace != config.MINIRAG_WORKSPACE:
++        raise HTTPException(
++            status_code=status.HTTP_400_BAD_REQUEST,
++            detail="Invalid workspace.",
++        )
++    settings = SearchSettings(
++        enabled=request.search_settings.enabled,
++        top_k=request.search_settings.top_k,
++    )
++    set_search_settings(request.thread_id, settings)
++    try:
++        doc_id, inserted, analysis = await finalize_diary(
++            messages=[message.model_dump() for message in request.messages],
++            thread_id=request.thread_id,
++            search_settings=settings,
++        )
++    except DiaryValidationError as exc:
++        raise HTTPException(
++            status_code=status.HTTP_400_BAD_REQUEST,
++            detail=str(exc),
++        ) from exc
++    except DiaryAnalysisError as exc:
++        raise HTTPException(
++            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
++            detail=str(exc),
++        ) from exc
++
++    return FinalizeDiaryResponse(
++        doc_id=doc_id,
++        inserted=inserted,
++        analysis=DiaryAnalysisModel(
++            title=analysis.title,
++            importance_score=analysis.importance_score,
++            summary=analysis.summary,
++            semantic_memory=analysis.semantic_memory,
++            episodic_memory=analysis.episodic_memory,
++        ),
++    )
++
++
++@router.post(
++    "/agui/diary/search-settings",
++    response_model=SearchSettingsResponse,
++    responses={400: {"model": ErrorResponse}},
++)
++async def update_search_settings(request: SearchSettingsRequest) -> SearchSettingsResponse:
++    settings = SearchSettings(
++        enabled=request.settings.enabled,
++        top_k=request.settings.top_k,
++    )
++    set_search_settings(request.thread_id, settings)
++    return SearchSettingsResponse(applied=True)
++
++
++async def search_diary(
++    query: str,
++    thread_id: str | None = None,
++    top_k: int | None = None,
++) -> dict:
++    """Search past diary entries and return doc_id/summary/body items."""
++    thread = thread_id or config.THREAD_ID
++    try:
++        return await run_search_diary(query=query, thread_id=thread, top_k=top_k)
++    except DiaryValidationError as exc:
++        return {"items": [], "error": str(exc)}
+diff --git a/services/avatar-ui/settings.default.json5 b/services/avatar-ui/settings.default.json5
+new file mode 100644
+index 0000000000000000000000000000000000000000..f5f5ef520bcc5f62b9df2367ee544dcbe401a109
+--- /dev/null
++++ b/services/avatar-ui/settings.default.json5
+@@ -0,0 +1,43 @@
++{
++  server: {
++    llmProvider: "gemini",
++    llmModel: "gemini-2.5-flash",
++    searchSubAgent: {
++      enabled: true,
++      model: "gemini-2.5-flash",
++    },
++    systemPrompt: "あなたは日記会話を支援するアシスタントです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。",
++    logMaxBytes: 1048576,
++    logBackupCount: 3,
++  },
++  ui: {
++    typeSpeed: 0,
++    opacity: 0.7,
++    soundVolume: 0,
++    mouthInterval: 0,
++    beepFrequency: 0,
++    beepDuration: 0,
++    beepVolumeEnd: 0,
++    avatarOverlayOpacity: 0.4,
++    avatarBrightness: 1,
++    glowText: 1,
++    glowBox: 1,
++    brightness: 1,
++    nameTags: {
++      user: "YOU",
++      avatar: "SPECTRA",
++      avatarFullName: "Spectra",
++    },
++    systemMessages: {
++      banner1: "{avatarFullName} online.",
++      banner2: "Type a message to begin.",
++    },
++    theme: "classic",
++  },
++  minirag: {
++    baseUrl: "http://localhost:8165",
++    workspace: "diary",
++    searchEnabledDefault: true,
++    topKDefault: 3,
++  },
++}

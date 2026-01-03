@@ -88,10 +88,19 @@ class SearchSubAgent(BaseModel, extra="forbid"):
     model: str = "gemini-2.5-flash"
 
 
+# MiniRAG 連携設定
+class MiniRagSettings(BaseModel, extra="forbid"):
+    baseUrl: str
+    workspace: str = "diary"
+    searchEnabledDefault: bool = True
+    topKDefault: int = Field(ge=1, le=10, default=3)
+
+
 # settings.json5 のルートスキーマ
 class AppSettings(BaseModel, extra="forbid"):
     server: ServerSettings
     ui: UiSettings
+    minirag: MiniRagSettings
 
 
 # ---------- テーマ解決 ----------
@@ -229,6 +238,12 @@ CLIENT_LOG_VERBOSE = (APP_ENV == "dev") or (LOG_BODY is True)
 # 検索サブエージェント設定
 SEARCH_SUBAGENT_ENABLED = app_settings.server.searchSubAgent.enabled
 SEARCH_SUBAGENT_MODEL = app_settings.server.searchSubAgent.model
+
+# MiniRAG 設定
+MINIRAG_BASE_URL = app_settings.minirag.baseUrl
+MINIRAG_WORKSPACE = app_settings.minirag.workspace
+MINIRAG_SEARCH_ENABLED_DEFAULT = app_settings.minirag.searchEnabledDefault
+MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
 
 # AG-UI エージェント接続情報（サーバを唯一の真実源とする）
 AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"

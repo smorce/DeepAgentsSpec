@@ -11,8 +11,10 @@ from google.adk import tools as adk_tools
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
+from google.adk.tools import FunctionTool
 
 from src import config
+from src.routes.diary import router as diary_router, search_diary
 
 # 検索サブエージェントを使う場合は GOOGLE_API_KEY が必須
 if config.SEARCH_SUBAGENT_ENABLED and not config.GOOGLE_API_KEY:
@@ -46,7 +48,7 @@ def resolve_model(provider: str, model: str):
 
 def build_agent() -> ADKAgent:
     """メインエージェントを構築（検索サブエージェント付きの場合あり）"""
-    search_tool = None
+    search_subagent_tool = None
     if config.SEARCH_SUBAGENT_ENABLED:
         search_agent = LlmAgent(
             name="search_agent",
@@ -58,12 +60,15 @@ def build_agent() -> ADKAgent:
             ),
             tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
         )
-        search_tool = AgentTool(agent=search_agent)
+        search_subagent_tool = AgentTool(agent=search_agent)
 
     main_model = resolve_model(config.LLM_PROVIDER, config.LLM_MODEL)
-    tools = [adk_tools.preload_memory]
-    if search_tool:
-        tools.append(search_tool)
+    tools = [
+        adk_tools.preload_memory,
+        FunctionTool(search_diary),
+    ]
+    if search_subagent_tool:
+        tools.append(search_subagent_tool)
 
     main_agent = LlmAgent(
         name="assistant",
@@ -121,12 +126,20 @@ def get_config():
     return {
         "ui": config._ui_settings,
         "clientLogVerbose": config.CLIENT_LOG_VERBOSE,
+        "minirag": {
+            "workspace": config.MINIRAG_WORKSPACE,
+            "searchEnabledDefault": config.MINIRAG_SEARCH_ENABLED_DEFAULT,
+            "topKDefault": config.MINIRAG_TOP_K_DEFAULT,
+        },
         "agent": {
             "url": config.AGENT_URL,
             "agentId": config.AGENT_ID,
             "threadId": config.THREAD_ID,
         },
     }
+
+
+app.include_router(diary_router)
 
 # AG-UI プロトコルのエンドポイントを登録
 add_adk_fastapi_endpoint(app, agent, path="/agui")
