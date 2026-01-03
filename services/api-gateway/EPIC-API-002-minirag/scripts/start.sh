@@ -23,56 +23,26 @@ echo "権限設定: ホストUID:GID=${HOST_UID}:${HOST_GID}, PostgreSQL GID=${P
 if [ "$CLEANUP_DB" = true ]; then
     echo "PostgreSQLデータボリュームをクリーンアップしています..."
     
-    # 既存のコンテナを停止・削除
+    # 既存のコンテナを停止・削除（named volumeも削除される）
     docker compose down --volumes --rmi all
     
-    # data/postgres ディレクトリを削除して再作成
-    if [ -d "./data/postgres" ]; then
-        echo "data/postgres ディレクトリを削除中..."
-        rm -rf ./data/postgres
-        echo "data/postgres ディレクトリを削除しました"
-    fi
-    
-    echo "data/postgres ディレクトリをフル権限で作成中..."
-    mkdir -p ./data/postgres
-    
-    # 現在のユーザーIDとグループIDを取得
-    # ディレクトリの所有者をホストユーザーに変更し、PostgreSQLコンテナもアクセス可能にする
-    sudo chown -R ${HOST_UID}:${POSTGRES_GID} ./data/postgres
-    # 777パーミッションで、所有者・グループ・その他すべてが読み書き可能にする
-    chmod -R 777 ./data/postgres
-
-    # init スクリプト・マイグレーション用ディレクトリは現在のユーザーのまま（読み取り専用で使用されるため）
-    # 必要に応じて権限を調整
+    # init スクリプト・マイグレーション用ディレクトリの権限を調整
     if [ -d "./postgres" ]; then
+      echo "postgres/init ディレクトリの権限を確認中..."
       sudo chown -R ${HOST_UID}:${HOST_GID} ./postgres
       chmod -R 755 ./postgres
     fi
     
-    echo "data/postgres のクリーンアップが完了しました"
-else
-    # cleanupモードでない場合も、既存のdata/postgresディレクトリの権限を確認・修正
-    if [ -d "./data/postgres" ]; then
-        # 所有者が現在のユーザーでない場合、権限を修正
-        if [ "$(stat -c '%u' ./data/postgres 2>/dev/null)" != "$HOST_UID" ]; then
-            echo "既存のdata/postgresディレクトリの権限を修正中（Windowsエクスプローラーからアクセス可能にします）..."
-            sudo chown -R ${HOST_UID}:${POSTGRES_GID} ./data/postgres
-            chmod -R 777 ./data/postgres
-            echo "権限の修正が完了しました"
-        fi
-    fi
+    echo "PostgreSQLボリュームのクリーンアップが完了しました"
 fi
 
 echo "PostgreSQL + AGE + pgvector コンテナと MiniRAG コンテナを起動します..."
 
-# 開発モードかどうかでcompose設定を選択
-if [ "$DEV_MODE" = true ]; then
-    echo "開発モードで起動中（ソースコードの変更がリアルタイムで反映されます）..."
-    docker compose -f compose.yaml -f compose.dev.yml up -d
-else
-    echo "本番モードで起動中（イメージ内のソースコードを使用）..."
-    docker compose up -d
-fi
+# compose.yaml を使用してコンテナを起動
+# 注意: compose.dev.yml は存在しないため、常に compose.yaml を使用
+# --build を付けることで、ソースコードに変更があればそのレイヤー以降が再ビルドされます。
+# 依存関係に変更がない限り、重い pip install はキャッシュが利用されるため高速です。
+docker compose up -d --build
 
 # PostgreSQLコンテナのhealthcheckが成功するまで待機（最大60秒）
 echo "PostgreSQLコンテナの起動を待機中..."
@@ -89,16 +59,25 @@ while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
 done
 echo ""
 
-# PostgreSQLコンテナが起動した後、data/postgres の所有権を再設定
-# （コンテナ内で作成されたファイルの所有権が postgres ユーザー (UID 999) になっているため）
-if [ -d "./data/postgres" ]; then
-    echo "data/postgres ディレクトリの所有権をホストユーザーに修正中（Windowsエクスプローラーからアクセス可能にします）..."
-    sudo chown -R ${HOST_UID}:${POSTGRES_GID} ./data/postgres
-    chmod -R 777 ./data/postgres
-    echo "所有権の修正が完了しました"
+# data/minirag ディレクトリの権限を確認・修正（Windowsエクスプローラーからアクセス可能にするため）
+if [ -d "./data/minirag" ]; then
+    echo "data/minirag ディレクトリの権限を確認中..."
+    if [ "$(stat -c '%u' ./data/minirag 2>/dev/null)" != "$HOST_UID" ]; then
+        echo "data/minirag ディレクトリの所有権をホストユーザーに修正中..."
+        sudo chown -R ${HOST_UID}:${HOST_GID} ./data/minirag
+        chmod -R 755 ./data/minirag
+        echo "所有権の修正が完了しました"
+    fi
+else
+    echo "data/minirag ディレクトリを作成中..."
+    mkdir -p ./data/minirag
+    sudo chown -R ${HOST_UID}:${HOST_GID} ./data/minirag
+    chmod -R 755 ./data/minirag
 fi
 
-# 起動したコンテナのログを少し表示して、正常起動を確認
-echo "コンテナの起動ログ:"
-docker compose logs -f --tail=30 postgres
-docker compose logs -f --tail=30 minirag_on_postgre
+# 起動したコンテナのログをフォアグラウンドで表示
+echo ""
+echo "=== コンテナの起動ログ（リアルタイム表示） ==="
+echo "Ctrl+C でログ表示を終了できます（コンテナは停止しません）"
+echo ""
+docker compose logs -f --tail=30

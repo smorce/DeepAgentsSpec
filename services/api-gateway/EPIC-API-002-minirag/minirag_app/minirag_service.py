@@ -17,12 +17,12 @@ from minirag.llm.openai import openai_complete_if_cache
 from minirag.utils import EmbeddingFunc, locate_json_string_body_from_string
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-v3.2-speciale")
+LLM_MODEL = os.getenv("LLM_MODEL", "qwen/qwen3-235b-a22b-2507")    # deepseek/deepseek-v3.2-speciale は一生進まないので使わない
 OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 MINIRAG_WORKING_DIR = os.getenv("MINIRAG_WORKING_DIR", "/data/minirag")
 MINIRAG_WORKSPACE = os.getenv("MINIRAG_WORKSPACE", "default")
 AGE_GRAPH_NAME = os.getenv("AGE_GRAPH_NAME", "my_minirag_graph")
-COSINE_THRESHOLD = float(os.getenv("COSINE_THRESHOLD", "0.4"))
+COSINE_THRESHOLD = float(os.getenv("COSINE_THRESHOLD", "-1.0"))
 STRUCTURED_TABLE = os.getenv("MINIRAG_STRUCTURED_TABLE", "public.structured_documents")
 
 STRUCTURED_SCHEMA = {

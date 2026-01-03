@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import json
 import os
+import sys
 import time
 from dataclasses import dataclass
 from typing import Union, List, Dict, Set, Any, Tuple
@@ -104,10 +105,16 @@ class PostgreSQLDB:
             raise
 
     async def check_tables(self):
+        logger.info("Starting table check and creation process...")
+        print("🔍 Starting table check and creation process...", flush=True)
+        sys.stdout.flush()
         for k, v in TABLES.items():
+            table_exists = False
             try:
                 # テーブルが存在するかチェック
                 await self.query("SELECT 1 FROM {k} LIMIT 1".format(k=k))
+                table_exists = True
+                logger.debug(f"Table {k} already exists")
 
                 # 既存テーブルに metadata 列が無い場合は追加
                 if "metadata" in v["ddl"]:
@@ -124,14 +131,37 @@ class PostgreSQLDB:
                     )
 
             except Exception as e:
-                logger.error(f"Failed to check table {k} in PostgreSQL database")
-                logger.error(f"PostgreSQL database error: {e}")
-                try:
-                    await self.execute(v["ddl"])
-                    logger.info(f"Created table {k} in PostgreSQL database")
-                except Exception as e:
-                    logger.error(f"Failed to create table {k} in PostgreSQL database")
-                    logger.error(f"PostgreSQL database error: {e}")
+                # テーブルが存在しない場合は作成を試みる
+                error_msg = str(e).lower()
+                print(f"⚠️  Exception caught for table {k}: {error_msg}", flush=True)
+                sys.stdout.flush()
+                if "does not exist" in error_msg or "relation" in error_msg:
+                    logger.info(f"Table {k} does not exist, attempting to create...")
+                    print(f"📝 Table {k} does not exist, attempting to create...", flush=True)
+                    sys.stdout.flush()
+                    try:
+                        await self.execute(v["ddl"], upsert=True)
+                        logger.info(f"✓ Successfully created table {k} in PostgreSQL database")
+                        print(f"✅ Successfully created table {k} in PostgreSQL database", flush=True)
+                        sys.stdout.flush()
+                    except asyncpg.exceptions.DuplicateTableError:
+                        # テーブルが既に存在する場合（競合状態）、これは正常
+                        logger.info(f"Table {k} already exists (race condition)")
+                        print(f"ℹ️  Table {k} already exists (race condition)", flush=True)
+                        sys.stdout.flush()
+                    except Exception as create_error:
+                        logger.error(f"✗ Failed to create table {k} in PostgreSQL database")
+                        logger.error(f"PostgreSQL database error: {create_error.__class__.__name__} - {create_error}")
+                        logger.error(f"DDL statement: {v['ddl']}")
+                        print(f"❌ Failed to create table {k}: {create_error}", flush=True)
+                        sys.stdout.flush()
+                        raise
+                else:
+                    # その他のエラーは再発生
+                    logger.error(f"Unexpected error checking table {k}: {e}")
+                    print(f"❌ Unexpected error checking table {k}: {e}", flush=True)
+                    sys.stdout.flush()
+                    raise
 
         logger.info("Finished checking all tables in PostgreSQL database")
 
@@ -191,20 +221,24 @@ class PostgreSQLDB:
 
                 if data is None:
                     await connection.execute(sql)
-                else:
+                elif isinstance(data, dict):
                     await connection.execute(sql, *data.values())
+                else:
+                    # data is a list or tuple
+                    await connection.execute(sql, *data)
         except (
             asyncpg.exceptions.UniqueViolationError,
             asyncpg.exceptions.DuplicateTableError,
         ) as e:
             if upsert:
-                print("Key value duplicate, but upsert succeeded.")
+                logger.debug(f"Duplicate key/table detected but upsert=True, continuing: {e}")
             else:
                 logger.error(f"Upsert error: {e}")
+                raise
         except Exception as e:
-            logger.error(f"PostgreSQL database error: {e.__class__} - {e}")
-            print(sql)
-            print(data)
+            logger.error(f"PostgreSQL database error: {e.__class__.__name__} - {e}")
+            logger.error(f"SQL: {sql}")
+            logger.error(f"Data: {data}")
             raise
 
     @staticmethod
@@ -1223,8 +1257,10 @@ class PGGraphStorage(BaseGraphStorage):
         # AGEではCypherクエリでK-hopの近隣を取得
         query = """SELECT * FROM cypher('%s', $$
                      MATCH path = (start:Entity {node_id: "%s"})-[*1..%d]-(neighbor:Entity)
-                     RETURN [n in nodes(path) | properties(n).node_id] AS path_nodes,
-                            [r in relationships(path) | r] AS path_edges
+                     WITH path, nodes(path) AS ns
+                     UNWIND ns AS n
+                     WITH path, collect(properties(n).node_id) AS nids
+                     RETURN nids AS path_nodes, [] AS path_edges
                    $$) AS (path_nodes agtype, path_edges agtype)""" % (
             self.graph_name, src_label, k
         )
