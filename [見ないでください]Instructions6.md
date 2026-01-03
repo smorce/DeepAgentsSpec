@@ -61,3 +61,17 @@ EPIC-AVATAR-001-diary-minirag に追加で。
 MiniRAG登録失敗時はプロファイル更新しない方針で。
 使用モデルは Gemini で。
 ファイルロック/排他制御は不要です。
+# =========================================
+あなたは担当機能の実装エージェントです。
+
+【機能名】プロファイリング機能の追加
+【指示書】services/avatar-ui/issues/ISSUE-AVATAR-002-001.md
+【ドキュメント】
+  - README.md
+  - docs/onboarding.md
+  - harness/AI-Agent-progress.txt
+【やること】
+  1. README.mdを確認する
+  2. onboarding.mdを確認する
+  3. AI-Agent-progress.txtを確認する
+  4. tasks.md を読み、最大限効率化しながら優先度順にタスクを実行してください。
