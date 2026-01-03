@@ -73,29 +73,29 @@ Gemini・GPT・Claude 対応。デスクトップで動くエージェント UI�
 
 - サービス付属スクリプト（推奨）:
 
-  ```bash
-  cd services/avatar-ui
-  # 初回のみ
-  cd app && npm install
-  cd ..
-  ./scripts/run_dev.sh
-  ```
+```bash
+cd services/avatar-ui
+# 初回のみ
+cd app && npm install
+cd ..
+./scripts/run_dev.sh
+```
 
 - 手動起動:
 
-  ```bash
-  # サーバー
-  cd services/avatar-ui/server
-  # 初回のみ（依存の取得）
-  uv pip show ag-ui-protocol fastapi uvicorn
-  uv pip install --link-mode=copy -e .
-  uv run --link-mode=copy python main.py
+```bash
+# サーバー
+cd services/avatar-ui/server
+# 初回のみ（依存の取得）
+uv pip show ag-ui-protocol fastapi uvicorn
+uv pip install --link-mode=copy -e .
+uv run --link-mode=copy python main.py
 
-  # 別ターミナルでクライアント
-  cd services/avatar-ui/app
-  npm install
-  npm run dev
-  ```
+# 別ターミナルでクライアント
+cd services/avatar-ui/app
+npm install
+npm run dev
+```
 
 > `uv` が未インストールの場合は `python main.py` を利用してください。
 > Electron ではなく Web ブラウザで動作させるため、`AVATAR_UI_WEB_ONLY=1` が自動で有効になります。
