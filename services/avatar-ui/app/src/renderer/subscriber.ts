@@ -47,6 +47,10 @@ export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscribe
     return line;
   };
 
+  const appendErrorLine = (message: string) => {
+    appendLine("text-line--error", `❌ ${message}`);
+  };
+
   // オブジェクトから最初に見つかった文字列値を取り出す（汎用）
   const extractFirstString = (obj: unknown): string => {
     if (typeof obj === "string") return obj;
@@ -156,10 +160,11 @@ export function createUiSubscriber(options: UiSubscriberOptions): AgentSubscribe
     
     onRunFailed({ error }: { error: unknown }) {
       engine.reset(); // 喋ってる途中なら止める
-      appendLine(
-        "text-line--error",
-        `❌ ${error instanceof Error ? error.message : String(error)}`,
-      );
+      appendErrorLine(error instanceof Error ? error.message : String(error));
+    },
+    onRunErrorEvent({ event }) {
+      engine.reset(); // 喋ってる途中なら止める
+      appendErrorLine(event.message || "実行中にエラーが発生しました。");
     },
   };
 }

@@ -29,4 +29,9 @@ export const loggerSubscriber: AgentSubscriber = {
   onRunFailed({ error }: { error: Error }) {
     logError(`agent run failed: ${error.message}`);
   },
+  // RUN_ERROR イベント受信時の通知
+  onRunErrorEvent({ event }) {
+    const code = event.code ? ` code=${event.code}` : "";
+    logError(`agent run error: ${event.message}${code}`);
+  },
 };
