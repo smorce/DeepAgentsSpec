@@ -21,7 +21,7 @@ from google.adk.artifacts import BaseArtifactService, InMemoryArtifactService
 from google.adk.memory import BaseMemoryService, InMemoryMemoryService
 from google.adk.auth.credential_service.base_credential_service import BaseCredentialService
 from google.adk.auth.credential_service.in_memory_credential_service import InMemoryCredentialService
-from google.genai import types
+from google.genai import types, errors as genai_errors
 
 from .event_translator import EventTranslator
 from .session_manager import SessionManager
@@ -1317,12 +1317,13 @@ class ADKAgent:
             
         except Exception as e:
             logger.error(f"Background execution error: {e}", exc_info=True)
+            message, code = self._format_run_error(e)
             # エラーをキューに入れる
             await event_queue.put(
                 RunErrorEvent(
                     type=EventType.RUN_ERROR,
-                    message=str(e),
-                    code="BACKGROUND_EXECUTION_ERROR"
+                    message=message,
+                    code=code,
                 )
             )
             await event_queue.put(None)
@@ -1369,3 +1370,35 @@ class ADKAgent:
 
         # セッションマネージャーのクリーンアップタスクを停止
         await self._session_manager.stop_cleanup_task()
+
+    @staticmethod
+    def _format_run_error(error: Exception) -> tuple[str, str]:
+        if isinstance(error, genai_errors.APIError):
+            details = getattr(error, "details", None)
+            status = getattr(error, "status", None)
+            code = getattr(error, "code", None)
+            retry_delay = None
+            if isinstance(details, dict):
+                error_payload = details.get("error") or details
+                detail_list = error_payload.get("details") if isinstance(error_payload, dict) else None
+                if isinstance(detail_list, list):
+                    for entry in detail_list:
+                        if isinstance(entry, dict) and entry.get("retryDelay"):
+                            retry_delay = entry.get("retryDelay")
+                            break
+
+            if code == 429 or status == "RESOURCE_EXHAUSTED":
+                if retry_delay:
+                    return (
+                        f"Gemini API のレート制限に達しました。{retry_delay} 後に再試行してください。",
+                        "RATE_LIMIT",
+                    )
+                return (
+                    "Gemini API のレート制限に達しました。しばらく待ってから再試行してください。",
+                    "RATE_LIMIT",
+                )
+
+            message = getattr(error, "message", None) or str(error)
+            return (f"Gemini API エラー: {message}", "GENAI_ERROR")
+
+        return (str(error), "BACKGROUND_EXECUTION_ERROR")
