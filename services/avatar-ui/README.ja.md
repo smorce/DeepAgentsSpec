@@ -1,5 +1,14 @@
 UI: http://localhost:5113/
 
+起動に4分くらいかかるが
+INFO:     Started server process [482094]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:41004 - "GET /agui/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41004 - "OPTIONS /agui/diary/search-settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41016 - "POST /agui/diary/search-settings HTTP/1.1" 200 OK
+が出ればOK。画面のアバター名も変わる。
+
 - WSL 内で:  
   `curl http://127.0.0.1:1686/healthz`
 
