@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from transformers import AutoModel, AutoTokenizer
 
@@ -24,6 +25,14 @@ MINIRAG_WORKSPACE = os.getenv("MINIRAG_WORKSPACE", "default")
 AGE_GRAPH_NAME = os.getenv("AGE_GRAPH_NAME", "my_minirag_graph")
 COSINE_THRESHOLD = float(os.getenv("COSINE_THRESHOLD", "-1.0"))
 STRUCTURED_TABLE = os.getenv("MINIRAG_STRUCTURED_TABLE", "public.structured_documents")
+CORS_ALLOW_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ALLOW_ORIGINS",
+        "http://localhost:9143,http://127.0.0.1:9143",
+    ).split(",")
+    if origin.strip()
+]
 
 STRUCTURED_SCHEMA = {
     "table": STRUCTURED_TABLE,
@@ -181,6 +190,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="MiniRAG Service", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ALLOW_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
@@ -275,4 +291,3 @@ async def delete_documents_by_workspace(workspace: str) -> DeleteResponse:
         raise HTTPException(status_code=500, detail=f"delete failed: {exc}") from exc
 
     return DeleteResponse(deleted=len(doc_ids))
-
