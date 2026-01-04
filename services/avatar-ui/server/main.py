@@ -41,6 +41,29 @@ if config.SEARCH_SUBAGENT_ENABLED and not config.GOOGLE_API_KEY:
     raise RuntimeError("GOOGLE_API_KEY is not set. Please add it to .env in project root")
 
 # ---------- ロギング設定 ----------
+class _FilteredStream:
+    def __init__(self, stream, blocked_substrings):
+        self._stream = stream
+        self._blocked = tuple(blocked_substrings)
+
+    def write(self, data):
+        if any(blocked in data for blocked in self._blocked):
+            return len(data)
+        return self._stream.write(data)
+
+    def flush(self):
+        return self._stream.flush()
+
+    def __getattr__(self, name):
+        return getattr(self._stream, name)
+
+
+_BLOCKED_STDIO_SUBSTRINGS = (
+    "Provider List: https://docs.litellm.ai/docs/providers",
+)
+sys.stdout = _FilteredStream(sys.stdout, _BLOCKED_STDIO_SUBSTRINGS)
+sys.stderr = _FilteredStream(sys.stderr, _BLOCKED_STDIO_SUBSTRINGS)
+
 logs_dir = Path(__file__).resolve().parent / "logs"
 logs_dir.mkdir(exist_ok=True)
 log_file = logs_dir / "app.log"
