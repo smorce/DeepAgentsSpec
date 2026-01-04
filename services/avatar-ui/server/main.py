@@ -1,5 +1,7 @@
 # AG-UI サーバーのエントリーポイント（FastAPI + Google ADK）
+import contextlib
 import inspect
+import io
 import json
 import logging
 import re
@@ -18,7 +20,8 @@ from google.adk.agents.run_config import StreamingMode
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.auth.credential_service.in_memory_credential_service import InMemoryCredentialService
 from google.adk import tools as adk_tools
-from google.adk.models.lite_llm import LiteLlm
+with contextlib.redirect_stdout(io.StringIO()):
+    from google.adk.models.lite_llm import LiteLlm
 from google.adk.memory import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools.agent_tool import AgentTool
@@ -26,10 +29,9 @@ from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
 from google.genai import types
 from ag_ui.core import EventType, ToolCallArgsEvent, ToolCallEndEvent, ToolCallResultEvent, ToolCallStartEvent
-from litellm import completion
-
 from src import config
 from src.diary_service import get_web_search_settings
+from src.litellm_client import completion_with_purpose, configure_litellm_logging
 from src.routes.diary import router as diary_router, search_diary
 
 # 検索サブエージェントを使う場合は GOOGLE_API_KEY が必須
@@ -48,6 +50,7 @@ logging.basicConfig(
     handlers=[RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT)],
 )
 logger = logging.getLogger("agui-adk-bridge")
+configure_litellm_logging()
 
 # EXPRIMENTAL warning を抑制（開発時のノイズ低減）
 warnings.filterwarnings(
@@ -211,7 +214,8 @@ def decide_web_search(user_text: str) -> tuple[bool, str]:
     completion_kwargs = {}
     if config.OPENROUTER_PROVIDER_IGNORE:
         completion_kwargs["extra_body"] = {"provider": {"ignore": config.OPENROUTER_PROVIDER_IGNORE}}
-    response = completion(
+    response = completion_with_purpose(
+        purpose="Web検索の要否判定",
         model=config.LITELLM_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
@@ -265,6 +269,7 @@ async def run_web_search(query: str) -> tuple[str, str | None]:
     chunks: list[str] = []
     error_message: str | None = None
     try:
+        logger.info("LLM呼び出し: Web検索サブエージェント (query=%s)", query)
         await session_service.create_session(
             app_name="agents",
             user_id="web_search_user",

@@ -1244,6 +1244,21 @@ class ADKAgent:
                 "run_config": run_config
             }
 
+            if active_tool_results:
+                tool_call_labels = []
+                for tool_msg in active_tool_results:
+                    message = tool_msg.get("message")
+                    tool_call_id = getattr(message, "tool_call_id", None) if message else None
+                    tool_name = tool_msg.get("tool_name")
+                    if tool_call_id or tool_name:
+                        tool_call_labels.append(f"{tool_name or 'unknown'}:{tool_call_id or 'unknown'}")
+                logger.info(
+                    "LLM呼び出し: ツール結果反映の応答生成 (thread=%s, tool_calls=%s)",
+                    input.thread_id,
+                    ", ".join(tool_call_labels) if tool_call_labels else "unknown",
+                )
+            else:
+                logger.info("LLM呼び出し: ユーザー応答生成 (thread=%s)", input.thread_id)
             async for adk_event in runner.run_async(**run_kwargs):
                 event_invocation_id = getattr(adk_event, 'invocation_id', None)
                 final_response = adk_event.is_final_response()

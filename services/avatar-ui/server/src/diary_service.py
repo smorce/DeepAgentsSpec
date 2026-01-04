@@ -6,9 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
-from litellm import completion
-
 from src import config
+from src.litellm_client import completion_with_purpose
 from src.minirag_client import MiniRagClient, MiniRagConfig, MiniRagError
 from src.profile_service import ProfilingStatus, run_profiling
 
@@ -187,7 +186,8 @@ async def analyze_diary(messages: list[dict[str, Any]]) -> DiaryAnalysis:
     if not messages:
         raise DiaryValidationError("No messages provided for diary analysis.")
     prompt = build_analysis_prompt(messages)
-    response = completion(
+    response = completion_with_purpose(
+        purpose="日記の要約/抽出",
         model=config.LITELLM_MODEL,
         messages=[{"role": "user", "content": prompt}],
         **_build_completion_kwargs(),

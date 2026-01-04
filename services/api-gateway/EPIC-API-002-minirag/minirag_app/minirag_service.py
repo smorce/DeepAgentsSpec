@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -50,6 +51,8 @@ STRUCTURED_SCHEMA = {
     },
     "conflict_columns": ["workspace", "doc_id"],
 }
+
+logger = logging.getLogger(__name__)
 
 
 class StructuredDocument(BaseModel):
@@ -187,6 +190,93 @@ async def init_rag() -> tuple[MiniRAG, PostgreSQLDB]:
     return rag, db_postgre
 
 
+async def fetch_structured_docs(
+    db: PostgreSQLDB,
+    doc_ids: set[str],
+) -> Dict[str, Dict[str, Any]]:
+    if not doc_ids:
+        return {}
+    query = (
+        f"SELECT doc_id, summary, body FROM {STRUCTURED_TABLE} "
+        "WHERE workspace=$1 AND doc_id = ANY($2)"
+    )
+    rows = await db.query(query, [db.workspace, list(doc_ids)], multirows=True)
+    if not rows:
+        return {}
+    return {row["doc_id"]: row for row in rows}
+
+
+def collect_doc_ids_from_results(results: List[Dict[str, Any]]) -> set[str]:
+    doc_ids: set[str] = set()
+    for result in results:
+        answer = result.get("answer")
+        if isinstance(answer, dict):
+            provenance = answer.get("provenance")
+            if isinstance(provenance, dict):
+                chunks = provenance.get("chunks") or []
+                if isinstance(chunks, list):
+                    for chunk in chunks:
+                        if not isinstance(chunk, dict):
+                            continue
+                        doc_id = chunk.get("full_doc_id") or chunk.get("doc_id")
+                        if doc_id:
+                            doc_ids.add(str(doc_id))
+
+        sources = result.get("sources") or []
+        if isinstance(sources, list):
+            for source in sources:
+                if not isinstance(source, dict):
+                    continue
+                doc_id = source.get("doc_id") or source.get("id")
+                if doc_id:
+                    doc_ids.add(str(doc_id))
+    return doc_ids
+
+
+def enrich_results_with_structured_docs(
+    results: List[Dict[str, Any]],
+    structured_docs: Dict[str, Dict[str, Any]],
+) -> None:
+    if not structured_docs:
+        return
+    for result in results:
+        answer = result.get("answer")
+        if isinstance(answer, dict):
+            provenance = answer.get("provenance")
+            if isinstance(provenance, dict):
+                chunks = provenance.get("chunks") or []
+                if isinstance(chunks, list):
+                    for chunk in chunks:
+                        if not isinstance(chunk, dict):
+                            continue
+                        doc_id = chunk.get("full_doc_id") or chunk.get("doc_id")
+                        if not doc_id:
+                            continue
+                        doc = structured_docs.get(str(doc_id))
+                        if not doc:
+                            continue
+                        if not chunk.get("summary"):
+                            chunk["summary"] = doc.get("summary")
+                        if not chunk.get("body"):
+                            chunk["body"] = doc.get("body")
+
+        sources = result.get("sources") or []
+        if isinstance(sources, list):
+            for source in sources:
+                if not isinstance(source, dict):
+                    continue
+                doc_id = source.get("doc_id") or source.get("id")
+                if not doc_id:
+                    continue
+                doc = structured_docs.get(str(doc_id))
+                if not doc:
+                    continue
+                if not source.get("summary"):
+                    source["summary"] = doc.get("summary")
+                if not source.get("body"):
+                    source["body"] = doc.get("body")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
@@ -239,6 +329,7 @@ async def bulk_insert(request: BulkInsertRequest) -> Dict[str, Any]:
 @app.post("/minirag/search")
 async def search(request: SearchRequest) -> Dict[str, Any]:
     rag: MiniRAG = app.state.rag
+    db: PostgreSQLDB = app.state.db
 
     async def run_mode(mode: str) -> Dict[str, Any]:
         param = QueryParam(
@@ -255,6 +346,13 @@ async def search(request: SearchRequest) -> Dict[str, Any]:
         results = await asyncio.gather(*[run_mode(mode) for mode in request.modes])
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"search failed: {exc}") from exc
+
+    try:
+        doc_ids = collect_doc_ids_from_results(results)
+        structured_docs = await fetch_structured_docs(db, doc_ids)
+        enrich_results_with_structured_docs(results, structured_docs)
+    except Exception as exc:
+        logger.warning("structured doc enrichment failed: %s", exc)
 
     total_sources = sum(len(result.get("sources") or []) for result in results)
     note = "0件" if total_sources == 0 else ""

@@ -6,9 +6,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from litellm import completion
-
 from src import config
+from src.litellm_client import completion_with_purpose
 from src.profile_store import (
     apply_value,
     ensure_path,
@@ -166,7 +165,8 @@ def update_profile_from_transcript(transcript: str) -> ProfilingStatus:
     profile = load_profile()
     prompt = build_profile_prompt(transcript, schema)
 
-    response = completion(
+    response = completion_with_purpose(
+        purpose="プロフィール推定",
         model=config.PROFILING_LITELLM_MODEL,
         messages=[{"role": "user", "content": prompt}],
         **_build_completion_kwargs(),
