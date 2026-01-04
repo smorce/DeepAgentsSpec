@@ -150,7 +150,7 @@ async def run_web_search(query: str) -> str:
         return ""
     search_agent = build_search_llm_agent()
     runner = Runner(
-        app_name="web_search",
+        app_name="agents",
         agent=search_agent,
         session_service=InMemorySessionService(),
         artifact_service=InMemoryArtifactService(),
