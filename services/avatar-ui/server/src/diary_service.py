@@ -279,6 +279,8 @@ async def finalize_diary(
 
 def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
+    def _summarize_text(text: str) -> str:
+        return text.strip()
 
     # 旧形式: items/documents など
     candidates = payload.get("items") or payload.get("documents") or []
@@ -286,11 +288,13 @@ def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
         for entry in candidates:
             if not isinstance(entry, dict):
                 continue
+            summary = str(entry.get("summary") or "").strip()
+            body = str(entry.get("body") or "").strip()
             items.append(
                 {
                     "doc_id": entry.get("doc_id") or entry.get("id") or "",
-                    "summary": entry.get("summary") or "",
-                    "body": entry.get("body") or "",
+                    "summary": summary or _summarize_text(body),
+                    "body": body,
                 }
             )
         return items
@@ -311,17 +315,23 @@ def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
             for chunk in chunks:
                 if not isinstance(chunk, dict):
                     continue
+                summary = str(chunk.get("summary") or "").strip()
+                body = str(chunk.get("body") or "").strip()
                 content = str(chunk.get("content") or "").strip()
-                if not content:
+                if not (summary or body or content):
                     continue
+                if not body:
+                    body = content
+                if not summary:
+                    summary = _summarize_text(body or content)
                 items.append(
                     {
                         "doc_id": chunk.get("full_doc_id")
                         or chunk.get("doc_id")
                         or chunk.get("chunk_id")
                         or "",
-                        "summary": content,
-                        "body": content,
+                        "summary": summary,
+                        "body": body,
                     }
                 )
             continue
@@ -331,23 +341,26 @@ def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         for source in sources:
             if isinstance(source, dict):
-                content = str(
-                    source.get("content")
-                    or source.get("body")
-                    or source.get("summary")
-                    or ""
-                ).strip()
+                summary = str(source.get("summary") or "").strip()
+                body = str(source.get("body") or "").strip()
+                content = str(source.get("content") or "").strip()
+                if not body:
+                    body = content
+                if not summary:
+                    summary = _summarize_text(body or content)
                 doc_id = source.get("doc_id") or source.get("id") or ""
             else:
                 content = str(source).strip()
+                summary = _summarize_text(content)
+                body = content
                 doc_id = ""
-            if not content:
+            if not (summary or body or content):
                 continue
             items.append(
                 {
                     "doc_id": doc_id,
-                    "summary": content,
-                    "body": content,
+                    "summary": summary,
+                    "body": body or content,
                 }
             )
 
