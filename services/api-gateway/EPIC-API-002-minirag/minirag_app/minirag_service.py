@@ -85,6 +85,7 @@ class BulkInsertRequest(BaseModel):
 
 
 class SearchRequest(BaseModel):
+    workspace: Optional[str] = None
     query: str
     modes: List[str] = Field(default_factory=lambda: ["mini"])
     top_k: int = 3
@@ -192,6 +193,7 @@ async def init_rag() -> tuple[MiniRAG, PostgreSQLDB]:
 
 async def fetch_structured_docs(
     db: PostgreSQLDB,
+    workspace: str,
     doc_ids: set[str],
 ) -> Dict[str, Dict[str, Any]]:
     if not doc_ids:
@@ -200,7 +202,7 @@ async def fetch_structured_docs(
         f"SELECT doc_id, summary, body FROM {STRUCTURED_TABLE} "
         "WHERE workspace=$1 AND doc_id = ANY($2)"
     )
-    rows = await db.query(query, [db.workspace, list(doc_ids)], multirows=True)
+    rows = await db.query(query, [workspace, list(doc_ids)], multirows=True)
     if not rows:
         return {}
     return {row["doc_id"]: row for row in rows}
@@ -277,6 +279,59 @@ def enrich_results_with_structured_docs(
                     source["body"] = doc.get("body")
 
 
+def normalize_sources_from_chunks(
+    results: List[Dict[str, Any]],
+    structured_docs: Dict[str, Dict[str, Any]],
+) -> None:
+    for result in results:
+        sources = result.get("sources") or []
+        if isinstance(sources, list):
+            has_doc_source = any(
+                isinstance(source, dict) and (source.get("doc_id") or source.get("id"))
+                for source in sources
+            )
+        else:
+            has_doc_source = False
+        if has_doc_source:
+            continue
+
+        answer = result.get("answer")
+        provenance = answer.get("provenance") if isinstance(answer, dict) else None
+        chunks = provenance.get("chunks") if isinstance(provenance, dict) else None
+        if not isinstance(chunks, list) or not chunks:
+            continue
+
+        normalized_sources: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for chunk in chunks:
+            if not isinstance(chunk, dict):
+                continue
+            doc_id = chunk.get("full_doc_id") or chunk.get("doc_id")
+            if not doc_id:
+                continue
+            doc_id = str(doc_id)
+            if doc_id in seen:
+                continue
+            seen.add(doc_id)
+            doc = structured_docs.get(doc_id) if structured_docs else None
+            if doc:
+                summary = doc.get("summary") or ""
+                body = doc.get("body") or ""
+            else:
+                content = str(chunk.get("content") or "")
+                summary = content
+                body = content
+            normalized_sources.append(
+                {
+                    "doc_id": doc_id,
+                    "summary": summary,
+                    "body": body,
+                }
+            )
+        if normalized_sources:
+            result["sources"] = normalized_sources
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
@@ -349,8 +404,10 @@ async def search(request: SearchRequest) -> Dict[str, Any]:
 
     try:
         doc_ids = collect_doc_ids_from_results(results)
-        structured_docs = await fetch_structured_docs(db, doc_ids)
+        workspace = request.workspace or db.workspace
+        structured_docs = await fetch_structured_docs(db, workspace, doc_ids)
         enrich_results_with_structured_docs(results, structured_docs)
+        normalize_sources_from_chunks(results, structured_docs)
     except Exception as exc:
         logger.warning("structured doc enrichment failed: %s", exc)
 

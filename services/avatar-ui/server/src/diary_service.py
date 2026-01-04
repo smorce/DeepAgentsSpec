@@ -4,6 +4,7 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from src import config
@@ -54,6 +55,33 @@ _MINIRAG_CLIENT = MiniRagClient(
 
 _search_settings_by_thread: dict[str, SearchSettings] = {}
 _web_search_settings_by_thread: dict[str, WebSearchSettings] = {}
+
+
+def _persist_minirag_search_payload(
+    payload: dict[str, Any],
+    *,
+    query: str,
+    thread_id: str,
+    top_k: int,
+    modes: list[str] | None,
+) -> None:
+    # MiniRAG 検索の生レスポンスを JSONL で保存する
+    logs_dir = Path(__file__).resolve().parent.parent / "logs"
+    record = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "query": query,
+        "thread_id": thread_id,
+        "top_k": top_k,
+        "modes": modes,
+        "payload": payload,
+    }
+    try:
+        logs_dir.mkdir(exist_ok=True)
+        log_path = logs_dir / "minirag_search_raw.jsonl"
+        with log_path.open("a", encoding="utf-8") as file:
+            file.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except Exception as exc:
+        logger.warning("MiniRAG raw response save failed: %s", exc)
 
 
 def get_search_settings(thread_id: str) -> SearchSettings:
@@ -391,4 +419,11 @@ async def search_diary(
     except MiniRagError as exc:
         logger.warning("MiniRAG search failed: %s", exc)
         return {"items": [], "error": "MiniRAG unavailable"}
+    _persist_minirag_search_payload(
+        payload,
+        query=query,
+        thread_id=thread_id,
+        top_k=effective_top_k,
+        modes=modes,
+    )
     return {"items": _extract_search_items(payload)}
