@@ -178,7 +178,16 @@ search_agent = LlmAgent(
     tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
 )
 search_tool = AgentTool(agent=search_agent)
+
+# OpenRouter が tools 非対応の場合は、検索トグル ON のスレッドのみ
+# Gemini のツール対応エージェントへ切り替える。
 ```
+
+**OpenRouter と検索トグルの関係**
+
+- `llmProvider=openrouter` の場合、tools 非対応モデルではツール呼び出しを送らない。
+- 検索トグルが ON のスレッドは Gemini（`searchSubAgent.provider` / `searchSubAgent.model`）で実行し、
+  MiniRAG 検索や Google Search を利用できるようにする。
 
 **設定スキーマ (`config.py`)**
 

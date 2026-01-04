@@ -217,6 +217,8 @@ cp settings.default.json5 settings.json5
 
 対応する API キーを `.env` に設定し、サーバーを再起動してください。
 OpenRouter を使う場合、`llmModel` は `openrouter/` のプレフィックスなしでも指定できます（内部で自動補完）。
+OpenRouter の一部モデルは tools に非対応のため、`llmProvider=openrouter` の場合はツール呼び出しを行わずに実行します。
+検索トグルが ON のスレッドは Gemini の検索エージェントで実行されるため、必要なときだけ検索を有効にしてください。
 
 reasoning を切り替える場合:
 

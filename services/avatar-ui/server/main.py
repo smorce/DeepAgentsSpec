@@ -14,6 +14,7 @@ from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
 
 from src import config
+from src.diary_service import get_search_settings
 from src.routes.diary import router as diary_router, search_diary
 
 # 検索サブエージェントを使う場合は GOOGLE_API_KEY が必須
@@ -67,10 +68,17 @@ def resolve_model(provider: str, model: str):
     return LiteLlm(model=f"{provider}/{model}")
 
 
-def build_agent() -> ADKAgent:
+def build_agent(
+    *,
+    provider: str | None = None,
+    model: str | None = None,
+    enable_tools: bool = True,
+) -> ADKAgent:
     """メインエージェントを構築（検索サブエージェント付きの場合あり）"""
+    provider = provider or config.LLM_PROVIDER
+    model = model or config.LLM_MODEL
     search_subagent_tool = None
-    if config.SEARCH_SUBAGENT_ENABLED:
+    if enable_tools and config.SEARCH_SUBAGENT_ENABLED:
         search_model = resolve_model(config.SEARCH_SUBAGENT_PROVIDER, config.SEARCH_SUBAGENT_MODEL)
         search_agent = LlmAgent(
             name="search_agent",
@@ -84,13 +92,15 @@ def build_agent() -> ADKAgent:
         )
         search_subagent_tool = AgentTool(agent=search_agent)
 
-    main_model = resolve_model(config.LLM_PROVIDER, config.LLM_MODEL)
-    tools = [
-        adk_tools.preload_memory,
-        FunctionTool(search_diary),
-    ]
-    if search_subagent_tool:
-        tools.append(search_subagent_tool)
+    main_model = resolve_model(provider, model)
+    tools = []
+    if enable_tools:
+        tools = [
+            adk_tools.preload_memory,
+            FunctionTool(search_diary),
+        ]
+        if search_subagent_tool:
+            tools.append(search_subagent_tool)
 
     main_agent = LlmAgent(
         name="assistant",
@@ -110,7 +120,32 @@ def build_agent() -> ADKAgent:
 
 
 # エージェントインスタンス（サーバー起動時に構築）
-agent = build_agent()
+agent = None
+openrouter_agent = None
+search_agent = None
+if config.LLM_PROVIDER.lower() == "openrouter":
+    openrouter_agent = build_agent(enable_tools=False)
+    search_agent = build_agent(
+        provider=config.SEARCH_SUBAGENT_PROVIDER,
+        model=config.SEARCH_SUBAGENT_MODEL,
+        enable_tools=True,
+    )
+else:
+    agent = build_agent(enable_tools=True)
+
+
+def select_agent(input_data):
+    if config.LLM_PROVIDER.lower() != "openrouter":
+        return agent
+    if not openrouter_agent or not search_agent:
+        return openrouter_agent or search_agent
+    try:
+        settings = get_search_settings(input_data.thread_id)
+    except Exception:
+        settings = None
+    if settings and settings.enabled:
+        return search_agent
+    return openrouter_agent
 
 # ---------- FastAPI アプリケーション ----------
 app = FastAPI(title="AG-UI ADK Bridge")
@@ -165,7 +200,7 @@ def get_config():
 app.include_router(diary_router)
 
 # AG-UI プロトコルのエンドポイントを登録
-add_adk_fastapi_endpoint(app, agent, path="/agui")
+add_adk_fastapi_endpoint(app, agent, path="/agui", agent_selector=select_agent)
 
 # ヘルスチェック（ロードバランサー等から使用）
 @app.get("/healthz")

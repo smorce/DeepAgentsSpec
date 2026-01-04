@@ -1,5 +1,7 @@
 # ADK ミドルウェア用 FastAPI エンドポイント
 
+from typing import Callable
+
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from ag_ui.core import RunAgentInput
@@ -10,14 +12,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def add_adk_fastapi_endpoint(app: FastAPI, agent: ADKAgent, path: str = "/"):
+def add_adk_fastapi_endpoint(
+    app: FastAPI,
+    agent: ADKAgent | None = None,
+    path: str = "/",
+    agent_selector: Callable[[RunAgentInput], ADKAgent] | None = None,
+):
     """FastAPI アプリに ADK ミドルウェアエンドポイントを追加
     
     Args:
         app: FastAPI アプリケーションインスタンス
         agent: 設定済み ADKAgent インスタンス
         path: API エンドポイントパス
+        agent_selector: 入力に応じて ADKAgent を切り替える関数
     """
+    if agent is None and agent_selector is None:
+        raise ValueError("agent or agent_selector must be provided")
     
     @app.post(path)
     async def adk_endpoint(input_data: RunAgentInput, request: Request):
@@ -34,7 +44,8 @@ def add_adk_fastapi_endpoint(app: FastAPI, agent: ADKAgent, path: str = "/"):
         async def event_generator():
             """ADK エージェントからイベントを生成"""
             try:
-                async for event in agent.run(input_data):
+                selected_agent = agent_selector(input_data) if agent_selector else agent
+                async for event in selected_agent.run(input_data):
                     try:
                         encoded = encoder.encode(event)
                         logger.debug(f"HTTP Response: {encoded}")
