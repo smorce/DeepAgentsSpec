@@ -39,16 +39,17 @@ OpenRouter / Gemini / OpenAI / Anthropic 対応。デスクトップで動くエ
 1. アプリ起動 → アバターが待機状態で表示
 2. メッセージ入力 → `Enter` で送信
 3. アバターがリアルタイム応答
-4. 必要に応じて Google 検索を自動実行
+4. Web検索トグルが ON の場合、必要に応じて Google 検索を自動実行
 5. 終了：`Ctrl+C`
 
 ## 日記 + MiniRAG 連携（概要）
 
-- UI に「検索トグル」「top_k 設定」「会話確定ボタン」が表示されます。
+- UI に「MiniRAG検索トグル」「Web検索トグル」「top_k 設定」「会話確定ボタン」が表示されます。
 - 会話確定ボタンを押すと、メイン LLM が会話内容を分析し、重要度・サマリー・記憶を抽出します。
 - 抽出結果は MiniRAG に構造化データとして登録されます。
-- 検索トグル ON のときのみ、MiniRAG 検索で過去日記を参照します。
-- top_k と検索トグルの初期値は `settings.json5` の `minirag` セクションで調整できます。
+- MiniRAG検索トグル ON のときのみ、MiniRAG 検索で過去日記を参照します。
+- Web検索トグル ON のときのみ、Gemini による Web 検索を実行し、その結果を OpenRouter のユーザーコンテキストに注入します。
+- top_k と MiniRAG検索トグルの初期値は `settings.json5` の `minirag` セクションで調整できます。
 - 会話確定後にユーザー発話のみを分析し、`profiling/user_profile.yaml` が差分更新されます。
 
 ## クイックスタート
@@ -218,7 +219,7 @@ cp settings.default.json5 settings.json5
 対応する API キーを `.env` に設定し、サーバーを再起動してください。
 OpenRouter を使う場合、`llmModel` は `openrouter/` のプレフィックスなしでも指定できます（内部で自動補完）。
 OpenRouter の一部モデルは tools に非対応のため、`llmProvider=openrouter` の場合はツール呼び出しを行わずに実行します。
-検索トグルが ON のスレッドは Gemini の検索エージェントで実行されるため、必要なときだけ検索を有効にしてください。
+Web検索トグルが ON のスレッドでは Gemini で Web 検索を実行し、その結果を OpenRouter のユーザーコンテキストに注入します。
 
 reasoning を切り替える場合:
 
@@ -233,6 +234,7 @@ reasoning を切り替える場合:
 ### 検索サブエージェント
 
 デフォルトで Google 検索サブエージェントが有効です（Gemini モデルで動作）。  
+Web検索トグルが ON のときにのみ、このサブエージェントが呼び出されます。  
 無効化する場合:
 
 ```json5
@@ -249,6 +251,16 @@ reasoning を切り替える場合:
   "enabled": true,
   "provider": "gemini",
   "model": "gemini-2.5-flash"
+}
+```
+
+### Web検索トグル
+
+Web 検索の初期状態は `settings.json5` の `webSearch` セクションで調整できます。
+
+```json5
+webSearch: {
+  enabledDefault: true
 }
 ```
 

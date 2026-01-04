@@ -153,6 +153,7 @@ avatar-ui/
 サーバー起動時に Pydantic で検証し、不正値があれば即座にエラー終了する（Fail-Fast）。
 
 クライアントは `/agui/config` エンドポイントから設定を取得し、サーバーを唯一の真実源とする。
+UI では MiniRAG 検索トグルと Web 検索トグルを分離し、それぞれ独立して切り替える。
 
 ---
 
@@ -179,20 +180,21 @@ search_agent = LlmAgent(
 )
 search_tool = AgentTool(agent=search_agent)
 
-# OpenRouter が tools 非対応の場合は、検索トグル ON のスレッドのみ
-# Gemini のツール対応エージェントへ切り替える。
+# OpenRouter が tools 非対応の場合は、検索トグル ON のスレッドで
+# Gemini の Web 検索結果を取得し、OpenRouter の入力に注入する。
 ```
 
 **OpenRouter と検索トグルの関係**
 
 - `llmProvider=openrouter` の場合、tools 非対応モデルではツール呼び出しを送らない。
-- 検索トグルが ON のスレッドは Gemini（`searchSubAgent.provider` / `searchSubAgent.model`）で実行し、
-  MiniRAG 検索や Google Search を利用できるようにする。
+- 検索トグルが ON のスレッドは Gemini（`searchSubAgent.provider` / `searchSubAgent.model`）で Web 検索を実行し、
+  検索結果を OpenRouter のユーザーコンテキストに注入する。
 
 **設定スキーマ (`config.py`)**
 
 - `ServerSettings`: LLM プロバイダ、モデル、reasoning、システムプロンプト、ログ設定
 - `UiSettings`: テーマ、タイピング速度、アバター設定、ラベル類
+- `WebSearchSettings`: Web検索トグルの初期値
 - `EnvSettings`: API キー、ポート、セッションタイムアウト
 
 **エンドポイント**

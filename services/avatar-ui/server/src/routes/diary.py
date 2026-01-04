@@ -9,9 +9,11 @@ from src.diary_service import (
     DiaryAnalysisError,
     DiaryValidationError,
     SearchSettings,
+    WebSearchSettings,
     finalize_diary,
     search_diary as run_search_diary,
     set_search_settings,
+    set_web_search_settings,
 )
 
 
@@ -63,6 +65,19 @@ class SearchSettingsRequest(BaseModel):
 
 
 class SearchSettingsResponse(BaseModel):
+    applied: bool
+
+
+class WebSearchSettingsModel(BaseModel):
+    enabled: bool
+
+
+class WebSearchSettingsRequest(BaseModel):
+    thread_id: str
+    settings: WebSearchSettingsModel
+
+
+class WebSearchSettingsResponse(BaseModel):
     applied: bool
 
 
@@ -147,6 +162,19 @@ async def update_search_settings(request: SearchSettingsRequest) -> SearchSettin
     )
     set_search_settings(request.thread_id, settings)
     return SearchSettingsResponse(applied=True)
+
+
+@router.post(
+    "/agui/web-search/settings",
+    response_model=WebSearchSettingsResponse,
+    responses={400: {"model": ErrorResponse}},
+)
+async def update_web_search_settings(
+    request: WebSearchSettingsRequest,
+) -> WebSearchSettingsResponse:
+    settings = WebSearchSettings(enabled=request.settings.enabled)
+    set_web_search_settings(request.thread_id, settings)
+    return WebSearchSettingsResponse(applied=True)
 
 
 async def search_diary(

@@ -1,6 +1,7 @@
 # ADK ミドルウェア用 FastAPI エンドポイント
 
-from typing import Callable
+from typing import Callable, Awaitable
+import inspect
 
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
@@ -17,6 +18,7 @@ def add_adk_fastapi_endpoint(
     agent: ADKAgent | None = None,
     path: str = "/",
     agent_selector: Callable[[RunAgentInput], ADKAgent] | None = None,
+    input_transformer: Callable[[RunAgentInput], Awaitable[RunAgentInput] | RunAgentInput] | None = None,
 ):
     """FastAPI アプリに ADK ミドルウェアエンドポイントを追加
     
@@ -44,8 +46,15 @@ def add_adk_fastapi_endpoint(
         async def event_generator():
             """ADK エージェントからイベントを生成"""
             try:
-                selected_agent = agent_selector(input_data) if agent_selector else agent
-                async for event in selected_agent.run(input_data):
+                selected_input = input_data
+                if input_transformer:
+                    transformed = input_transformer(selected_input)
+                    if inspect.isawaitable(transformed):
+                        selected_input = await transformed
+                    else:
+                        selected_input = transformed
+                selected_agent = agent_selector(selected_input) if agent_selector else agent
+                async for event in selected_agent.run(selected_input):
                     try:
                         encoded = encoder.encode(event)
                         logger.debug(f"HTTP Response: {encoded}")

@@ -42,6 +42,9 @@ export interface AppConfig {
     topKDefault: number;
     searchModesDefault: string[];
   };
+  webSearch: {
+    enabledDefault: boolean;
+  };
   agent: {
     url: string;
     agentId: string;
@@ -61,6 +64,9 @@ const defaults: AppConfig = {
     searchEnabledDefault: true,
     topKDefault: 3,
     searchModesDefault: ["mini"],
+  },
+  webSearch: {
+    enabledDefault: true,
   },
   agent: {
     url: "",
@@ -117,6 +123,7 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
     const ui = serverConfig.ui ?? serverConfig;
     const agent = serverConfig.agent ?? defaults.agent;
     const minirag = serverConfig.minirag ?? defaults.minirag;
+    const webSearch = serverConfig.webSearch ?? defaults.webSearch;
     const hasModesDefault = Array.isArray(minirag.searchModesDefault);
     const rawModes = hasModesDefault
       ? minirag.searchModesDefault.filter((mode: unknown) => typeof mode === "string")
@@ -134,11 +141,15 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
       topKDefault: Number(minirag.topKDefault ?? defaults.minirag.topKDefault),
       searchModesDefault: rawModes,
     };
+    config.webSearch = {
+      enabledDefault: Boolean(webSearch.enabledDefault ?? defaults.webSearch.enabledDefault),
+    };
     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
 
 	    console.info("Config loaded from server:", {
 	      ui: config.ui,
 	      minirag: config.minirag,
+        webSearch: config.webSearch,
 	      agent: config.agent,
 	      clientLogVerbose: config.clientLogVerbose,
 	    });

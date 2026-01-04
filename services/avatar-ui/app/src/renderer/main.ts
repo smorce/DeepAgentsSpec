@@ -17,6 +17,7 @@ const avatarImg = document.getElementById("avatar-img") as HTMLImageElement | nu
 const metaBar = document.getElementById("meta");
 const avatarLabel = document.getElementById("avatar-label");
 const searchToggle = document.getElementById("search-toggle") as HTMLInputElement | null;
+const webSearchToggle = document.getElementById("web-search-toggle") as HTMLInputElement | null;
 const topKInput = document.getElementById("search-top-k") as HTMLInputElement | null;
 const modeInputs = Array.from(
   document.querySelectorAll<HTMLInputElement>('input[name="search-mode"]'),
@@ -189,6 +190,9 @@ async function initApp() {
     top_k: config.minirag.topKDefault,
     modes: ensureAtLeastOneMode(normalizeSearchModes(config.minirag.searchModesDefault ?? [])),
   };
+  const webSearchSettings = {
+    enabled: config.webSearch.enabledDefault,
+  };
 
   // テキスト行を追加（エンジンを介さない即時表示用）
   const appendLine = (className: string, text: string) => {
@@ -242,11 +246,43 @@ async function initApp() {
     }
   };
 
+  const applyWebSearchSettings = async () => {
+    if (!config.agent.threadId) {
+      return;
+    }
+    try {
+      const response = await fetch(`${serverBase}/agui/web-search/settings`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thread_id: config.agent.threadId,
+          settings: webSearchSettings,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`Web search settings update failed: ${response.status}`);
+      }
+      updateFinalizeStatus("Web検索設定を更新しました");
+    } catch (error) {
+      updateFinalizeStatus(
+        `Web search settings update failed: ${error instanceof Error ? error.message : String(error)}`,
+        "error",
+      );
+    }
+  };
+
   if (searchToggle) {
     searchToggle.checked = diarySearchSettings.enabled;
     searchToggle.addEventListener("change", async () => {
       diarySearchSettings.enabled = searchToggle.checked;
       await applySearchSettings();
+    });
+  }
+  if (webSearchToggle) {
+    webSearchToggle.checked = webSearchSettings.enabled;
+    webSearchToggle.addEventListener("change", async () => {
+      webSearchSettings.enabled = webSearchToggle.checked;
+      await applyWebSearchSettings();
     });
   }
 
@@ -291,6 +327,9 @@ async function initApp() {
 
   if (searchToggle || topKInput || modeInputs.length > 0) {
     await applySearchSettings();
+  }
+  if (webSearchToggle) {
+    await applyWebSearchSettings();
   }
 
   // ユーザー入力を処理してエージェントに送信

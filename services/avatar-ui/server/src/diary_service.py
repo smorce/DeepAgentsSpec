@@ -32,6 +32,11 @@ class SearchSettings:
 
 
 @dataclass(frozen=True)
+class WebSearchSettings:
+    enabled: bool
+
+
+@dataclass(frozen=True)
 class DiaryAnalysis:
     title: str
     importance_score: int
@@ -49,6 +54,7 @@ _MINIRAG_CLIENT = MiniRagClient(
 )
 
 _search_settings_by_thread: dict[str, SearchSettings] = {}
+_web_search_settings_by_thread: dict[str, WebSearchSettings] = {}
 
 
 def get_search_settings(thread_id: str) -> SearchSettings:
@@ -59,6 +65,13 @@ def get_search_settings(thread_id: str) -> SearchSettings:
             top_k=config.MINIRAG_TOP_K_DEFAULT,
             modes=tuple(config.MINIRAG_SEARCH_MODES_DEFAULT),
         ),
+    )
+
+
+def get_web_search_settings(thread_id: str) -> WebSearchSettings:
+    return _web_search_settings_by_thread.get(
+        thread_id,
+        WebSearchSettings(enabled=config.WEB_SEARCH_ENABLED_DEFAULT),
     )
 
 
@@ -80,6 +93,12 @@ def set_search_settings(thread_id: str, settings: SearchSettings) -> SearchSetti
     )
     _search_settings_by_thread[thread_id] = clamped
     return clamped
+
+
+def set_web_search_settings(thread_id: str, settings: WebSearchSettings) -> WebSearchSettings:
+    normalized = WebSearchSettings(enabled=bool(settings.enabled))
+    _web_search_settings_by_thread[thread_id] = normalized
+    return normalized
 
 
 def format_transcript(messages: list[dict[str, Any]]) -> str:

@@ -1,20 +1,29 @@
 # AG-UI サーバーのエントリーポイント（FastAPI + Google ADK）
 import logging
+import uuid
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
+from google.adk import Runner
 from google.adk.agents import LlmAgent
+from google.adk.agents import RunConfig as ADKRunConfig
+from google.adk.agents.run_config import StreamingMode
+from google.adk.artifacts import InMemoryArtifactService
+from google.adk.auth.credential_service.in_memory_credential_service import InMemoryCredentialService
 from google.adk import tools as adk_tools
 from google.adk.models.lite_llm import LiteLlm
+from google.adk.memory import InMemoryMemoryService
+from google.adk.sessions import InMemorySessionService
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
+from google.genai import types
 
 from src import config
-from src.diary_service import get_search_settings
+from src.diary_service import get_web_search_settings
 from src.routes.diary import router as diary_router, search_diary
 
 # 検索サブエージェントを使う場合は GOOGLE_API_KEY が必須
@@ -119,17 +128,116 @@ def build_agent(
     )
 
 
+def build_search_llm_agent() -> LlmAgent:
+    search_model = resolve_model(config.SEARCH_SUBAGENT_PROVIDER, config.SEARCH_SUBAGENT_MODEL)
+    return LlmAgent(
+        name="search_agent",
+        model=search_model,
+        description="Performs web searches using Google Search",
+        instruction=(
+            "Search the web and return concise results with sources. "
+            "Use the same language as the latest user message."
+        ),
+        tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
+    )
+
+
+async def run_web_search(query: str) -> str:
+    query = query.strip()
+    if not query:
+        return ""
+    if not config.SEARCH_SUBAGENT_ENABLED:
+        return ""
+    search_agent = build_search_llm_agent()
+    runner = Runner(
+        app_name="web_search",
+        agent=search_agent,
+        session_service=InMemorySessionService(),
+        artifact_service=InMemoryArtifactService(),
+        memory_service=InMemoryMemoryService(),
+        credential_service=InMemoryCredentialService(),
+    )
+    run_config = ADKRunConfig(streaming_mode=StreamingMode.SSE)
+    search_message = types.Content(parts=[types.Part(text=query)], role="user")
+    session_id = f"web-search-{uuid.uuid4().hex}"
+    chunks: list[str] = []
+    try:
+        async for adk_event in runner.run_async(
+            user_id="web_search_user",
+            session_id=session_id,
+            new_message=search_message,
+            run_config=run_config,
+        ):
+            content = getattr(adk_event, "content", None)
+            parts = getattr(content, "parts", None) if content else None
+            if parts:
+                for part in parts:
+                    text = getattr(part, "text", None)
+                    if text:
+                        chunks.append(text)
+            is_final = False
+            if hasattr(adk_event, "is_final_response") and callable(adk_event.is_final_response):
+                is_final = adk_event.is_final_response()
+            elif hasattr(adk_event, "is_final_response"):
+                is_final = bool(adk_event.is_final_response)
+            if is_final or getattr(adk_event, "turn_complete", False):
+                break
+    finally:
+        close_method = getattr(runner, "close", None)
+        if callable(close_method):
+            try:
+                close_method()
+            except Exception:
+                pass
+    return "".join(chunks).strip()
+
+
+def _extract_latest_user_message(input_data) -> tuple[object | None, str]:
+    messages = getattr(input_data, "messages", None)
+    if not messages:
+        return None, ""
+    for message in reversed(messages):
+        role = getattr(message, "role", None)
+        content = getattr(message, "content", None)
+        if role == "user" and isinstance(content, str):
+            return message, content
+        if isinstance(message, dict) and message.get("role") == "user":
+            content = message.get("content")
+            if isinstance(content, str):
+                return message, content
+    return None, ""
+
+
+async def enrich_input_with_web_search(input_data):
+    if config.LLM_PROVIDER.lower() != "openrouter":
+        return input_data
+    message, user_text = _extract_latest_user_message(input_data)
+    if not message or not user_text:
+        return input_data
+    try:
+        settings = get_web_search_settings(input_data.thread_id)
+    except Exception:
+        settings = None
+    if not settings or not settings.enabled:
+        return input_data
+    if "検索結果:" in user_text:
+        return input_data
+    search_results = await run_web_search(user_text)
+    if not search_results:
+        return input_data
+    appended = f"{user_text}\n\n検索結果:\n{search_results}"
+    if isinstance(message, dict):
+        message["content"] = appended
+    else:
+        setattr(message, "content", appended)
+    return input_data
+
+
 # エージェントインスタンス（サーバー起動時に構築）
 agent = None
 openrouter_agent = None
-search_agent = None
 if config.LLM_PROVIDER.lower() == "openrouter":
     openrouter_agent = build_agent(enable_tools=False)
-    search_agent = build_agent(
-        provider=config.SEARCH_SUBAGENT_PROVIDER,
-        model=config.SEARCH_SUBAGENT_MODEL,
-        enable_tools=True,
-    )
 else:
     agent = build_agent(enable_tools=True)
 
@@ -137,14 +245,6 @@ else:
 def select_agent(input_data):
     if config.LLM_PROVIDER.lower() != "openrouter":
         return agent
-    if not openrouter_agent or not search_agent:
-        return openrouter_agent or search_agent
-    try:
-        settings = get_search_settings(input_data.thread_id)
-    except Exception:
-        settings = None
-    if settings and settings.enabled:
-        return search_agent
     return openrouter_agent
 
 # ---------- FastAPI アプリケーション ----------
@@ -189,6 +289,9 @@ def get_config():
             "topKDefault": config.MINIRAG_TOP_K_DEFAULT,
             "searchModesDefault": config.MINIRAG_SEARCH_MODES_DEFAULT,
         },
+        "webSearch": {
+            "enabledDefault": config.WEB_SEARCH_ENABLED_DEFAULT,
+        },
         "agent": {
             "url": config.AGENT_URL,
             "agentId": config.AGENT_ID,
@@ -200,7 +303,13 @@ def get_config():
 app.include_router(diary_router)
 
 # AG-UI プロトコルのエンドポイントを登録
-add_adk_fastapi_endpoint(app, agent, path="/agui", agent_selector=select_agent)
+add_adk_fastapi_endpoint(
+    app,
+    agent,
+    path="/agui",
+    agent_selector=select_agent,
+    input_transformer=enrich_input_with_web_search,
+)
 
 # ヘルスチェック（ロードバランサー等から使用）
 @app.get("/healthz")

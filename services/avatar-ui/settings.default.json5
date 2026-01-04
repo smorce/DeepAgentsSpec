@@ -95,6 +95,10 @@
     // MiniRAG API のタイムアウト（秒）
     timeoutSeconds: 300,
   },
+  webSearch: {
+    // Web検索トグルの初期値
+    enabledDefault: true,
+  },
   profiling: {
     // プロファイリング用のモデル
     model: "deepseek/deepseek-v3.2-speciale",

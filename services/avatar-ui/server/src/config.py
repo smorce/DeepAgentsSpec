@@ -122,6 +122,11 @@ class MiniRagSettings(BaseModel, extra="forbid"):
         return normalized
 
 
+# Web 検索トグル設定
+class WebSearchSettings(BaseModel, extra="forbid"):
+    enabledDefault: bool = False
+
+
 # Profiling 設定
 class ProfilingSettings(BaseModel, extra="forbid"):
     model: str
@@ -133,6 +138,7 @@ class AppSettings(BaseModel, extra="forbid"):
     server: ServerSettings
     ui: UiSettings
     minirag: MiniRagSettings
+    webSearch: WebSearchSettings = Field(default_factory=WebSearchSettings)
     profiling: ProfilingSettings = Field(
         default_factory=lambda: ProfilingSettings(model="deepseek/deepseek-v3.2-speciale")
     )
@@ -303,6 +309,9 @@ MINIRAG_TOP_K_DEFAULT = app_settings.minirag.topKDefault
 MINIRAG_SEARCH_MODES_ALLOWED = ("naive", "mini", "light")
 MINIRAG_SEARCH_MODES_DEFAULT = app_settings.minirag.searchModesDefault
 MINIRAG_TIMEOUT_SECONDS = app_settings.minirag.timeoutSeconds
+
+# Web 検索トグル設定
+WEB_SEARCH_ENABLED_DEFAULT = app_settings.webSearch.enabledDefault
 
 # Profiling 設定
 PROFILING_MODEL = app_settings.profiling.model
