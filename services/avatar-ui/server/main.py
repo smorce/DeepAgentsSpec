@@ -149,10 +149,11 @@ async def run_web_search(query: str) -> str:
     if not config.SEARCH_SUBAGENT_ENABLED:
         return ""
     search_agent = build_search_llm_agent()
+    session_service = InMemorySessionService()
     runner = Runner(
         app_name="agents",
         agent=search_agent,
-        session_service=InMemorySessionService(),
+        session_service=session_service,
         artifact_service=InMemoryArtifactService(),
         memory_service=InMemoryMemoryService(),
         credential_service=InMemoryCredentialService(),
@@ -162,6 +163,11 @@ async def run_web_search(query: str) -> str:
     session_id = f"web-search-{uuid.uuid4().hex}"
     chunks: list[str] = []
     try:
+        await session_service.create_session(
+            app_name="agents",
+            user_id="web_search_user",
+            session_id=session_id,
+        )
         async for adk_event in runner.run_async(
             user_id="web_search_user",
             session_id=session_id,
