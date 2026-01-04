@@ -59,10 +59,16 @@ def add_adk_fastapi_endpoint(
                     else:
                         selected_input = transformed
                 selected_agent = agent_selector(selected_input) if agent_selector else agent
-                for event in pre_events:
-                    encoded = encoder.encode(event)
-                    yield encoded
+                pre_events_emitted = False
                 async for event in selected_agent.run(selected_input):
+                    if not pre_events_emitted:
+                        encoded = encoder.encode(event)
+                        yield encoded
+                        for pre_event in pre_events:
+                            encoded = encoder.encode(pre_event)
+                            yield encoded
+                        pre_events_emitted = True
+                        continue
                     try:
                         encoded = encoder.encode(event)
                         logger.debug(f"HTTP Response: {encoded}")
