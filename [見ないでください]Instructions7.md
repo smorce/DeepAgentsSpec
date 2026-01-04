@@ -18,7 +18,7 @@ OPENROUTER_LLM = os.getenv("OPENROUTER_LLM", "deepseek/deepseek-v3.2-speciale")
 from litellm import completion
 
 # LiteLLM は OPENROUTER_API_KEY を環境変数から読めます（明示してもOK）
-os.environ["OPENROUTER_API_KEY"] = OPENROUTER_API_KEY
+os.environ["OPENROUTER_API_KEY"] = OPENROUTER_API_KEY   # 意味ないか？
 
 resp = completion(
     # OpenRouter 経由で呼ぶので "openrouter/" を前につける
