@@ -213,7 +213,7 @@ cp settings.default.json5 settings.json5
 "server": {
   "llmProvider": "openrouter",   // gemini | openai | anthropic | openrouter
   "llmModel": "deepseek/deepseek-v3.2-speciale",
-  "openrouterProviderIgnore": ["AtlasCloud"]
+  "openrouterProviderIgnore": ["atlas-cloud"]
 }
 ```
 
@@ -267,7 +267,7 @@ webSearch: {
 ```
 `autoDecision: true` の場合は OpenRouter が検索要否を判断し、必要なときだけ Gemini で Web 検索します。
 
-OpenRouter の特定プロバイダで `router not found` が出る場合は `openrouterProviderIgnore` を設定して除外できます。
+OpenRouter の特定プロバイダで `router not found` が出る場合は `openrouterProviderIgnore` を設定して除外できます（値はプロバイダの slug です）。
 
 ### 日記 + MiniRAG 設定
 
