@@ -316,6 +316,34 @@ def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
         provenance = answer.get("provenance") if isinstance(answer, dict) else None
         chunks = provenance.get("chunks") if isinstance(provenance, dict) else None
 
+        sources = result.get("sources") or []
+        if isinstance(sources, list) and sources:
+            for source in sources:
+                if isinstance(source, dict):
+                    summary = str(source.get("summary") or "").strip()
+                    body = str(source.get("body") or "").strip()
+                    content = str(source.get("content") or "").strip()
+                    if not body:
+                        body = content
+                    if not summary:
+                        summary = _summarize_text(body or content)
+                    doc_id = source.get("doc_id") or source.get("id") or ""
+                else:
+                    content = str(source).strip()
+                    summary = _summarize_text(content)
+                    body = content
+                    doc_id = ""
+                if not (summary or body or content):
+                    continue
+                items.append(
+                    {
+                        "doc_id": doc_id,
+                        "summary": summary,
+                        "body": body or content,
+                    }
+                )
+            continue
+
         if isinstance(chunks, list) and chunks:
             for chunk in chunks:
                 if not isinstance(chunk, dict):
@@ -340,34 +368,6 @@ def _extract_search_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
                     }
                 )
             continue
-
-        sources = result.get("sources") or []
-        if not isinstance(sources, list):
-            continue
-        for source in sources:
-            if isinstance(source, dict):
-                summary = str(source.get("summary") or "").strip()
-                body = str(source.get("body") or "").strip()
-                content = str(source.get("content") or "").strip()
-                if not body:
-                    body = content
-                if not summary:
-                    summary = _summarize_text(body or content)
-                doc_id = source.get("doc_id") or source.get("id") or ""
-            else:
-                content = str(source).strip()
-                summary = _summarize_text(content)
-                body = content
-                doc_id = ""
-            if not (summary or body or content):
-                continue
-            items.append(
-                {
-                    "doc_id": doc_id,
-                    "summary": summary,
-                    "body": body or content,
-                }
-            )
 
     return items
 

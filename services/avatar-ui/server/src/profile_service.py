@@ -195,4 +195,8 @@ def run_profiling(transcript: str) -> ProfilingStatus:
         return ProfilingStatus(status="failed", message=str(exc))
     except Exception as exc:
         logger.warning("Profiling update crashed: %s", exc)
-        return ProfilingStatus(status="failed", message="Profiling error")
+        message = str(exc).strip()
+        return ProfilingStatus(
+            status="failed",
+            message=message or "Profiling error",
+        )
