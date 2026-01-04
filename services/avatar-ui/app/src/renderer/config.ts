@@ -44,6 +44,7 @@ export interface AppConfig {
   };
   webSearch: {
     enabledDefault: boolean;
+    autoDecision?: boolean;
   };
   agent: {
     url: string;
@@ -67,6 +68,7 @@ const defaults: AppConfig = {
   },
   webSearch: {
     enabledDefault: true,
+    autoDecision: true,
   },
   agent: {
     url: "",
@@ -143,6 +145,7 @@ export async function fetchConfig(options: FetchConfigOptions = {}): Promise<voi
     };
     config.webSearch = {
       enabledDefault: Boolean(webSearch.enabledDefault ?? defaults.webSearch.enabledDefault),
+      autoDecision: Boolean(webSearch.autoDecision ?? defaults.webSearch.autoDecision),
     };
     config.clientLogVerbose = Boolean(serverConfig.clientLogVerbose ?? false);
 

@@ -260,9 +260,11 @@ Web 検索の初期状態は `settings.json5` の `webSearch` セクションで
 
 ```json5
 webSearch: {
-  enabledDefault: true
+  enabledDefault: true,
+  autoDecision: true
 }
 ```
+`autoDecision: true` の場合は OpenRouter が検索要否を判断し、必要なときだけ Gemini で Web 検索します。
 
 ### 日記 + MiniRAG 設定
 

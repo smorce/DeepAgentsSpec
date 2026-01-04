@@ -1,6 +1,8 @@
 # AG-UI サーバーのエントリーポイント（FastAPI + Google ADK）
 import inspect
+import json
 import logging
+import re
 import uuid
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -22,6 +24,7 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
 from google.genai import types
+from litellm import completion
 
 from src import config
 from src.diary_service import get_web_search_settings
@@ -143,6 +146,60 @@ def build_search_llm_agent() -> LlmAgent:
     )
 
 
+def _extract_response_text(response) -> str:
+    if response is None:
+        return ""
+    choices = getattr(response, "choices", None)
+    if choices:
+        message = getattr(choices[0], "message", None)
+        if isinstance(message, dict):
+            content = message.get("content")
+            if isinstance(content, str):
+                return content
+        content = getattr(message, "content", None)
+        if isinstance(content, str):
+            return content
+    if isinstance(response, dict):
+        choices = response.get("choices") or []
+        if choices and isinstance(choices[0], dict):
+            message = choices[0].get("message")
+            if isinstance(message, dict):
+                content = message.get("content")
+                if isinstance(content, str):
+                    return content
+    return ""
+
+
+def _extract_json_payload(text: str) -> dict:
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        return {}
+    try:
+        return json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return {}
+
+
+def decide_web_search(user_text: str) -> tuple[bool, str]:
+    system_prompt = (
+        "You decide whether web search is required to answer the user's message accurately.\n"
+        "Respond with JSON only: {\"needs_web_search\": true/false, \"query\": \"\"}.\n"
+        "If search is not needed, set needs_web_search=false and query to empty string."
+    )
+    response = completion(
+        model=config.LITELLM_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_text},
+        ],
+    )
+    text = _extract_response_text(response)
+    payload = _extract_json_payload(text)
+    needs = bool(payload.get("needs_web_search"))
+    query = str(payload.get("query") or "").strip()
+    return needs, query
+
+
 async def run_web_search(query: str) -> str:
     query = query.strip()
     if not query:
@@ -169,26 +226,30 @@ async def run_web_search(query: str) -> str:
             user_id="web_search_user",
             session_id=session_id,
         )
-        async for adk_event in runner.run_async(
-            user_id="web_search_user",
-            session_id=session_id,
-            new_message=search_message,
-            run_config=run_config,
-        ):
-            content = getattr(adk_event, "content", None)
-            parts = getattr(content, "parts", None) if content else None
-            if parts:
-                for part in parts:
-                    text = getattr(part, "text", None)
-                    if text:
-                        chunks.append(text)
-            is_final = False
-            if hasattr(adk_event, "is_final_response") and callable(adk_event.is_final_response):
-                is_final = adk_event.is_final_response()
-            elif hasattr(adk_event, "is_final_response"):
-                is_final = bool(adk_event.is_final_response)
-            if is_final or getattr(adk_event, "turn_complete", False):
-                break
+        try:
+            async for adk_event in runner.run_async(
+                user_id="web_search_user",
+                session_id=session_id,
+                new_message=search_message,
+                run_config=run_config,
+            ):
+                content = getattr(adk_event, "content", None)
+                parts = getattr(content, "parts", None) if content else None
+                if parts:
+                    for part in parts:
+                        text = getattr(part, "text", None)
+                        if text:
+                            chunks.append(text)
+                is_final = False
+                if hasattr(adk_event, "is_final_response") and callable(adk_event.is_final_response):
+                    is_final = adk_event.is_final_response()
+                elif hasattr(adk_event, "is_final_response"):
+                    is_final = bool(adk_event.is_final_response)
+                if is_final or getattr(adk_event, "turn_complete", False):
+                    break
+        except Exception as exc:
+            logger.warning("Web search failed: %s", exc)
+            return ""
     finally:
         close_method = getattr(runner, "close", None)
         if callable(close_method):
@@ -231,7 +292,18 @@ async def enrich_input_with_web_search(input_data):
         return input_data
     if "検索結果:" in user_text:
         return input_data
-    search_results = await run_web_search(user_text)
+    if config.WEB_SEARCH_AUTO_DECISION:
+        try:
+            needs_search, query = decide_web_search(user_text)
+        except Exception as exc:
+            logger.warning("Web search decision failed: %s", exc)
+            return input_data
+        if not needs_search:
+            return input_data
+        search_query = query or user_text
+    else:
+        search_query = user_text
+    search_results = await run_web_search(search_query)
     if not search_results:
         return input_data
     appended = f"{user_text}\n\n検索結果:\n{search_results}"
@@ -300,6 +372,7 @@ def get_config():
         },
         "webSearch": {
             "enabledDefault": config.WEB_SEARCH_ENABLED_DEFAULT,
+            "autoDecision": config.WEB_SEARCH_AUTO_DECISION,
         },
         "agent": {
             "url": config.AGENT_URL,

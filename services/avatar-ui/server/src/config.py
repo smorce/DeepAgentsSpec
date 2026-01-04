@@ -125,6 +125,8 @@ class MiniRagSettings(BaseModel, extra="forbid"):
 # Web 検索トグル設定
 class WebSearchSettings(BaseModel, extra="forbid"):
     enabledDefault: bool = False
+    autoDecision: bool = True
+    autoDecision: bool = True
 
 
 # Profiling 設定
@@ -312,6 +314,8 @@ MINIRAG_TIMEOUT_SECONDS = app_settings.minirag.timeoutSeconds
 
 # Web 検索トグル設定
 WEB_SEARCH_ENABLED_DEFAULT = app_settings.webSearch.enabledDefault
+WEB_SEARCH_AUTO_DECISION = app_settings.webSearch.autoDecision
+WEB_SEARCH_AUTO_DECISION = app_settings.webSearch.autoDecision
 
 # Profiling 設定
 PROFILING_MODEL = app_settings.profiling.model

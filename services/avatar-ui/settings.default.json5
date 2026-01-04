@@ -98,6 +98,8 @@
   webSearch: {
     // Web検索トグルの初期値
     enabledDefault: true,
+    // OpenRouter に検索要否を判断させる
+    autoDecision: true,
   },
   profiling: {
     // プロファイリング用のモデル
