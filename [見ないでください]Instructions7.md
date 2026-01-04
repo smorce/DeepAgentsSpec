@@ -7,40 +7,40 @@ Openrouter は各種LLMプロバイダーでありますが、使うモデルは
 .env に OPENROUTER_API_KEY は設定しました。
 デフォルトは "reasoning": {"enabled": True} でお願いします。
 
-# Openrouter の使い方
+services/avatar-ui は LiteLLM をサポートしており、LiteLLM は Openrouter をサポートしているので移行はスムーズのはずです。
+
+# LiteLLM の Openrouter の使い方
 ```
 import os
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "ダミー")
 OPENROUTER_LLM = os.getenv("OPENROUTER_LLM", "deepseek/deepseek-v3.2-speciale")
 
-import requests
+from litellm import completion
 
-# First API call with reasoning
-response = requests.post(
-  url="https://openrouter.ai/api/v1/chat/completions",
-  headers={
-    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-    "Content-Type": "application/json",
-  },
-  data=json.dumps({
-    "model": OPENROUTER_LLM,
-    "messages": [
-        {
-          "role": "user",
-          "content": "How many r's are in the word 'strawberry'?"
-        }
-      ],
-    "reasoning": {"enabled": True}   # 思考モードのON/OFF
-  })
+# LiteLLM は OPENROUTER_API_KEY を環境変数から読めます（明示してもOK）
+os.environ["OPENROUTER_API_KEY"] = OPENROUTER_API_KEY
+
+resp = completion(
+    # OpenRouter 経由で呼ぶので "openrouter/" を前につける
+    model=f"openrouter/{OPENROUTER_LLM}",
+    messages=[
+        {"role": "user", "content": "How many r's are in the word 'strawberry'?"}
+    ],
+
+    # OpenRouter の reasoning を有効化（あなたの元コードと同じ意図）
+    reasoning={"enabled": True},
+
+    # “思考トレースを返す”系は OpenRouter 側で include_reasoning が必要な場合があります
+    include_reasoning=True,
 )
 
-# Extract the assistant message with reasoning_details
-response = response.json()
-response = response['choices'][0]['message']
+# LiteLLM: 通常の回答
+print(resp.choices[0].message.content)
 
-
-print(response.get('content'))     # LLMの回答
-print(response.get('reasoning'))   # 思考トレース
+# LiteLLM: 推論テキストは標準化されて reasoning_content に入ることがあります
+# （プロバイダ/モデルによっては message.reasoning に入る場合もあるので両方見ます）
+print(getattr(resp.choices[0].message, "reasoning_content", None))   # 基本はこっちでOK
+print(getattr(resp.choices[0].message, "reasoning", None))           # 念の為、こっちも見る
 ```
 
 上記を参考にコードを修正してください。
