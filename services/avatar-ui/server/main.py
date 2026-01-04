@@ -4,6 +4,7 @@ import json
 import logging
 import re
 import uuid
+import warnings
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from fastapi import FastAPI, Request
@@ -47,6 +48,18 @@ logging.basicConfig(
     handlers=[RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT)],
 )
 logger = logging.getLogger("agui-adk-bridge")
+
+# EXPRIMENTAL warning を抑制（開発時のノイズ低減）
+warnings.filterwarnings(
+    "ignore",
+    message=r"\[EXPERIMENTAL\] InMemoryCredentialService:.*",
+    category=UserWarning,
+)
+warnings.filterwarnings(
+    "ignore",
+    message=r"\[EXPERIMENTAL\] BaseCredentialService:.*",
+    category=UserWarning,
+)
 
 # ---------- エージェント構築 ----------
 
@@ -191,7 +204,9 @@ def decide_web_search(user_text: str) -> tuple[bool, str]:
     system_prompt = (
         "You decide whether web search is required to answer the user's message accurately.\n"
         "Respond with JSON only: {\"needs_web_search\": true/false, \"query\": \"\"}.\n"
-        "If search is not needed, set needs_web_search=false and query to empty string."
+        "If search is not needed, set needs_web_search=false and query to empty string.\n"
+        "If search is needed, generate a concise query in the same language as the user message.\n"
+        "Include any specific names, places, dates, or identifiers from the user message."
     )
     completion_kwargs = {}
     if config.OPENROUTER_PROVIDER_IGNORE:
@@ -209,6 +224,23 @@ def decide_web_search(user_text: str) -> tuple[bool, str]:
     needs = bool(payload.get("needs_web_search"))
     query = str(payload.get("query") or "").strip()
     return needs, query
+
+
+def _has_japanese(text: str) -> bool:
+    return bool(re.search(r"[\u3040-\u30ff\u4e00-\u9fff]", text))
+
+
+def normalize_search_query(user_text: str, query: str) -> str:
+    normalized = query.strip()
+    if not normalized:
+        return user_text
+    if len(normalized) < 6:
+        return user_text
+    user_is_jp = _has_japanese(user_text)
+    query_is_jp = _has_japanese(normalized)
+    if user_is_jp and not query_is_jp:
+        return user_text
+    return normalized
 
 
 async def run_web_search(query: str) -> tuple[str, str | None]:
@@ -344,7 +376,7 @@ async def enrich_input_with_web_search(input_data):
             return input_data
         if not needs_search:
             return input_data
-        search_query = query or user_text
+        search_query = normalize_search_query(user_text, query)
     else:
         search_query = user_text
     search_results, search_error = await run_web_search(search_query)
