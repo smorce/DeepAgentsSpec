@@ -4,6 +4,7 @@ import inspect
 import io
 import json
 import logging
+import sys
 import re
 import uuid
 import warnings
@@ -47,7 +48,10 @@ log_level = logging.INFO
 logging.basicConfig(
     level=log_level,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    handlers=[RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT)],
+    handlers=[
+        RotatingFileHandler(log_file, maxBytes=config.LOG_MAX_BYTES, backupCount=config.LOG_BACKUP_COUNT),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 logger = logging.getLogger("agui-adk-bridge")
 configure_litellm_logging()
