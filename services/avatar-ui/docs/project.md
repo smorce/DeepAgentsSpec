@@ -1,6 +1,6 @@
 # Avatar UI Project
 
-AG-UI プロトコルと Google ADK を用いたレトロターミナル風エージェント UI の設計書。
+AG-UI プロトコルと Google ADK + LiteLLM を用いたレトロターミナル風エージェント UI の設計書。
 
 ---
 
@@ -8,7 +8,7 @@ AG-UI プロトコルと Google ADK を用いたレトロターミナル風エ�
 
 ### 目的
 
-入力欄・出力欄・アバターのみで構成されるレトロ端末風チャット UI を構築する。CopilotKit 等の外部 UI フレームワークに依存せず、AG-UI プロトコルと Google ADK の公式スタックのみで実装する。
+入力欄・出力欄・アバターのみで構成されるレトロ端末風チャット UI を構築する。CopilotKit 等の外部 UI フレームワークに依存せず、AG-UI プロトコルと Google ADK の公式スタックを基盤に実装する。
 
 ### 技術スタック
 
@@ -17,7 +17,7 @@ AG-UI プロトコルと Google ADK を用いたレトロターミナル風エ�
 | フロント | Electron + Vite + TypeScript | デスクトップアプリとして動作 |
 | バックエンド | FastAPI + Google ADK | AG-UI ミドルウェア経由でエージェント実行 |
 | プロトコル | AG-UI Protocol | エージェント・UI 間の標準通信規格 |
-| LLM | Gemini / OpenAI / Anthropic | LiteLLM 経由で切り替え可能 |
+| LLM | OpenRouter / Gemini / OpenAI / Anthropic | LiteLLM 経由で切り替え可能 |
 
 ### 設計原則
 
@@ -35,8 +35,8 @@ AG-UI プロトコルと Google ADK を用いたレトロターミナル風エ�
 | 機能 | 詳細 |
 |------|------|
 | リアルタイムチャット | SSE によるストリーミング応答 |
-| マルチ LLM | Gemini / OpenAI / Anthropic を設定で切り替え |
-| 検索サブエージェント | Gemini + Google Search によるウェブ検索（Gemini 2.x 系のみ） |
+| マルチ LLM | OpenRouter / Gemini / OpenAI / Anthropic を設定で切り替え |
+| 検索サブエージェント | Gemini + Google Search によるウェブ検索（Gemini 2.x/3.x 系のみ） |
 | テーマ切替 | Classic / Cobalt / Amber の 3 プリセット |
 | カスタマイズ | プロンプト、アバター画像、色、各種パラメータを設定ファイルで変更 |
 
@@ -61,9 +61,11 @@ AG-UI プロトコルと Google ADK を用いたレトロターミナル風エ�
 ┌─────────────────┐             ┌──────────────────────┐
 │  Renderer       │     SSE     │  main.py             │
 │  ├─ main.ts     │◄───────────►│  └─ ADKAgent         │
-│  ├─ subscriber  │             │      ├─ LlmAgent     │──────► Gemini API
-│  └─ Terminal    │             │      │   (main)      │        OpenAI API
-│      Engine     │             │      │               │        Anthropic API
+│  ├─ subscriber  │             │      ├─ LlmAgent     │──────► OpenRouter API
+│  └─ Terminal    │             │      │   (main)      │        (DeepSeek 等)
+│      Engine     │             │      │               │        OpenAI API
+│                 │             │      │               │        Anthropic API
+│                 │             │      │               │        Gemini API
 │                 │             │      └─ AgentTool    │
 │  Main Process   │             │          └─ search   │──────► Google Search
 │  └─ index.ts    │             │              _agent  │
@@ -161,7 +163,7 @@ avatar-ui/
 **エージェント構築 (`main.py`)**
 
 ```python
-# メインエージェント: Gemini / OpenAI / Anthropic を LiteLLM 経由で切り替え
+# メインエージェント: OpenRouter / Gemini / OpenAI / Anthropic を LiteLLM 経由で切り替え
 main_agent = LlmAgent(
     name="assistant",
     model=resolve_model(provider, model),  # gemini は直接、他は LiteLlm 経由
@@ -169,10 +171,10 @@ main_agent = LlmAgent(
     tools=[preload_memory, search_tool],
 )
 
-# 検索サブエージェント: Gemini + Google Search（Gemini 2.x 系専用）
+# 検索サブエージェント: Gemini + Google Search（Gemini 2.x/3.x 系専用）
 search_agent = LlmAgent(
     name="search_agent",
-    model="gemini-2.5-flash",
+    model=resolve_model(search_provider, search_model),
     tools=[GoogleSearchTool(bypass_multi_tools_limit=True)],
 )
 search_tool = AgentTool(agent=search_agent)
@@ -180,7 +182,7 @@ search_tool = AgentTool(agent=search_agent)
 
 **設定スキーマ (`config.py`)**
 
-- `ServerSettings`: LLM プロバイダ、モデル、システムプロンプト、ログ設定
+- `ServerSettings`: LLM プロバイダ、モデル、reasoning、システムプロンプト、ログ設定
 - `UiSettings`: テーマ、タイピング速度、アバター設定、ラベル類
 - `EnvSettings`: API キー、ポート、セッションタイムアウト
 
