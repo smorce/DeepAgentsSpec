@@ -43,6 +43,7 @@ class DiaryAnalysisModel(BaseModel):
 class ProfilingStatusModel(BaseModel):
     status: Literal["ok", "failed"]
     message: str | None = None
+    applied: int = Field(ge=0)
 
 
 class FinalizeDiaryRequest(BaseModel):
@@ -140,6 +141,7 @@ async def finalize_diary_route(request: FinalizeDiaryRequest) -> FinalizeDiaryRe
         profiling=ProfilingStatusModel(
             status=profiling_status.status,
             message=profiling_status.message,
+            applied=profiling_status.applied,
         ),
     )
 

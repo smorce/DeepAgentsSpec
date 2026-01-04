@@ -38,6 +38,7 @@ class ProfileUpdate:
 class ProfilingStatus:
     status: str
     message: str | None = None
+    applied: int = 0
 
 
 def build_profile_prompt(transcript: str, schema: dict[str, Any]) -> str:
@@ -159,7 +160,7 @@ def apply_profile_updates(
 def update_profile_from_transcript(transcript: str) -> ProfilingStatus:
     transcript = transcript.strip()
     if not transcript:
-        return ProfilingStatus(status="ok")
+        return ProfilingStatus(status="ok", applied=0)
 
     schema = load_default_profile()
     profile = load_profile()
@@ -184,7 +185,7 @@ def update_profile_from_transcript(transcript: str) -> ProfilingStatus:
     )
     if applied > 0:
         save_profile(updated_profile)
-    return ProfilingStatus(status="ok")
+    return ProfilingStatus(status="ok", applied=applied)
 
 
 def run_profiling(transcript: str) -> ProfilingStatus:
@@ -192,11 +193,12 @@ def run_profiling(transcript: str) -> ProfilingStatus:
         return update_profile_from_transcript(transcript)
     except ProfilingError as exc:
         logger.warning("Profiling update failed: %s", exc)
-        return ProfilingStatus(status="failed", message=str(exc))
+        return ProfilingStatus(status="failed", message=str(exc), applied=0)
     except Exception as exc:
         logger.warning("Profiling update crashed: %s", exc)
         message = str(exc).strip()
         return ProfilingStatus(
             status="failed",
             message=message or "Profiling error",
+            applied=0,
         )

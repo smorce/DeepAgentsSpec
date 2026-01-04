@@ -446,6 +446,15 @@ async function initApp() {
           `> サマリー: ${payload.analysis.summary}`,
         );
         updateFinalizeStatus("会話確定が完了しました");
+        if (payload.profiling?.status === "ok") {
+          const appliedCount = Number(payload.profiling.applied ?? 0);
+          if (appliedCount > 0) {
+            appendLine(
+              "text-line--system",
+              `> プロファイルを更新しました (${appliedCount} 件)`,
+            );
+          }
+        }
         if (payload.profiling?.status === "failed") {
           const reason =
             typeof payload.profiling.message === "string" && payload.profiling.message
