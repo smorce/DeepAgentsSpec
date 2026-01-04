@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from google import genai
+from litellm import completion
 
 from src import config
 from src.profile_store import (
@@ -59,23 +59,45 @@ def build_profile_prompt(transcript: str, schema: dict[str, Any]) -> str:
     )
 
 
+def _build_completion_kwargs() -> dict[str, Any]:
+    if config.LLM_PROVIDER.lower() != "openrouter":
+        return {}
+    if not config.REASONING_ENABLED:
+        return {}
+    return {
+        "reasoning": {"enabled": True},
+        "include_reasoning": True,
+    }
+
+
 def _extract_response_text(response: Any) -> str:
-    text = getattr(response, "text", None)
-    if isinstance(text, str):
-        return text
-    candidates = getattr(response, "candidates", None)
-    if candidates:
-        content = getattr(candidates[0], "content", None)
-        parts = getattr(content, "parts", None) if content else None
-        if parts and hasattr(parts[0], "text"):
-            return parts[0].text
+    if response is None:
+        return ""
+    choices = getattr(response, "choices", None)
+    if choices:
+        message = getattr(choices[0], "message", None)
+        if isinstance(message, dict):
+            content = message.get("content")
+            if isinstance(content, str):
+                return content
+        content = getattr(message, "content", None)
+        if isinstance(content, str):
+            return content
+    if isinstance(response, dict):
+        choices = response.get("choices") or []
+        if choices and isinstance(choices[0], dict):
+            message = choices[0].get("message")
+            if isinstance(message, dict):
+                content = message.get("content")
+                if isinstance(content, str):
+                    return content
     return ""
 
 
 def _extract_json_payload(text: str) -> dict[str, Any]:
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
-        raise ProfilingError("Gemini response did not include JSON payload.")
+        raise ProfilingError("LLM response did not include JSON payload.")
     try:
         return json.loads(match.group(0))
     except json.JSONDecodeError as exc:
@@ -144,14 +166,14 @@ def update_profile_from_transcript(transcript: str) -> ProfilingStatus:
     profile = load_profile()
     prompt = build_profile_prompt(transcript, schema)
 
-    client = genai.Client(api_key=config.GOOGLE_API_KEY)
-    response = client.models.generate_content(
-        model=config.PROFILING_MODEL,
-        contents=prompt,
+    response = completion(
+        model=config.PROFILING_LITELLM_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        **_build_completion_kwargs(),
     )
     text = _extract_response_text(response)
     if not text:
-        raise ProfilingError("Gemini response was empty.")
+        raise ProfilingError("LLM response was empty.")
     payload = _extract_json_payload(text)
     updates = parse_profile_updates(payload)
     updated_profile, applied = apply_profile_updates(

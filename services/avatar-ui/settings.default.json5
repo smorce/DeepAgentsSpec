@@ -1,13 +1,18 @@
 {
   // ---- Server settings ----
   "server": {
-    // LLM プロバイダ: gemini | openai | anthropic
-    "llmProvider": "gemini",
-    // LLM モデル ID（Google ADKで利用）: gemini-2.5-flash | gpt-5 | claude-sonnet-4-5
-    "llmModel": "gemini-2.5-flash",
-    // 検索サブエージェント設定（Gemini + Google Search 専用）
+    // LLM プロバイダ: gemini | openai | anthropic | openrouter
+    "llmProvider": "openrouter",
+    // LLM モデル ID（Google ADK / LiteLLM で利用）
+    "llmModel": "deepseek/deepseek-v3.2-speciale",
+    // OpenRouter の reasoning 設定
+    "reasoning": {
+      "enabled": true,
+    },
+    // 検索サブエージェント設定（検索サブエージェントを有効にする限り GOOGLE_API_KEY は必須）
     "searchSubAgent": {
       "enabled": true,
+      "provider": "gemini",
       "model": "gemini-2.5-flash",
     },
     // システムプロンプト（全応答の前置き）
@@ -92,7 +97,7 @@
   },
   profiling: {
     // プロファイリング用のモデル
-    model: "gemini-2.5-flash",
+    model: "deepseek/deepseek-v3.2-speciale",
     // 反映する信頼度の最小値（0-1）
     minConfidence: 0.6,
   },

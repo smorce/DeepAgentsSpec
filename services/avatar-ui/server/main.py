@@ -35,14 +35,35 @@ logger = logging.getLogger("agui-adk-bridge")
 
 # ---------- エージェント構築 ----------
 
+def build_openrouter_completion_kwargs(provider: str) -> dict | None:
+    if provider.lower() != "openrouter":
+        return None
+    if not config.REASONING_ENABLED:
+        return None
+    return {
+        "reasoning": {"enabled": True},
+        "include_reasoning": True,
+    }
+
+
 def resolve_model(provider: str, model: str):
     """プロバイダに応じたモデルインスタンスを返す（gemini は直接、他は LiteLlm 経由）"""
     provider = provider.lower()
     if provider == "gemini":
         return model
+    completion_kwargs = build_openrouter_completion_kwargs(provider)
+    if provider == "openrouter":
+        resolved_model = model if model.startswith("openrouter/") else f"openrouter/{model}"
+        if completion_kwargs:
+            return LiteLlm(model=resolved_model, completion_kwargs=completion_kwargs)
+        return LiteLlm(model=resolved_model)
     # openai / anthropic などは LiteLlm 経由
     if "/" in model:
+        if completion_kwargs:
+            return LiteLlm(model=model, completion_kwargs=completion_kwargs)
         return LiteLlm(model=model)
+    if completion_kwargs:
+        return LiteLlm(model=f"{provider}/{model}", completion_kwargs=completion_kwargs)
     return LiteLlm(model=f"{provider}/{model}")
 
 
@@ -50,9 +71,10 @@ def build_agent() -> ADKAgent:
     """メインエージェントを構築（検索サブエージェント付きの場合あり）"""
     search_subagent_tool = None
     if config.SEARCH_SUBAGENT_ENABLED:
+        search_model = resolve_model(config.SEARCH_SUBAGENT_PROVIDER, config.SEARCH_SUBAGENT_MODEL)
         search_agent = LlmAgent(
             name="search_agent",
-            model=config.SEARCH_SUBAGENT_MODEL,
+            model=search_model,
             description="Performs web searches using Google Search",
             instruction=(
                 "Search the web and return concise results. "

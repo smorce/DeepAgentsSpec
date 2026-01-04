@@ -48,6 +48,14 @@ print(getattr(resp.choices[0].message, "reasoning", None))           # 念の為
 
 
 
+settings.json5 のsystemPrompt にも対応していますか？ していなければ対応してください。
+あと、openrouter に検索サブエージェント機能はないので、検索が必要なケースもあって、その場合は元々あった Gemini の検索機能 を呼び出せるかな？
+基本的には Gemini から移行したいですが、検索機能は Gemini を使いたいです。
+
+
+
+
+
 
 
 

@@ -72,19 +72,25 @@ class ThemePreset(BaseModel, extra="forbid"):
     toolColor: str
 
 
+class ReasoningSettings(BaseModel, extra="forbid"):
+    enabled: bool = True
+
+
 # サーバー側の設定（LLM プロバイダ、プロンプト等）
 class ServerSettings(BaseModel, extra="forbid"):
-    llmProvider: str = "gemini"  # gemini | openai | anthropic
+    llmProvider: str = "openrouter"  # gemini | openai | anthropic | openrouter
     llmModel: str
+    reasoning: ReasoningSettings = Field(default_factory=ReasoningSettings)
     searchSubAgent: "SearchSubAgent" = Field(default_factory=lambda: SearchSubAgent())
     systemPrompt: str
     logMaxBytes: int = Field(gt=0)
     logBackupCount: int = Field(ge=0)
 
 
-# 検索サブエージェントの設定（Gemini + google_search を使用）
+# 検索サブエージェントの設定（Google Search を使用）
 class SearchSubAgent(BaseModel, extra="forbid"):
     enabled: bool = True
+    provider: str = "gemini"
     model: str = "gemini-2.5-flash"
 
 
@@ -128,7 +134,7 @@ class AppSettings(BaseModel, extra="forbid"):
     ui: UiSettings
     minirag: MiniRagSettings
     profiling: ProfilingSettings = Field(
-        default_factory=lambda: ProfilingSettings(model="gemini-2.5-flash")
+        default_factory=lambda: ProfilingSettings(model="deepseek/deepseek-v3.2-speciale")
     )
 
 
@@ -152,9 +158,21 @@ def resolve_theme(ui: UiSettings) -> dict:
     return resolved
 
 
+def resolve_litellm_model(provider: str, model: str) -> str:
+    provider = provider.lower()
+    if provider == "openrouter":
+        if model.startswith("openrouter/"):
+            return model
+        return f"openrouter/{model}"
+    if "/" in model:
+        return model
+    return f"{provider}/{model}"
+
+
 # .env から読み込む環境変数のスキーマ
 class EnvSettings(BaseSettings):
-    google_api_key: str = Field(alias="GOOGLE_API_KEY")
+    google_api_key: str | None = Field(default=None, alias="GOOGLE_API_KEY")
+    openrouter_api_key: str | None = Field(default=None, alias="OPENROUTER_API_KEY")
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
     agent_id: str = Field(alias="AGENT_ID")
@@ -169,7 +187,7 @@ class EnvSettings(BaseSettings):
     electron_warnings: str | None = Field(alias="ELECTRON_WARNINGS")
     session_timeout_seconds: int = Field(alias="SESSION_TIMEOUT_SECONDS")
     cleanup_interval_seconds: int = Field(alias="CLEANUP_INTERVAL_SECONDS")
-    @field_validator("google_api_key", "agent_id", "server_host")
+    @field_validator("agent_id", "server_host")
     @classmethod
     def non_empty(cls, v: str, info):
         if not v or not v.strip():
@@ -231,6 +249,7 @@ env_settings = load_env_settings()    # .env から読み込み
 app_settings = load_settings_json()   # settings.json5 から読み込み
 
 GOOGLE_API_KEY = env_settings.google_api_key
+OPENROUTER_API_KEY = env_settings.openrouter_api_key
 AGENT_ID = env_settings.agent_id
 SERVER_HOST = env_settings.server_host
 SERVER_BIND_HOST = env_settings.server_bind_host or SERVER_HOST
@@ -253,6 +272,12 @@ LLM_PROVIDER = app_settings.server.llmProvider
 SYSTEM_PROMPT = app_settings.server.systemPrompt
 LOG_MAX_BYTES = app_settings.server.logMaxBytes
 LOG_BACKUP_COUNT = app_settings.server.logBackupCount
+REASONING_ENABLED = app_settings.server.reasoning.enabled
+
+if LLM_PROVIDER.lower() == "openrouter" and not OPENROUTER_API_KEY:
+    raise RuntimeError("OPENROUTER_API_KEY is not set. Please add it to .env in project root")
+
+LITELLM_MODEL = resolve_litellm_model(LLM_PROVIDER, LLM_MODEL)
 
 # Session/HITL 設定
 SESSION_TIMEOUT_SECONDS = env_settings.session_timeout_seconds
@@ -266,7 +291,9 @@ CLIENT_LOG_VERBOSE = (APP_ENV == "dev") or (LOG_BODY is True)
 
 # 検索サブエージェント設定
 SEARCH_SUBAGENT_ENABLED = app_settings.server.searchSubAgent.enabled
+SEARCH_SUBAGENT_PROVIDER = app_settings.server.searchSubAgent.provider
 SEARCH_SUBAGENT_MODEL = app_settings.server.searchSubAgent.model
+SEARCH_SUBAGENT_LITELLM_MODEL = resolve_litellm_model(SEARCH_SUBAGENT_PROVIDER, SEARCH_SUBAGENT_MODEL)
 
 # MiniRAG 設定
 MINIRAG_BASE_URL = app_settings.minirag.baseUrl
@@ -280,6 +307,7 @@ MINIRAG_TIMEOUT_SECONDS = app_settings.minirag.timeoutSeconds
 # Profiling 設定
 PROFILING_MODEL = app_settings.profiling.model
 PROFILING_MIN_CONFIDENCE = app_settings.profiling.minConfidence
+PROFILING_LITELLM_MODEL = resolve_litellm_model(LLM_PROVIDER, PROFILING_MODEL)
 
 # AG-UI エージェント接続情報（サーバを唯一の真実源とする）
 AGENT_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/agui"
