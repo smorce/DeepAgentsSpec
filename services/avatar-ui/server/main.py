@@ -1,4 +1,5 @@
 # AG-UI サーバーのエントリーポイント（FastAPI + Google ADK）
+import inspect
 import logging
 import uuid
 from logging.handlers import RotatingFileHandler
@@ -192,7 +193,9 @@ async def run_web_search(query: str) -> str:
         close_method = getattr(runner, "close", None)
         if callable(close_method):
             try:
-                close_method()
+                result = close_method()
+                if inspect.isawaitable(result):
+                    await result
             except Exception:
                 pass
     return "".join(chunks).strip()
