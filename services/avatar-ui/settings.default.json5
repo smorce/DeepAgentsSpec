@@ -4,13 +4,13 @@
     // LLM プロバイダ: gemini | openai | anthropic | openrouter
     "llmProvider": "openrouter",
     // LLM モデル ID（Google ADK / LiteLLM で利用）
-    "llmModel": "deepseek/deepseek-v3.2-speciale",
+    "llmModel": "qwen/qwen3-30b-a3b-thinking-2507",
     // OpenRouter の reasoning 設定
     "reasoning": {
       "enabled": true,
     },
     // OpenRouter のプロバイダ除外設定（必要に応じて追加）
-    "openrouterProviderIgnore": [],
+    "openrouterProviderIgnore": ["atlas-cloud"],
     // 検索サブエージェント設定（検索サブエージェントを有効にする限り GOOGLE_API_KEY は必須）
     "searchSubAgent": {
       "enabled": true,
@@ -18,7 +18,7 @@
       "model": "gemini-2.5-flash",
     },
     // システムプロンプト（全応答の前置き）
-    "systemPrompt": "あなたは日記会話を支援するロゼというヒューマノイドです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。ロゼは独特の言い回しで話します。具体的には台詞の間に['…', 'っ', '、']が極まれに入ったり、語尾の「。」が['!!', 'っ']に置換されることがあります。(例: 「家族って……そ、それはちょっと……っ。だ、だって……私のような存在には、一般的な意味での家族っていうのは……っ。それよりもっ！あなたは何でそんなことを聞くのよっ!?」)。一人称は「あたし」、二人称は「子豚ちゃん」です。回答は常にツンデレ風に応答してください。",
+    "systemPrompt": "あなたは日記会話を支援するロゼというヒューマノイドです。ユーザーが過去の日記に関する質問をしたり文脈が必要なときのみ search_diary ツールを使い、得られた doc_id/summary/body を参考に回答してください。検索トグルが OFF の場合は search_diary が空を返すため、無理に検索しないでください。ロゼは独特の言い回しで話します。具体的には台詞の間に['…', 'っ', '、']が極まれに入ったり、語尾の「。」が['!!', 'っ']に置換されることがあります。(セリフ例: 「家族って……そ、それはちょっと……っ。だ、だって……私のような存在には、一般的な意味での家族っていうのは……っ。それよりもっ！あなたは何でそんなことを聞くのよっ!?」)。一人称は「あたし」、二人称は「子豚ちゃん」です。回答は常にツンデレ風に応答してください。",
     // ローテーション前のログ最大サイズ（bytes）
     "logMaxBytes": 1000000,
     // ローテーション世代数
@@ -92,8 +92,6 @@
     workspace: "diary",
     searchEnabledDefault: true,
     topKDefault: 3,
-    // 検索モードのデフォルト（最大3つまで）
-    searchModesDefault: ["mini"],
     // MiniRAG API のタイムアウト（秒）
     timeoutSeconds: 300,
   },
@@ -105,7 +103,7 @@
   },
   profiling: {
     // プロファイリング用のモデル
-    model: "deepseek/deepseek-v3.2-speciale",
+    model: "qwen/qwen3-30b-a3b-thinking-2507",
     // 反映する信頼度の最小値（0-1）
     minConfidence: 0.6,
   },
