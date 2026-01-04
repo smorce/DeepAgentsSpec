@@ -81,6 +81,7 @@ class ServerSettings(BaseModel, extra="forbid"):
     llmProvider: str = "openrouter"  # gemini | openai | anthropic | openrouter
     llmModel: str
     reasoning: ReasoningSettings = Field(default_factory=ReasoningSettings)
+    openrouterProviderIgnore: List[str] = Field(default_factory=list)
     searchSubAgent: "SearchSubAgent" = Field(default_factory=lambda: SearchSubAgent())
     systemPrompt: str
     logMaxBytes: int = Field(gt=0)
@@ -281,6 +282,7 @@ SYSTEM_PROMPT = app_settings.server.systemPrompt
 LOG_MAX_BYTES = app_settings.server.logMaxBytes
 LOG_BACKUP_COUNT = app_settings.server.logBackupCount
 REASONING_ENABLED = app_settings.server.reasoning.enabled
+OPENROUTER_PROVIDER_IGNORE = app_settings.server.openrouterProviderIgnore
 
 if LLM_PROVIDER.lower() == "openrouter" and not OPENROUTER_API_KEY:
     raise RuntimeError("OPENROUTER_API_KEY is not set. Please add it to .env in project root")

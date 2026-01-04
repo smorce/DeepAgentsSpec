@@ -9,6 +9,8 @@
     "reasoning": {
       "enabled": true,
     },
+    // OpenRouter のプロバイダ除外設定（必要に応じて追加）
+    "openrouterProviderIgnore": [],
     // 検索サブエージェント設定（検索サブエージェントを有効にする限り GOOGLE_API_KEY は必須）
     "searchSubAgent": {
       "enabled": true,

@@ -52,12 +52,17 @@ logger = logging.getLogger("agui-adk-bridge")
 def build_openrouter_completion_kwargs(provider: str) -> dict | None:
     if provider.lower() != "openrouter":
         return None
-    if not config.REASONING_ENABLED:
-        return None
-    return {
-        "reasoning": {"enabled": True},
-        "include_reasoning": True,
-    }
+    kwargs: dict = {}
+    if config.REASONING_ENABLED:
+        kwargs.update(
+            {
+                "reasoning": {"enabled": True},
+                "include_reasoning": True,
+            }
+        )
+    if config.OPENROUTER_PROVIDER_IGNORE:
+        kwargs["extra_body"] = {"provider": {"ignore": config.OPENROUTER_PROVIDER_IGNORE}}
+    return kwargs or None
 
 
 def resolve_model(provider: str, model: str):
@@ -186,12 +191,16 @@ def decide_web_search(user_text: str) -> tuple[bool, str]:
         "Respond with JSON only: {\"needs_web_search\": true/false, \"query\": \"\"}.\n"
         "If search is not needed, set needs_web_search=false and query to empty string."
     )
+    completion_kwargs = {}
+    if config.OPENROUTER_PROVIDER_IGNORE:
+        completion_kwargs["extra_body"] = {"provider": {"ignore": config.OPENROUTER_PROVIDER_IGNORE}}
     response = completion(
         model=config.LITELLM_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_text},
         ],
+        **completion_kwargs,
     )
     text = _extract_response_text(response)
     payload = _extract_json_payload(text)
