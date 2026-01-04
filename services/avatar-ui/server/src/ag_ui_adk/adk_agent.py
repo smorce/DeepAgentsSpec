@@ -173,6 +173,29 @@ class ADKAgent:
             logger.error(f"Error during session metadata lookup for {session_id}: {e}")
 
         return None
+
+    async def reset_session(self, session_id: str) -> bool:
+        if not session_id:
+            return False
+
+        execution = self._active_executions.pop(session_id, None)
+        if execution:
+            try:
+                await execution.cancel()
+            except Exception as e:
+                logger.warning("Failed to cancel execution for %s: %s", session_id, e)
+
+        metadata = self._get_session_metadata(session_id)
+        app_name = metadata["app_name"] if metadata else (self._static_app_name or getattr(self._adk_agent, "name", None) or "AG-UI ADK Agent")
+        user_id = metadata["user_id"] if metadata else f"thread_user_{session_id}"
+
+        cleared = await self._session_manager.delete_session(
+            session_id=session_id,
+            app_name=app_name,
+            user_id=user_id,
+        )
+        self._session_lookup_cache.pop(session_id, None)
+        return cleared
     
     def _get_app_name(self, input: RunAgentInput) -> str:
         """明確な優先順位でアプリ名を解決"""

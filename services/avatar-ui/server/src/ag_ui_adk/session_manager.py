@@ -600,6 +600,29 @@ class SessionManager:
             logger.error(f"Failed to delete session {session_key}: {e}")
         
         self._untrack_session(session_key, session.user_id)
+
+    async def delete_session(
+        self,
+        session_id: str,
+        app_name: str,
+        user_id: str
+    ) -> bool:
+        try:
+            session = await self._session_service.get_session(
+                session_id=session_id,
+                app_name=app_name,
+                user_id=user_id
+            )
+            if not session:
+                logger.info(f"Session not found: {app_name}:{session_id}")
+                return False
+            await self._delete_session(session)
+            session_key = self._make_session_key(app_name, session_id)
+            self._processed_message_ids.pop(session_key, None)
+            return True
+        except Exception as e:
+            logger.error(f"Failed to delete session {app_name}:{session_id}: {e}", exc_info=True)
+            return False
     
     def _start_cleanup_task(self):
         """まだ実行されていなければクリーンアップタスクを開始"""

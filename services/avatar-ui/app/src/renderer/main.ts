@@ -23,6 +23,7 @@ const modeInputs = Array.from(
   document.querySelectorAll<HTMLInputElement>('input[name="search-mode"]'),
 );
 const finalizeButton = document.getElementById("finalize-button") as HTMLButtonElement | null;
+const resetButton = document.getElementById("reset-button") as HTMLButtonElement | null;
 const finalizeStatus = document.getElementById("finalize-status") as HTMLSpanElement | null;
 
 type DiaryMessage = {
@@ -201,6 +202,17 @@ async function initApp() {
     line.textContent = text;
     outputEl.appendChild(line);
     outputEl.scrollTop = outputEl.scrollHeight;
+  };
+
+  const appendSystemBanners = () => {
+    const fullName = config.ui.nameTags.avatarFullName || config.ui.nameTags.avatar || "AGENT";
+    if (config.ui.systemMessages.banner1) {
+      const banner1 = config.ui.systemMessages.banner1.replace("{avatarFullName}", fullName);
+      appendLine("text-line--system", `> ${banner1}`);
+    }
+    if (config.ui.systemMessages.banner2) {
+      appendLine("text-line--system", `> ${config.ui.systemMessages.banner2}`);
+    }
   };
 
   let isRunning = false; // 多重実行防止フラグ
@@ -457,16 +469,55 @@ async function initApp() {
       }
     });
   }
+
+  if (resetButton) {
+    resetButton.addEventListener("click", async () => {
+      if (isRunning || isFinalizing) {
+        return;
+      }
+      resetButton.disabled = true;
+      try {
+        const response = await fetch(`${serverBase}/agui/session/reset`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            thread_id: config.agent.threadId,
+          }),
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.detail || `Reset failed: ${response.status}`);
+        }
+        const payload = await response.json().catch(() => ({}));
+        transcript.length = 0;
+        if (agentInstance?.messages) {
+          agentInstance.messages.length = 0;
+        }
+        engine.reset();
+        outputEl.textContent = "";
+        if (finalizeStatus) {
+          finalizeStatus.textContent = "";
+          finalizeStatus.style.color = "";
+        }
+        appendSystemBanners();
+        appendLine("text-line--system", "> 会話履歴をリセットしました。");
+        if (payload?.cleared === false) {
+          appendLine("text-line--warning", "⚠️ サーバ側のセッションが見つかりませんでした。");
+        }
+        inputEl.focus();
+      } catch (error) {
+        appendLine(
+          "text-line--error",
+          `❌ 履歴リセットに失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      } finally {
+        resetButton.disabled = false;
+      }
+    });
+  }
   
   // 初期メッセージ: 設定されたシステムメッセージを使う
-  const fullName = config.ui.nameTags.avatarFullName || config.ui.nameTags.avatar || "AGENT";
-  if (config.ui.systemMessages.banner1) {
-    const banner1 = config.ui.systemMessages.banner1.replace("{avatarFullName}", fullName);
-    appendLine("text-line--system", `> ${banner1}`);
-  }
-  if (config.ui.systemMessages.banner2) {
-    appendLine("text-line--system", `> ${config.ui.systemMessages.banner2}`);
-  }
+  appendSystemBanners();
 }
 
 // アプリ起動

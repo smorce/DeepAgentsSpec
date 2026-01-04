@@ -10,7 +10,7 @@ import uuid
 import warnings
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
@@ -30,8 +30,9 @@ from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
 from google.genai import types
 from ag_ui.core import EventType, ToolCallArgsEvent, ToolCallEndEvent, ToolCallResultEvent, ToolCallStartEvent
+from pydantic import BaseModel
 from src import config
-from src.diary_service import get_web_search_settings
+from src.diary_service import get_web_search_settings, clear_thread_settings
 from src.litellm_client import completion_with_purpose, configure_litellm_logging
 from src.routes.diary import router as diary_router, search_diary
 
@@ -465,6 +466,33 @@ def get_config():
             "threadId": config.THREAD_ID,
         },
     }
+
+
+class ResetSessionRequest(BaseModel):
+    thread_id: str | None = None
+
+
+class ResetSessionResponse(BaseModel):
+    cleared: bool
+
+
+def _get_active_agent():
+    if config.LLM_PROVIDER.lower() != "openrouter":
+        return agent
+    return openrouter_agent
+
+
+@app.post("/agui/session/reset", response_model=ResetSessionResponse)
+async def reset_session(request: ResetSessionRequest) -> ResetSessionResponse:
+    thread_id = (request.thread_id or config.THREAD_ID).strip()
+    if not thread_id:
+        raise HTTPException(status_code=400, detail="Invalid thread_id.")
+    selected_agent = _get_active_agent()
+    if not selected_agent:
+        raise HTTPException(status_code=500, detail="Agent is not initialized.")
+    cleared = await selected_agent.reset_session(thread_id)
+    clear_thread_settings(thread_id)
+    return ResetSessionResponse(cleared=cleared)
 
 
 app.include_router(diary_router)

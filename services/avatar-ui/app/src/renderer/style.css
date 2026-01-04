@@ -294,6 +294,22 @@ body {
   cursor: not-allowed;
 }
 
+#reset-button {
+  background: rgba(255, 120, 120, 0.12);
+  border: 1px solid var(--col-border-high);
+  color: var(--col-theme-text);
+  font: inherit;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-shadow: var(--glow-text);
+}
+
+#reset-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .finalize-status {
   color: var(--col-theme-text);
   opacity: 0.8;

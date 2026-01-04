@@ -100,6 +100,11 @@ def set_web_search_settings(thread_id: str, settings: WebSearchSettings) -> WebS
     return normalized
 
 
+def clear_thread_settings(thread_id: str) -> None:
+    _search_settings_by_thread.pop(thread_id, None)
+    _web_search_settings_by_thread.pop(thread_id, None)
+
+
 def format_transcript(messages: list[dict[str, Any]]) -> str:
     lines: list[str] = []
     for message in messages:
