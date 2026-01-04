@@ -47,13 +47,21 @@ def add_adk_fastapi_endpoint(
             """ADK エージェントからイベントを生成"""
             try:
                 selected_input = input_data
+                pre_events = []
                 if input_transformer:
                     transformed = input_transformer(selected_input)
                     if inspect.isawaitable(transformed):
-                        selected_input = await transformed
+                        transformed = await transformed
+                    else:
+                        transformed = transformed
+                    if isinstance(transformed, tuple) and len(transformed) == 2:
+                        selected_input, pre_events = transformed
                     else:
                         selected_input = transformed
                 selected_agent = agent_selector(selected_input) if agent_selector else agent
+                for event in pre_events:
+                    encoded = encoder.encode(event)
+                    yield encoded
                 async for event in selected_agent.run(selected_input):
                     try:
                         encoded = encoder.encode(event)

@@ -24,6 +24,7 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools import FunctionTool
 from google.genai import types
+from ag_ui.core import EventType, ToolCallArgsEvent, ToolCallEndEvent, ToolCallResultEvent, ToolCallStartEvent
 from litellm import completion
 
 from src import config
@@ -91,12 +92,13 @@ def build_agent(
     provider: str | None = None,
     model: str | None = None,
     enable_tools: bool = True,
+    include_search_subagent_tool: bool = True,
 ) -> ADKAgent:
     """メインエージェントを構築（検索サブエージェント付きの場合あり）"""
     provider = provider or config.LLM_PROVIDER
     model = model or config.LLM_MODEL
     search_subagent_tool = None
-    if enable_tools and config.SEARCH_SUBAGENT_ENABLED:
+    if enable_tools and include_search_subagent_tool and config.SEARCH_SUBAGENT_ENABLED:
         search_model = resolve_model(config.SEARCH_SUBAGENT_PROVIDER, config.SEARCH_SUBAGENT_MODEL)
         search_agent = LlmAgent(
             name="search_agent",
@@ -209,12 +211,12 @@ def decide_web_search(user_text: str) -> tuple[bool, str]:
     return needs, query
 
 
-async def run_web_search(query: str) -> str:
+async def run_web_search(query: str) -> tuple[str, str | None]:
     query = query.strip()
     if not query:
-        return ""
+        return "", "empty_query"
     if not config.SEARCH_SUBAGENT_ENABLED:
-        return ""
+        return "", "web_search_disabled"
     search_agent = build_search_llm_agent()
     session_service = InMemorySessionService()
     runner = Runner(
@@ -229,36 +231,36 @@ async def run_web_search(query: str) -> str:
     search_message = types.Content(parts=[types.Part(text=query)], role="user")
     session_id = f"web-search-{uuid.uuid4().hex}"
     chunks: list[str] = []
+    error_message: str | None = None
     try:
         await session_service.create_session(
             app_name="agents",
             user_id="web_search_user",
             session_id=session_id,
         )
-        try:
-            async for adk_event in runner.run_async(
-                user_id="web_search_user",
-                session_id=session_id,
-                new_message=search_message,
-                run_config=run_config,
-            ):
-                content = getattr(adk_event, "content", None)
-                parts = getattr(content, "parts", None) if content else None
-                if parts:
-                    for part in parts:
-                        text = getattr(part, "text", None)
-                        if text:
-                            chunks.append(text)
-                is_final = False
-                if hasattr(adk_event, "is_final_response") and callable(adk_event.is_final_response):
-                    is_final = adk_event.is_final_response()
-                elif hasattr(adk_event, "is_final_response"):
-                    is_final = bool(adk_event.is_final_response)
-                if is_final or getattr(adk_event, "turn_complete", False):
-                    break
-        except Exception as exc:
-            logger.warning("Web search failed: %s", exc)
-            return ""
+        async for adk_event in runner.run_async(
+            user_id="web_search_user",
+            session_id=session_id,
+            new_message=search_message,
+            run_config=run_config,
+        ):
+            content = getattr(adk_event, "content", None)
+            parts = getattr(content, "parts", None) if content else None
+            if parts:
+                for part in parts:
+                    text = getattr(part, "text", None)
+                    if text:
+                        chunks.append(text)
+            is_final = False
+            if hasattr(adk_event, "is_final_response") and callable(adk_event.is_final_response):
+                is_final = adk_event.is_final_response()
+            elif hasattr(adk_event, "is_final_response"):
+                is_final = bool(adk_event.is_final_response)
+            if is_final or getattr(adk_event, "turn_complete", False):
+                break
+    except Exception as exc:
+        error_message = str(exc)
+        logger.warning("Web search failed: %s", exc)
     finally:
         close_method = getattr(runner, "close", None)
         if callable(close_method):
@@ -268,7 +270,40 @@ async def run_web_search(query: str) -> str:
                     await result
             except Exception:
                 pass
-    return "".join(chunks).strip()
+    return "".join(chunks).strip(), error_message
+
+
+def build_web_search_events(query: str, results: str, error: str | None) -> list:
+    tool_call_id = f"web_search_{uuid.uuid4().hex}"
+    args_payload = json.dumps({"query": query}, ensure_ascii=False)
+    result_payload = {
+        "query": query,
+        "results": results,
+    }
+    if error:
+        result_payload["error"] = error
+    return [
+        ToolCallStartEvent(
+            type=EventType.TOOL_CALL_START,
+            tool_call_id=tool_call_id,
+            tool_call_name="web_search",
+        ),
+        ToolCallArgsEvent(
+            type=EventType.TOOL_CALL_ARGS,
+            tool_call_id=tool_call_id,
+            delta=args_payload,
+        ),
+        ToolCallEndEvent(
+            type=EventType.TOOL_CALL_END,
+            tool_call_id=tool_call_id,
+        ),
+        ToolCallResultEvent(
+            message_id=str(uuid.uuid4()),
+            type=EventType.TOOL_CALL_RESULT,
+            tool_call_id=tool_call_id,
+            content=json.dumps(result_payload, ensure_ascii=False),
+        ),
+    ]
 
 
 def _extract_latest_user_message(input_data) -> tuple[object | None, str]:
@@ -312,24 +347,24 @@ async def enrich_input_with_web_search(input_data):
         search_query = query or user_text
     else:
         search_query = user_text
-    search_results = await run_web_search(search_query)
-    if not search_results:
-        return input_data
-    appended = f"{user_text}\n\n検索結果:\n{search_results}"
-    if isinstance(message, dict):
-        message["content"] = appended
-    else:
-        setattr(message, "content", appended)
-    return input_data
+    search_results, search_error = await run_web_search(search_query)
+    tool_events = build_web_search_events(search_query, search_results, search_error)
+    if search_results:
+        appended = f"{user_text}\n\n検索結果:\n{search_results}"
+        if isinstance(message, dict):
+            message["content"] = appended
+        else:
+            setattr(message, "content", appended)
+    return input_data, tool_events
 
 
 # エージェントインスタンス（サーバー起動時に構築）
 agent = None
 openrouter_agent = None
 if config.LLM_PROVIDER.lower() == "openrouter":
-    openrouter_agent = build_agent(enable_tools=False)
+    openrouter_agent = build_agent(enable_tools=True, include_search_subagent_tool=False)
 else:
-    agent = build_agent(enable_tools=True)
+    agent = build_agent(enable_tools=True, include_search_subagent_tool=True)
 
 
 def select_agent(input_data):
