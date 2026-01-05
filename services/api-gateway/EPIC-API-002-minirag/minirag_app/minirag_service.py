@@ -19,7 +19,7 @@ from minirag.llm.openai import openai_complete_if_cache
 from minirag.utils import EmbeddingFunc, locate_json_string_body_from_string
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-LLM_MODEL = os.getenv("LLM_MODEL", "qwen/qwen3-235b-a22b-2507")    # deepseek/deepseek-v3.2-speciale は一生進まないので使わない
+LLM_MODEL = os.getenv("LLM_MODEL", "qwen/qwen3-30b-a3b-thinking-2507")    # deepseek/deepseek-v3.2-speciale は一生進まないので使わない
 OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 MINIRAG_WORKING_DIR = os.getenv("MINIRAG_WORKING_DIR", "/data/minirag")
 MINIRAG_WORKSPACE = os.getenv("MINIRAG_WORKSPACE", "default")
