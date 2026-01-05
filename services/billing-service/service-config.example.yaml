@@ -1,5 +1,0 @@
-service:
-  name: billing-service
-  port: 8082
-  invoice_store: redis://redis:6379/0
-
