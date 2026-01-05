@@ -3,7 +3,7 @@
 対象フィーチャ:
 - ID: F-API-003
 - Epic: EPIC-API-001-minirag-demo-ui
-- Impl plan: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md`
+- Impl plan: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md`
 
 ## A. Plan 本体の構造
 

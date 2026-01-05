@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning  
 **Created**: 2026-01-02  
-**Feature**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`
+**Feature**: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`
 
 ## Content Quality
 - [x] No implementation details (languages, frameworks, APIs)

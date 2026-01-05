@@ -1,15 +1,15 @@
 # Implementation Plan: F-API-003
 
 **Branch**: `F-API-003-minirag-chat-ui` | **Date**: 2026-01-02  
-**Epic**: `EPIC-API-001-minirag-demo-ui` (`plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md`)  
-**Feature Spec**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
-**Spec Checklist**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
-**Plan Checklist**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md` (validate via `scripts/validate_plan.sh`)  
+**Epic**: `EPIC-API-001-minirag-demo-ui` (`plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/exec-plan.md`)  
+**Feature Spec**: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
+**Spec Checklist**: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
+**Plan Checklist**: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md` (validate via `scripts/validate_plan.sh`)  
 
 **Input**: Feature specification under  
-`plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
+`plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
 with a passing spec quality checklist at  
-`plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`.
+`plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`.
 
 ---
 
@@ -17,14 +17,14 @@ with a passing spec quality checklist at
 
 ブラウザ上の静的な簡易チャットUIで、登録・検索・削除のデモ操作を可能にする。  
 検索はチャット入力、登録/削除はボタン操作とし、結果は上位5件を関連度順で表示する。  
-UI は `services/frontend/EPIC-API-001-minirag-demo-ui` で静的HTML/JSとして実装し、F-API-002 の REST API を呼び出す。
+UI は `services/minirag/EPIC-API-001-minirag-demo-ui/frontend` で静的HTML/JSとして実装し、F-API-002 の REST API を呼び出す。
 
 ---
 
 ## Technical Context
 
 **Language/Version**: HTML/CSS/Vanilla JS（ビルドなし）  
-**Primary Services**: frontend/EPIC-API-001-minirag-demo-ui（UI）, api-gateway（バックエンド呼び出し）  
+**Primary Services**: minirag/EPIC-API-001-minirag-demo-ui/frontend（UI）, api-gateway（バックエンド呼び出し）  
 **Primary Dependencies**: なし（ブラウザ標準の fetch を使用）  
 **Storage**: ブラウザのメモリ内のみ  
 **Testing**: E2E（tests/e2e/ のシナリオ追加）  
@@ -50,7 +50,7 @@ UI は `services/frontend/EPIC-API-001-minirag-demo-ui` で静的HTML/JSとし�
 ### Documentation (this feature)
 
 ```text
-plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/
+plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/
 ├── spec.md
 ├── impl-plan.md
 ├── research.md
@@ -66,7 +66,7 @@ plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/
 ### Epic-level Design (cross-feature context)
 
 ```text
-plans/services/frontend/EPIC-API-001-minirag-demo-ui/
+plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/
 ├── exec-plan.md
 └── design/
     └── index.md
@@ -108,9 +108,9 @@ services/
 
 ## Concrete Steps
 
-1. `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md` を確認し、UI 実装と API 連携方針を固定する
-2. `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/ui-client-openapi.yaml` を参照し、UI からの API 呼び出しを実装する
-3. `services/frontend/EPIC-API-001-minirag-demo-ui/public/` に HTML/CSS/JS の UI を追加する
+1. `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md` を確認し、UI 実装と API 連携方針を固定する
+2. `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/ui-client-openapi.yaml` を参照し、UI からの API 呼び出しを実装する
+3. `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public/` に HTML/CSS/JS の UI を追加する
 4. `tests/e2e/scenarios/minirag_demo_ui.spec.js` を追加し、登録→検索→削除とエラー表示を検証する
 5. `checklists/PlanQualityGate.md` を埋め、`scripts/validate_plan.sh` を実行する
 
@@ -118,8 +118,8 @@ services/
 
 ## Validation / Acceptance
 
-- `scripts/validate_spec.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md` → `PASSED`
-- `scripts/validate_plan.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md` → `PASSED`
+- `scripts/validate_spec.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md` → `PASSED`
+- `scripts/validate_plan.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md` → `PASSED`
 - `scripts/run_all_e2e_tests.sh` → `PASS`
 - UI 操作: 登録→検索→削除を 3 分以内に完了できる
 - 空入力時はチャット内に注意メッセージが表示される
@@ -128,7 +128,7 @@ services/
 
 ## Artifacts and Notes
 
-- Epic design index: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/design/index.md`
+- Epic design index: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/design/index.md`
   - UI 側の feature map と API 依存関係
   - F-API-002（api-gateway）との連携導線
 

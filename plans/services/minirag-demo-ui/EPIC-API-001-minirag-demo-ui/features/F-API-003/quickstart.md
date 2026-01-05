@@ -4,15 +4,15 @@
 静的HTML/JSの簡易チャットUIで、登録・検索・削除のデモ操作を行えるようにする。
 
 ## 実装想定位置
-- `services/frontend/EPIC-API-001-minirag-demo-ui/public/` 配下に UI を配置
+- `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public/` 配下に UI を配置
 - E2E シナリオは `tests/e2e/scenarios/` に追加
 
 ## 主要アーティファクト
-- Spec: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`
-- Checklist: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`
-- Research: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md`
-- Data Model: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md`
-- Contracts: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/ui-client-openapi.yaml`
+- Spec: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`
+- Checklist: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`
+- Research: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md`
+- Data Model: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md`
+- Contracts: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/ui-client-openapi.yaml`
 
 ## UI 要件の要約
 - 検索はチャット入力で実行
@@ -25,6 +25,6 @@
 - 登録完了時は `registered_count` を表示
 
 ## バリデーション
-- `scripts/validate_spec.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`
-- `scripts/validate_plan.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`
+- `scripts/validate_spec.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`
+- `scripts/validate_plan.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`
 - `scripts/run_all_e2e_tests.sh`

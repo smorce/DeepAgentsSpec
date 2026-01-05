@@ -8,7 +8,7 @@ against the MiniRAG backend (api-gateway).
 
 ```bash
 # From repository root
-./services/frontend/EPIC-API-001-minirag-demo-ui/scripts/run_dev.sh
+./services/minirag/EPIC-API-001-minirag-demo-ui/frontend/scripts/run_dev.sh
 ```
 
 Then open <http://localhost:5173> in your browser.

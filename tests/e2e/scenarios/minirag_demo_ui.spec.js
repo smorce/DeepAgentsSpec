@@ -6,7 +6,7 @@ const puppeteerConfig = require("../puppeteer.config");
 
 const UI_ROOT = path.resolve(
   __dirname,
-  "../../../services/frontend/EPIC-API-001-minirag-demo-ui/public"
+  "../../../services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public"
 );
 
 const contentTypes = {

@@ -6,12 +6,12 @@
 ---
 
 ## 1. 概要
-- **サービス名**: `frontend/EPIC-API-001-minirag-demo-ui`
+- **サービス名**: `minirag/EPIC-API-001-minirag-demo-ui/frontend`
 - **対象エピック**: `EPIC-API-001-minirag-demo-ui`
 - **対象フィーチャ**: `F-API-003`
 - **関連ブランチ**: `F-API-003-minirag-chat-ui`
 - **優先度 / 期限**: `High / 2026-01-02`
-- **保管場所**: `services/frontend/EPIC-API-001-minirag-demo-ui/issues/ISSUE-API-003-001.md`  
+- **保管場所**: `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/issues/ISSUE-API-003-001.md`  
   - *テンプレート記入後は、必ず対象マイクロサービス配下に `issues/` ディレクトリ（無ければ作成）を作り、上記パスへ Markdown ファイルとして保存してください。Pull Request ではこのファイルも含めてください。*
 
 ### 期待するユーザー価値
@@ -37,23 +37,23 @@ AI エージェントは以下の順序でドキュメントを読んでくだ�
    - `harness/harness-config.yaml`（スクリプト参照先）
 
 3. **サービス固有**  
-   - `services/frontend/EPIC-API-001-minirag-demo-ui/service-architecture.md`  
-   - `services/frontend/EPIC-API-001-minirag-demo-ui/README.md`  
-   - `services/frontend/EPIC-API-001-minirag-demo-ui/service-config.example.yaml`  
-   - `services/frontend/EPIC-API-001-minirag-demo-ui/scripts/` 配下の実行スクリプト
+   - `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/service-architecture.md`  
+   - `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/README.md`  
+   - `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/service-config.example.yaml`  
+   - `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/scripts/` 配下の実行スクリプト
 
 4. **エピック / フィーチャ**  
-   - ExecPlan: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md`  
-   - Epic design index: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/design/index.md`  
-   - Feature Spec: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
-   - Requirements Checklist: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
-   - PlanQualityGate Checklist: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`  
+   - ExecPlan: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/exec-plan.md`  
+   - Epic design index: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/design/index.md`  
+   - Feature Spec: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md`  
+   - Requirements Checklist: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
+   - PlanQualityGate Checklist: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`  
    - 実装計画／補助資料:  
-     - `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md`  
-     - `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md`  
-     - `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md`  
-     - `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/`  
-     - `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md`
+     - `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md`  
+     - `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/research.md`  
+     - `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md`  
+     - `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/`  
+     - `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md`
 
 5. **ドメイン別チェックリスト（必要に応じて追加）**  
    - 追加が必要な場合のみ `scripts/bash/add-domain-checklist.sh` で生成し、Issue 内にパスと目的を明記する。
@@ -75,7 +75,7 @@ AI エージェントは以下の順序でドキュメントを読んでくだ�
    - 重要な設計判断は対象 ExecPlan の `Decision Log` に追記し、`docs/decisions.md` に要約を追加する。  
    - 進捗は `ExecPlan > Progress` と `harness/AI-Agent-progress.txt` に同時反映する。
 3. **サービス境界の尊重**  
-   - UI は `services/frontend/EPIC-API-001-minirag-demo-ui/public/` 配下で完結させる。  
+   - UI は `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public/` 配下で完結させる。  
    - 外部インターフェースは `contracts/` 配下に残す。
 4. **Idempotent な作業手順**  
    - 静的ファイルは差し替え前提で、繰り返し実行しても破壊的にならないこと。  
@@ -87,7 +87,7 @@ AI エージェントは以下の順序でドキュメントを読んでくだ�
 
 ## 5. 作業スコープ定義
 - **想定アウトプット**  
-  - `services/frontend/EPIC-API-001-minirag-demo-ui/public/` 配下の UI 実装  
+  - `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public/` 配下の UI 実装  
   - `tests/e2e/scenarios/` の E2E シナリオ  
   - `scripts/run_all_e2e_tests.sh` の更新  
   - 関連ドキュメント（ExecPlan, spec, checklists, contracts 等）の更新
@@ -100,8 +100,8 @@ AI エージェントは以下の順序でドキュメントを読んでくだ�
 
 ## 6. 成功条件 & 検証コマンド
 - **動作確認**  
-  - `scripts/validate_spec.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
-  - `scripts/validate_plan.sh plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`  
+  - `scripts/validate_spec.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md`  
+  - `scripts/validate_plan.sh plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md`  
   - `scripts/run_all_e2e_tests.sh`
 - **期待される結果**  
   - validate 系スクリプトは `PASSED` であること。  

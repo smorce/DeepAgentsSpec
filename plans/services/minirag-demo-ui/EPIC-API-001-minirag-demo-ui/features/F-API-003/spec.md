@@ -5,7 +5,7 @@
 **Created**: 2026-01-02  
 **Status**: Draft  
 **Input**: User description: "HTMLベースの簡易チャットUIで、5件の構造化データを登録・削除・検索できるようにする。"  
-**Spec Checklist**: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md` (validate via `scripts/validate_spec.sh`)
+**Spec Checklist**: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md` (validate via `scripts/validate_spec.sh`)
 
 ## Overview & Goal *(mandatory)*
 
@@ -33,8 +33,8 @@
 
 - `architecture/system-architecture.md` → UIとバックエンドの関係性の前提
 - `architecture/service-boundaries.md` → UI責務の境界
-- `plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md` → 本エピックの作業計画
-- `services/frontend/EPIC-API-001-minirag-demo-ui/service-architecture.md` → UIサービスの制約
+- `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/exec-plan.md` → 本エピックの作業計画
+- `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/service-architecture.md` → UIサービスの制約
 - `temp/MiniRAGのサンプル/minirag_app/docs/MiniRAG_on_postgres.py` → サンプルデータ構造の参考
 
 ---

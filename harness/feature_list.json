@@ -26,7 +26,7 @@
       "title": "MiniRAG demo UI (static)",
       "category": "service:frontend",
       "services": ["frontend"],
-      "exec_plan_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md"
+      "exec_plan_path": "plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/exec-plan.md"
     },
     {
       "id": "EPIC-AVATAR-001-DIARY-MINIRAG",
@@ -52,11 +52,7 @@
       "services": ["api-gateway", "user-service", "billing-service"],
       "status": "failing",
       "tags": ["foundation", "infrastructure"],
-
-      // /speckit.specify のスコープ
       "spec_path": "plans/system/EPIC-SYS-001-foundation/features/F-SYS-001/spec.md",
-
-      // /speckit.specify のスコープ
       "checklist_path": "plans/system/EPIC-SYS-001-foundation/features/F-SYS-001/checklists/requirements.md"
     },
     {
@@ -92,8 +88,8 @@
       "status": "passing",
       "tags": ["frontend", "demo-ui"],
 
-      "spec_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
-      "checklist_path": "plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md"
+      "spec_path": "plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md",
+      "checklist_path": "plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md"
     },
     {
       "id": "F-AVATAR-001",

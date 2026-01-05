@@ -2,10 +2,10 @@
 
 ## 1. Scope & Owner
 
-- ExecPlan: `plans/services/frontend/EPIC-API-001-minirag-demo-ui/exec-plan.md`
+- ExecPlan: `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/exec-plan.md`
 - Scope:
-  - Service: frontend/EPIC-API-001-minirag-demo-ui
-  - Primary services: frontend/EPIC-API-001-minirag-demo-ui, api-gateway
+  - Service: minirag/EPIC-API-001-minirag-demo-ui/frontend
+  - Primary services: minirag/EPIC-API-001-minirag-demo-ui/frontend, api-gateway
 - Summary:
   - 静的UIで MiniRAG デモの登録・検索・削除体験を成立させる。
 
@@ -15,7 +15,7 @@
 
 | Feature ID | Title | Spec Path | Impl Plan | Data Model | Contracts Dir | Quickstart |
 | --- | --- | --- | --- | --- | --- | --- |
-| F-API-003 | MiniRAGデモ用チャットUI | `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md` | `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md` | `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md` | `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/` | `plans/services/frontend/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md` |
+| F-API-003 | MiniRAGデモ用チャットUI | `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/spec.md` | `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/impl-plan.md` | `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/data-model.md` | `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/contracts/` | `plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/quickstart.md` |
 
 ---
 

@@ -1,7 +1,7 @@
 # Research: F-API-003 MiniRAGデモ用チャットUI
 
 ## Decision 1: UI 実装は静的HTML/JSで提供
-- Decision: `services/frontend/EPIC-API-001-minirag-demo-ui/public/` に HTML/CSS/JS を配置する
+- Decision: `services/minirag/EPIC-API-001-minirag-demo-ui/frontend/public/` に HTML/CSS/JS を配置する
 - Rationale: ビルドなしで最小のHTTPサーバー配信を実現し、デモ用途に適した最小構成になる
 - Alternatives considered:
   - Vite/Electron（avatar-ui を流用）※採用せず
