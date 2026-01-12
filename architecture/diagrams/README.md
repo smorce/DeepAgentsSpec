@@ -1,6 +1,4 @@
-# Architecture Diagrams
+# アーキテクチャ図
+更新ルール: システムが進化するたびに、随時更新してください。
 
-Place diagrams that illustrate the system architecture, service boundaries, or deployment
-topology in this directory. Use PNG, SVG, or mermaid files and document how they relate
-to the ExecPlans and architecture documents.
-
+このディレクトリには、システム全体のアーキテクチャ、サービス境界、またはデプロイメントトポロジーを示す図を配置してください。PNG、SVG、またはmermaid形式のファイルを使用し、それらがExecPlanやアーキテクチャ関連ドキュメントとどのように関連するかを記載してください。

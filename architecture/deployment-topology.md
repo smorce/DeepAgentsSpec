@@ -1,11 +1,4 @@
-# Deployment Topology
+# デプロイメントトポロジー
+更新ルール: システムが進化するたびに、随時更新してください。
 
-This document captures the runtime deployment assumptions, such as the container
-layout, service mesh (if any), ingress points, and observability infrastructure
-that support the DeepAgentsSpec microservices. The avatar UI runs as a client
-application (Electron/Vite) alongside its local AG-UI server, which can also be
-deployed as a separate service if needed. The MiniRAG demo UI is a static site
-served by a minimal HTTP server and communicates with the API gateway.
-The avatar UI server additionally calls the MiniRAG API to register diary entries
-and to retrieve past diary context when Gemini requests it.
-
+このドキュメントは、DeepAgentsSpec マイクロサービス群を支えるランタイム時のデプロイ前提（コンテナのレイアウト、サービスメッシュ（必要な場合）、外部からの侵入ポイント、オブザーバビリティ基盤など）について記載します。
