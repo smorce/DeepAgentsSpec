@@ -1,6 +1,63 @@
 {
   "epics": [
+    {
+      "id": "EPIC-SYS-002-HARNESS-RADAR",
+      "title": "Agent Harness Radar and SoR Control System",
+      "category": "system",
+      "services": [
+        "harness"
+      ],
+      "exec_plan_path": "plans/system/EPIC-SYS-002-harness-radar/exec-plan.md"
+    }
   ],
   "features": [
+    {
+      "id": "F-SYS-010",
+      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "title": "Official blog limited source radar",
+      "description": "Collect updates from six official blogs only and persist diffs in repo SoR.",
+      "services": [
+        "harness"
+      ],
+      "status": "passing",
+      "tags": [
+        "harness",
+        "source-radar"
+      ],
+      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-010/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-010/checklists/requirements.md"
+    },
+    {
+      "id": "F-SYS-011",
+      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "title": "Feedback loop and control system",
+      "description": "Run update/validate/garden as a mechanical control loop.",
+      "services": [
+        "harness"
+      ],
+      "status": "passing",
+      "tags": [
+        "harness",
+        "control-loop"
+      ],
+      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/checklists/requirements.md"
+    },
+    {
+      "id": "F-SYS-012",
+      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "title": "State persistence and replacement expressions",
+      "description": "Define when/what/where to checkpoint and how conversation state is tokenized.",
+      "services": [
+        "harness"
+      ],
+      "status": "passing",
+      "tags": [
+        "harness",
+        "state-management"
+      ],
+      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/checklists/requirements.md"
+    }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-13T00:00:00Z",
+  "rules": [
+    {
+      "id": "GR-001",
+      "title": "指定ソース境界の厳守",
+      "rule": "収集対象は official_sources.json の6ブログのみとし、許可外リンクを評価対象へ昇格しない。",
+      "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate"
+    },
+    {
+      "id": "GR-002",
+      "title": "差分駆動でのみ実験を起票",
+      "rule": "new-items.json に存在する差分だけを実験バックログへ追加する。",
+      "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog"
+    },
+    {
+      "id": "GR-003",
+      "title": "状態を会話から切り離して永続化",
+      "rule": "会話本文に長文状態を埋め込まず、state snapshot id に差し替えて参照する。",
+      "verification": "docs/agent-harness/state-persistence.md"
+    }
+  ]
+}

@@ -14,9 +14,22 @@ default_scripts:
   init: harness/init.sh
   run_all_unit_tests: scripts/run_all_unit_tests.sh
   run_all_e2e_tests: scripts/run_all_e2e_tests.sh
+  run_agent_harness_cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
 
 e2e:
   scenarios_dir: tests/e2e/scenarios
   helpers_dir: tests/e2e/helpers
   config_file: tests/e2e/puppeteer.config.js
 
+agent_radar:
+  sources_file: harness/agent_radar/official_sources.json
+  state_file: harness/agent_radar/state.json
+  snapshot_file: harness/agent_radar/snapshot-latest.json
+  new_items_file: harness/agent_radar/new-items.json
+  golden_rules_file: harness/agent_radar/golden_rules.json
+  scripts:
+    update: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update
+    validate: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate
+    backlog: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog
+    garden: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden
+    cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle

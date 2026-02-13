@@ -80,3 +80,36 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 を最初に参照してください。
 
 以降のセッションでは、README を毎回読み直す必要はなく、`docs/onboarding.md` と各 ExecPlan / spec を見れば十分です。
+## Agent Harness SoR (EPIC-SYS-002)
+
+このリポジトリは、AIエージェント活用知見を継続的に取り込むための SoR を内蔵しています。
+
+### 対象ソース
+
+以下6ブログのみを収集対象にします。
+
+- https://qwenlm.github.io/blog/
+- https://deepseek.ai/blog/
+- https://sakana.ai/blog/
+- https://huggingface.co/blog/
+- https://developers.openai.com/blog/
+- https://www.anthropic.com/engineering/
+
+### 実行コマンド
+
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+```
+
+### SoR ファイル
+
+- `harness/agent_radar/official_sources.json`
+- `harness/agent_radar/state.json`
+- `harness/agent_radar/snapshot-latest.json`
+- `harness/agent_radar/new-items.json`
+- `harness/agent_radar/golden_rules.json`
+- `docs/agent-harness/state-persistence.md`

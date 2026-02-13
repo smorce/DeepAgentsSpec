@@ -1,0 +1,47 @@
+name: Agent Radar Daily Cycle
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: agent-radar-daily
+  cancel-in-progress: false
+
+jobs:
+  run-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: python -m pip install --upgrade uv
+
+      - name: Run agent radar cycle
+        run: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+
+      - name: Commit and push SoR updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [[ -n "$(git status --porcelain -- harness/agent_radar docs/reports/source-radar harness/AI-Agent-progress.txt)" ]]; then
+            git add harness/agent_radar docs/reports/source-radar harness/AI-Agent-progress.txt
+            git commit -m "chore: Agent Radarの日次更新"
+            git push
+          else
+            echo "No changes to commit."
+          fi

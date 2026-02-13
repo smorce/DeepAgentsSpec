@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-13T03:40:10Z",
+  "items": [
+    {
+      "id": "EXP-001",
+      "status": "ready",
+      "title": "MCP/Skills関連の新規記事を検出したときに自動で評価タスクへ変換する",
+      "source": "system",
+      "acceptance": "new-items.json から plans 系ドキュメントへ変換するスクリプトが作成される"
+    }
+  ]
+}

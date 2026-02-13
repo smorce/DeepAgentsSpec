@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-13T00:00:00Z",
+  "sources": [
+    {
+      "id": "qwen",
+      "name": "Qwen Official Blog",
+      "homepage": "https://qwenlm.github.io/blog/",
+      "feeds": [
+        "https://qwenlm.github.io/blog/index.xml"
+      ],
+      "allowed_entry_prefixes": [
+        "https://qwenlm.github.io/blog/"
+      ],
+      "html_entry_prefixes": [
+        "https://qwenlm.github.io/blog/"
+      ],
+      "max_items": 20
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Official Blog",
+      "homepage": "https://deepseek.ai/blog/",
+      "feeds": [],
+      "allowed_entry_prefixes": [
+        "https://deepseek.ai/blog/"
+      ],
+      "html_entry_prefixes": [
+        "https://deepseek.ai/blog/"
+      ],
+      "max_items": 20
+    },
+    {
+      "id": "sakana_ai",
+      "name": "Sakana AI Official Blog",
+      "homepage": "https://sakana.ai/blog/",
+      "feeds": [
+        "https://sakana.ai/feed.xml"
+      ],
+      "allowed_entry_prefixes": [
+        "https://sakana.ai/"
+      ],
+      "html_entry_prefixes": [
+        "https://sakana.ai/blog/",
+        "https://sakana.ai/"
+      ],
+      "max_items": 20
+    },
+    {
+      "id": "hugging_face",
+      "name": "Hugging Face Official Blog",
+      "homepage": "https://huggingface.co/blog/",
+      "feeds": [
+        "https://huggingface.co/blog/feed.xml"
+      ],
+      "allowed_entry_prefixes": [
+        "https://huggingface.co/blog/"
+      ],
+      "html_entry_prefixes": [
+        "https://huggingface.co/blog/"
+      ],
+      "max_items": 20
+    },
+    {
+      "id": "openai_developers",
+      "name": "OpenAI Developers Blog",
+      "homepage": "https://developers.openai.com/blog/",
+      "feeds": [
+        "https://developers.openai.com/rss.xml"
+      ],
+      "allowed_entry_prefixes": [
+        "https://developers.openai.com/blog/"
+      ],
+      "html_entry_prefixes": [
+        "https://developers.openai.com/blog/"
+      ],
+      "max_items": 20
+    },
+    {
+      "id": "anthropic_engineering",
+      "name": "Anthropic Engineering",
+      "homepage": "https://www.anthropic.com/engineering/",
+      "feeds": [],
+      "allowed_entry_prefixes": [
+        "https://www.anthropic.com/engineering/"
+      ],
+      "html_entry_prefixes": [
+        "https://www.anthropic.com/engineering/"
+      ],
+      "max_items": 20
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harness/agent_radar/runtime_state_schema.json",
+  "title": "Agent Runtime State",
+  "type": "object",
+  "required": [
+    "state_id",
+    "thread_id",
+    "created_at",
+    "checkpoint_reason",
+    "replacement_token",
+    "storage_tier",
+    "payload_ref"
+  ],
+  "properties": {
+    "state_id": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "checkpoint_reason": { "type": "string" },
+    "replacement_token": { "type": "string" },
+    "storage_tier": {
+      "type": "string",
+      "enum": ["hot", "cold"]
+    },
+    "payload_ref": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

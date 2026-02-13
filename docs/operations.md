@@ -1,6 +1,55 @@
 # Operations
 
-Document how to operate and monitor the DeepAgentsSpec services once they are running.
+## 対象
 
-Include commands for starting/stopping services, monitoring logs, and contacting on-call resources.
+本ドキュメントは EPIC-SYS-002 の Agent Harness SoR（source radar + control loop）の運用手順を定義します。
 
+## 日次運用
+
+1. 収集・検証・バックログ同期・ガーデニングを実行
+
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+```
+
+2. 新規差分を確認
+
+```bash
+cat harness/agent_radar/new-items.json
+```
+
+3. レポート確認
+
+```bash
+ls docs/reports/source-radar/
+```
+
+## 自動実行
+
+- GitHub Actions: `.github/workflows/agent-radar-daily.yml`
+- 実行時刻: 毎日 `00:15 UTC`
+
+## 障害対応
+
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle` 失敗:
+  - ネットワークまたはサイト構造変化を疑う。
+  - `harness/agent_radar/snapshot-latest.json` の `errors` を確認する。
+
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate` 失敗:
+  - 許可外リンク混入または SoR構造破損。
+  - `official_sources.json` と `snapshot-latest.json` の境界を確認する。
+
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog` 失敗:
+  - `new-items.json` または `experiment_backlog.json` の構造崩れ。
+  - `new_items` / `items` が配列か確認する。
+
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` 失敗:
+  - 対象文書の `TODO:` / `NEEDS CLARIFICATION` / `プレースホルダー` を除去する。
+
+## エスカレーション条件
+
+以下は人間レビュー必須:
+
+- 公式URL変更が必要な場合
+- 差し替え表現や状態スキーマの後方互換が壊れる場合
+- 黄金律に昇格するルール変更

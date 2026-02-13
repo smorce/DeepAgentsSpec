@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "last_run_at": "2026-02-13T03:40:05Z",
+  "sources": {
+    "qwen": {
+      "links": [
+        "https://qwenlm.github.io/blog/global-load-balance/",
+        "https://qwenlm.github.io/blog/gspo/",
+        "https://qwenlm.github.io/blog/qvq-max-preview/",
+        "https://qwenlm.github.io/blog/qwen-image-edit/",
+        "https://qwenlm.github.io/blog/qwen-image/",
+        "https://qwenlm.github.io/blog/qwen-mt/",
+        "https://qwenlm.github.io/blog/qwen-tts/",
+        "https://qwenlm.github.io/blog/qwen-vlo/",
+        "https://qwenlm.github.io/blog/qwen2.5-1m/",
+        "https://qwenlm.github.io/blog/qwen2.5-math-prm/",
+        "https://qwenlm.github.io/blog/qwen2.5-max/",
+        "https://qwenlm.github.io/blog/qwen2.5-omni/",
+        "https://qwenlm.github.io/blog/qwen2.5-vl-32b/",
+        "https://qwenlm.github.io/blog/qwen2.5-vl/",
+        "https://qwenlm.github.io/blog/qwen3-coder/",
+        "https://qwenlm.github.io/blog/qwen3-embedding/",
+        "https://qwenlm.github.io/blog/qwen3/",
+        "https://qwenlm.github.io/blog/qwen3guard/",
+        "https://qwenlm.github.io/blog/qwq-32b/",
+        "https://qwenlm.github.io/blog/qwq-max-preview/"
+      ],
+      "fingerprint": "f0383ede71290310f7216ecdfd2ec27df8d95cc6a476544821a4c2792c37be39",
+      "updated_at": "2026-02-13T03:40:05Z"
+    },
+    "deepseek": {
+      "links": [],
+      "fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "updated_at": "2026-02-13T03:40:05Z"
+    },
+    "sakana_ai": {
+      "links": [
+        "https://sakana.ai/ahc-2025/",
+        "https://sakana.ai/ahc058/",
+        "https://sakana.ai/drope/",
+        "https://sakana.ai/drq/",
+        "https://sakana.ai/google/",
+        "https://sakana.ai/pd-nca/",
+        "https://sakana.ai/repo/",
+        "https://sakana.ai/series-b/",
+        "https://sakana.ai/swe-interview-2025/",
+        "https://sakana.ai/unofficial-guide/"
+      ],
+      "fingerprint": "f4bda9d2a0f076ad8acf56cc2311328428d4a48e225b94fe5ce07183a7936612",
+      "updated_at": "2026-02-13T03:40:05Z"
+    },
+    "hugging_face": {
+      "links": [
+        "https://huggingface.co/blog/Hcompany/introducing-holo2-235b-a22b",
+        "https://huggingface.co/blog/LinkedIn/gpt-oss-agentic-rl",
+        "https://huggingface.co/blog/Photoroom/prx-part2",
+        "https://huggingface.co/blog/ServiceNow-AI/sygra-studio",
+        "https://huggingface.co/blog/community-evals",
+        "https://huggingface.co/blog/daggr",
+        "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment",
+        "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment-blog-2",
+        "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment-blog-3",
+        "https://huggingface.co/blog/ibm-research/assetopsbench-playground-on-hugging-face",
+        "https://huggingface.co/blog/microsoft/diff-attn-v2",
+        "https://huggingface.co/blog/nvidia/nemotron-colembed-v2",
+        "https://huggingface.co/blog/nvidia/nvidia-cosmos-reason-2-brings-advanced-reasoning",
+        "https://huggingface.co/blog/open-responses",
+        "https://huggingface.co/blog/openenv-turing",
+        "https://huggingface.co/blog/tiiuae/emirati-benchmarks",
+        "https://huggingface.co/blog/tiiuae/falcon-h1-arabic",
+        "https://huggingface.co/blog/transformersjs-v4",
+        "https://huggingface.co/blog/upskill",
+        "https://huggingface.co/blog/waypoint-1"
+      ],
+      "fingerprint": "4ef572d0de46a77b5c4f7936e7f0517e8a9bd484e4fd7a7a00e576eaa22fc8cb",
+      "updated_at": "2026-02-13T03:40:05Z"
+    },
+    "openai_developers": {
+      "links": [
+        "https://developers.openai.com/blog/15-lessons-building-chatgpt-apps",
+        "https://developers.openai.com/blog/eval-skills",
+        "https://developers.openai.com/blog/openai-for-developers-2025",
+        "https://developers.openai.com/blog/skills-shell-tips",
+        "https://developers.openai.com/blog/skyscanner-codex-jetbrains-mcp",
+        "https://developers.openai.com/blog/topic/api",
+        "https://developers.openai.com/blog/topic/apps-sdk",
+        "https://developers.openai.com/blog/topic/audio",
+        "https://developers.openai.com/blog/topic/codex",
+        "https://developers.openai.com/blog/topic/general"
+      ],
+      "fingerprint": "a8c8311a2da015652aa7ee45d2e7e4727bbbe925452dbcf87f6e50fb024790b1",
+      "updated_at": "2026-02-13T03:40:05Z"
+    },
+    "anthropic_engineering": {
+      "links": [
+        "https://www.anthropic.com/engineering/",
+        "https://www.anthropic.com/engineering/AI-resistant-technical-evaluations",
+        "https://www.anthropic.com/engineering/a-postmortem-of-three-recent-issues",
+        "https://www.anthropic.com/engineering/advanced-tool-use",
+        "https://www.anthropic.com/engineering/building-c-compiler",
+        "https://www.anthropic.com/engineering/building-effective-agents",
+        "https://www.anthropic.com/engineering/claude-code-best-practices",
+        "https://www.anthropic.com/engineering/claude-code-sandboxing",
+        "https://www.anthropic.com/engineering/claude-think-tool",
+        "https://www.anthropic.com/engineering/code-execution-with-mcp",
+        "https://www.anthropic.com/engineering/contextual-retrieval",
+        "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+        "https://www.anthropic.com/engineering/desktop-extensions",
+        "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+        "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "https://www.anthropic.com/engineering/infrastructure-noise",
+        "https://www.anthropic.com/engineering/multi-agent-research-system",
+        "https://www.anthropic.com/engineering/swe-bench-sonnet",
+        "https://www.anthropic.com/engineering/writing-tools-for-agents"
+      ],
+      "fingerprint": "eb9a09bfdfdd30ada04c3a1619b228d49c31233cdbccda128eb8abccfe816b63",
+      "updated_at": "2026-02-13T03:40:05Z"
+    }
+  }
+}
