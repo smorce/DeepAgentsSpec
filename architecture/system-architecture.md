@@ -21,7 +21,7 @@
 
 4. Knowledge Layer
    - 仕様・計画・決定ログを repo 内で一貫管理する。
-   - 主要文書: `plans/system/EPIC-SYS-002-harness-radar/`, `docs/agent-harness/`
+   - 主要文書: `plans/system/EPIC-SYS-001-harness-radar/`, `docs/agent-harness/`
 
 ## データフロー
 

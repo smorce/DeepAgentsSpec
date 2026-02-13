@@ -1,9 +1,9 @@
-# EPIC-SYS-002-HARNESS-RADAR: エージェントハーネス継続進化のSoR構築
+# EPIC-SYS-001-HARNESS-RADAR: エージェントハーネス継続進化のSoR構築
 
 This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
 
 本ドキュメントは `PLANS.md` に従って維持・更新します。  
-本エピックの設計インデックスは `plans/system/EPIC-SYS-002-harness-radar/design/index.md` です。
+本エピックの設計インデックスは `plans/system/EPIC-SYS-001-harness-radar/design/index.md` です。
 
 ## Purpose / Big Picture
 
@@ -13,24 +13,24 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 ## Related Features / Specs
 
 - F-SYS-010: 公式ブログ限定ソースレーダー
-  - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-010/spec.md`
+  - Spec: `plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/spec.md`
 - F-SYS-011: フィードバックループと制御システム
-  - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/spec.md`
+  - Spec: `plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/spec.md`
 - F-SYS-012: 状態管理・永続化・差し替え表現
-  - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/spec.md`
+  - Spec: `plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/spec.md`
 - F-SYS-013: 自律実装と監視ターゲット生成
-  - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/spec.md`
+  - Spec: `plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/spec.md`
 
 ## Progress
 
-- [x] (2026-02-13 00:00Z) EPIC-SYS-002 の ExecPlan と design index を作成した。
+- [x] (2026-02-13 00:00Z) EPIC-SYS-001 の ExecPlan と design index を作成した。
 - [x] (2026-02-13 00:00Z) 6ブログ限定のソース収集SoR（設定・状態・差分ファイル）を追加した。
 - [x] (2026-02-13 00:00Z) `update/validate/garden` の制御ループ用スクリプトを追加した。
 - [x] (2026-02-13 00:00Z) 状態永続化と差し替え表現の仕様を `docs/agent-harness/` に追加した。
 - [x] (2026-02-13 11:27Z) `harness/agent_radar/radar_ops.py` に制御ループを統合し、`validate` と `cycle` の実行成功を確認した。
 - [x] (2026-02-13 11:40Z) `new-items.json` から `experiment_backlog.json` へ自動起票する `backlog` モードを追加した。
 - [x] (2026-02-13 11:40Z) GitHub Actions 日次実行ワークフローを追加した。
-- [x] (2026-02-13 15:30Z) `EPIC-SYS-001-foundation` の実体と参照を削除し、現行SoRを `EPIC-SYS-002` に一本化した。
+- [x] (2026-02-13 15:30Z) `EPIC-SYS-001-foundation` の実体と参照を削除し、現行SoRを `EPIC-SYS-001` に一本化した。
 - [x] (2026-02-13 16:00Z) `implement/autogrow` モードを追加し、収集から実装・監視・黄金律反映までを無人ループ化した。
 
 ## Surprises & Discoveries
@@ -62,7 +62,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
   Rationale: `new-items.json` の見落としを防ぎ、知見取り込みを人手待ちにしないため。
   Date/Author: 2026-02-13 / codex
 
-- Decision: `EPIC-SYS-001-foundation` を廃止し、システムレベルのSoR管理対象を `EPIC-SYS-002-HARNESS-RADAR` へ一本化する。
+- Decision: `EPIC-SYS-001-foundation` を廃止し、システムレベルのSoR管理対象を `EPIC-SYS-001-HARNESS-RADAR` へ一本化する。
   Rationale: 現行運用と無関係な初期土台エピックを残すと、エージェント参照時にノイズとなるため。
   Date/Author: 2026-02-13 / codex
 
@@ -118,7 +118,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 
 ## Artifacts and Notes
 
-- Epic design index: `plans/system/EPIC-SYS-002-harness-radar/design/index.md`
+- Epic design index: `plans/system/EPIC-SYS-001-harness-radar/design/index.md`
 - Source of Record root: `harness/agent_radar/`
 - Ops docs: `docs/agent-harness/`
 

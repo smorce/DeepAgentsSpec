@@ -69,39 +69,39 @@ Each entry should follow this format:
 - ID: DEC-2026-006
   Date: 2026-02-13
   Scope: system
-  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
   Summary: Introduce an in-repo System of Record for agent harness evolution with a six-blog-only source radar and mechanical control loop.
   Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
 
 - ID: DEC-2026-007
   Date: 2026-02-13
   Scope: system
-  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
   Summary: Consolidate control-loop execution into a single entrypoint (`harness/agent_radar/radar_ops.py`) with mode switching.
   Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
 
 - ID: DEC-2026-008
   Date: 2026-02-13
   Scope: system
-  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
   Summary: Add `backlog` step and daily GitHub Actions cycle to continuously convert source diffs into experiment backlog items.
   Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
 
 - ID: DEC-2026-009
   Date: 2026-02-13
   Scope: system
-  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
   Summary: Retire `EPIC-SYS-001-FOUNDATION` and remove its artifacts/references to keep the active SoR surface minimal.
   Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
 
 - ID: DEC-2026-010
   Date: 2026-02-13
   Scope: system
-  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
   Summary: Standardize unattended growth on `autogrow` mode, including backlog-to-implementation promotion, monitoring targets, and automatic rule encoding.
   Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)

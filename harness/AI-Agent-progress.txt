@@ -4,7 +4,7 @@
 # Long-running Agent Progress Log
 # Each session appends a short summary in plain text.
 # Suggested format:
-# YYYY-MM-DDThh:mm:ssZ | agent-id | epic-ids | feature-ids | summary[2026-02-13 00:00Z] agent-radar: bootstrap completed | epic=EPIC-SYS-002-HARNESS-RADAR | features=F-SYS-010,F-SYS-011,F-SYS-012
+# YYYY-MM-DDThh:mm:ssZ | agent-id | epic-ids | feature-ids | summary[2026-02-13 00:00Z] agent-radar: bootstrap completed | epic=EPIC-SYS-001-HARNESS-RADAR | features=F-SYS-010,F-SYS-011,F-SYS-012
 [2026-02-13 02:05Z] agent-radar: update completed | sources=6 items=86 new=86
 [2026-02-13 02:05Z] agent-radar: update completed | sources=6 items=86 new=86
 [2026-02-13 02:05Z] agent-radar: update completed | sources=6 items=86 new=0

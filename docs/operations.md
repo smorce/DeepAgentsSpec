@@ -2,7 +2,7 @@
 
 ## 対象
 
-本ドキュメントは EPIC-SYS-002 の Agent Harness SoR（source radar + control loop）の運用手順を定義します。
+本ドキュメントは EPIC-SYS-001 の Agent Harness SoR（source radar + control loop）の運用手順を定義します。
 
 ## 日次運用
 

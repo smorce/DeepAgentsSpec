@@ -1,19 +1,19 @@
 {
   "epics": [
     {
-      "id": "EPIC-SYS-002-HARNESS-RADAR",
+      "id": "EPIC-SYS-001-HARNESS-RADAR",
       "title": "Agent Harness Radar and SoR Control System",
       "category": "system",
       "services": [
         "harness"
       ],
-      "exec_plan_path": "plans/system/EPIC-SYS-002-harness-radar/exec-plan.md"
+      "exec_plan_path": "plans/system/EPIC-SYS-001-harness-radar/exec-plan.md"
     }
   ],
   "features": [
     {
       "id": "F-SYS-010",
-      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "epic_id": "EPIC-SYS-001-HARNESS-RADAR",
       "title": "Official blog limited source radar",
       "description": "Collect updates from six official blogs only and persist diffs in repo SoR.",
       "services": [
@@ -24,12 +24,12 @@
         "harness",
         "source-radar"
       ],
-      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-010/spec.md",
-      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-010/checklists/requirements.md"
+      "spec_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md"
     },
     {
       "id": "F-SYS-011",
-      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "epic_id": "EPIC-SYS-001-HARNESS-RADAR",
       "title": "Feedback loop and control system",
       "description": "Run update/validate/backlog/implement/garden as a mechanical control loop.",
       "services": [
@@ -40,12 +40,12 @@
         "harness",
         "control-loop"
       ],
-      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/spec.md",
-      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/checklists/requirements.md"
+      "spec_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md"
     },
     {
       "id": "F-SYS-012",
-      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "epic_id": "EPIC-SYS-001-HARNESS-RADAR",
       "title": "State persistence and replacement expressions",
       "description": "Define when/what/where to checkpoint and how conversation state is tokenized.",
       "services": [
@@ -56,12 +56,12 @@
         "harness",
         "state-management"
       ],
-      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/spec.md",
-      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/checklists/requirements.md"
+      "spec_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md"
     },
     {
       "id": "F-SYS-013",
-      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "epic_id": "EPIC-SYS-001-HARNESS-RADAR",
       "title": "Autonomous implementation and monitoring targets",
       "description": "Convert experiment backlog items into implementation artifacts, monitoring targets, and golden rules without human intervention.",
       "services": [
@@ -73,8 +73,8 @@
         "autonomy",
         "monitoring"
       ],
-      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/spec.md",
-      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/checklists/requirements.md"
+      "spec_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md"
     }
   ]
 }

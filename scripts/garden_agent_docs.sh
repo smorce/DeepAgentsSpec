@@ -9,7 +9,7 @@ TARGETS=(
   "architecture/service-boundaries.md"
   "architecture/deployment-topology.md"
   "docs/agent-harness"
-  "plans/system/EPIC-SYS-002-harness-radar"
+  "plans/system/EPIC-SYS-001-harness-radar"
 )
 
 PATTERN='TODO:|\[NEEDS CLARIFICATION|\[NEEDS\s+CLARIFICATION'

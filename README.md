@@ -43,7 +43,7 @@ architecture/
        │（システムの「あるべき姿」「全体像」を説明）
        │
 plans/system/
-  └── EPIC-SYS-002-harness-radar/exec-plan.md
+  └── EPIC-SYS-001-harness-radar/exec-plan.md
        ↑
        │（architecture を前提に、
        │  「このリポジトリで何をどう変えるか」を落とし込む）
@@ -80,7 +80,7 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 を最初に参照してください。
 
 以降のセッションでは、README を毎回読み直す必要はなく、`docs/onboarding.md` と各 ExecPlan / spec を見れば十分です。
-## Agent Harness SoR (EPIC-SYS-002)
+## Agent Harness SoR (EPIC-SYS-001)
 
 このリポジトリは、AIエージェント活用知見を継続的に取り込むための SoR を内蔵しています。
 

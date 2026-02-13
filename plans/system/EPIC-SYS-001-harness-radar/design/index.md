@@ -1,4 +1,4 @@
-# EPIC-SYS-002 Harness Radar Design Index
+# EPIC-SYS-001 Harness Radar Design Index
 
 ## Feature Map
 

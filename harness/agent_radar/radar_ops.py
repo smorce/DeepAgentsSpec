@@ -50,7 +50,7 @@ GARDEN_TARGETS = [
     ROOT / "architecture" / "service-boundaries.md",
     ROOT / "architecture" / "deployment-topology.md",
     ROOT / "docs" / "agent-harness",
-    ROOT / "plans" / "system" / "EPIC-SYS-002-harness-radar",
+    ROOT / "plans" / "system" / "EPIC-SYS-001-harness-radar",
 ]
 
 GARDEN_PATTERNS = [
