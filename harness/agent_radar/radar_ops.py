@@ -1075,6 +1075,7 @@ def validate_monitoring_artifacts() -> list[str]:
     errors: list[str] = []
     now = utc_now()
     freshness_limit = dt.timedelta(hours=36)
+    bootstrap_grace_limit = dt.timedelta(hours=24)
 
     targets_doc = read_json(MONITORING_TARGETS_FILE, default={"targets": []})
     targets = targets_doc.get("targets") if isinstance(targets_doc, dict) else []
@@ -1107,6 +1108,20 @@ def validate_monitoring_artifacts() -> list[str]:
     latest_loop = str(latest_doc.get("loop", "")).strip()
     results_loop = str(results_doc.get("loop", "")).strip()
     bootstrap_mode = latest_loop == "bootstrap" or results_loop == "bootstrap"
+    if bootstrap_mode:
+        reference_times = [
+            generated_at
+            for generated_at in (latest_generated_at, results_generated_at)
+            if generated_at is not None
+        ]
+        if not reference_times:
+            errors.append("monitoring bootstrap mode has no valid generated_at timestamps")
+        else:
+            latest_reference = max(reference_times)
+            if now - latest_reference > bootstrap_grace_limit:
+                errors.append(
+                    "monitoring bootstrap mode exceeded 24h while monitoring targets are configured"
+                )
 
     metrics = latest_doc.get("metrics")
     if not bootstrap_mode:
@@ -1601,6 +1616,26 @@ def publish_monitoring_artifacts(
     collector_mode: str,
     outcomes: list[StepOutcome],
 ) -> None:
+    previous_latest = read_json(METRICS_LATEST_FILE, default={})
+    previous_results = read_json(MONITORING_RESULTS_FILE, default={})
+    previous_latest_loop = (
+        str(previous_latest.get("loop", "")).strip()
+        if isinstance(previous_latest, dict)
+        else ""
+    )
+    previous_results_loop = (
+        str(previous_results.get("loop", "")).strip()
+        if isinstance(previous_results, dict)
+        else ""
+    )
+    previous_bootstrap_mode = (
+        previous_latest_loop == "bootstrap" or previous_results_loop == "bootstrap"
+    )
+    loop_success = len(outcomes) > 0 and all(outcome.rc == 0 for outcome in outcomes)
+    effective_loop_name = (
+        "autogrow" if previous_bootstrap_mode and loop_success else loop_name
+    )
+
     backlog = read_json(EXPERIMENT_BACKLOG_FILE, default={"items": []})
     backlog_items = backlog.get("items") if isinstance(backlog, dict) else []
     if not isinstance(backlog_items, list):
@@ -1635,7 +1670,7 @@ def publish_monitoring_artifacts(
 
     latest_payload = {
         "version": 1,
-        "loop": loop_name,
+        "loop": effective_loop_name,
         "generated_at": iso_now(),
         "collector_mode": collector_mode,
         "steps": [
@@ -1686,14 +1721,16 @@ def publish_monitoring_artifacts(
     result_doc = {
         "version": 1,
         "generated_at": iso_now(),
-        "loop": loop_name,
+        "loop": effective_loop_name,
         "pass_count": pass_count,
         "total_targets": len(evaluations),
         "evaluations": evaluations,
     }
     write_json(MONITORING_RESULTS_FILE, result_doc)
+    if previous_bootstrap_mode and effective_loop_name == "autogrow":
+        append_progress("monitoring loop transitioned | from=bootstrap to=autogrow")
     append_progress(
-        f"monitoring evaluated | loop={loop_name} pass={pass_count} total={len(evaluations)}"
+        f"monitoring evaluated | loop={effective_loop_name} pass={pass_count} total={len(evaluations)}"
     )
 
 

@@ -24,6 +24,16 @@ cat harness/agent_radar/new-items.json
 ls docs/reports/source-radar/
 ```
 
+4. タスク単位で再現・修正・証跡化を実行する場合
+
+```bash
+uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py \
+  --task-id TASK-001 \
+  --repro-cmd "<repro command>" \
+  --fix-prompt "<single prompt for fix>" \
+  --verify-cmd "<verify command>"
+```
+
 ## 自動実行
 
 - GitHub Actions: `.github/workflows/agent-radar-daily.yml`
@@ -53,6 +63,10 @@ ls docs/reports/source-radar/
 
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` 失敗:
   - 対象文書の `TODO:` / `NEEDS CLARIFICATION` / `プレースホルダー` を除去する。
+
+- `uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py` 失敗:
+  - `harness/worktree/runs/<RUN_ID>/logs/*.stderr.log` を確認する。
+  - `artifacts/replay.sh` で失敗を再実行し、同じ結果が再現するか確認する。
 
 - `scripts/run_all_e2e_tests.sh`:
   - デフォルトでは UI モックシナリオのみ実行される。

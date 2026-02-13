@@ -41,6 +41,9 @@
 - 回復/監査:
   - `harness/agent_radar/self_heal_log.json`
   - `docs/reports/source-radar/codex-exec/`
+- タスク隔離ハーネス:
+  - `harness/worktree/worktree_ops.py`
+  - `harness/worktree/runs/`
 
 ## 3. 自己改変の仕組み
 
@@ -100,3 +103,4 @@ Spec/Plan/SoR/テストの品質ゲートを強制します。
 - 自己修復ログの増加は、設計ドリフトの兆候として週次で確認する
 - `monitoring_targets.json` が 1 件以上ある場合、`metrics/latest.json` と `monitoring_results.json` は
   鮮度（36時間以内）と件数整合を保つ必要がある
+- `harness/worktree/worktree_ops.py` は、再現→修正→証跡生成を 1 回で回す標準入口として扱う

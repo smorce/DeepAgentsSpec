@@ -32,6 +32,9 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - [x] (2026-02-13 11:40Z) GitHub Actions 日次実行ワークフローを追加した。
 - [x] (2026-02-13 15:30Z) `EPIC-SYS-001-foundation` の実体と参照を削除し、現行SoRを `EPIC-SYS-001` に一本化した。
 - [x] (2026-02-13 16:00Z) `implement/autogrow` モードを追加し、収集から実装・監視・黄金律反映までを無人ループ化した。
+- [x] (2026-02-13 18:55Z) `harness/feature_list.json` を system + services の全EPIC/F構成へ復元し、オンボーディング規約と整合させた。
+- [x] (2026-02-13 18:55Z) `validate` に bootstrap 24時間制限を追加し、初回成功時に `loop=autogrow` へ自動遷移する監視制御を実装した。
+- [x] (2026-02-13 18:55Z) `harness/worktree/worktree_ops.py` を追加し、再現→修正→検証→証跡生成を隔離 worktree で標準化した。
 
 ## Surprises & Discoveries
 
@@ -68,6 +71,22 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 
 - Decision: `autogrow` を日次運用の標準入口とし、`implement` を `cycle` の必須ステップへ昇格する。
   Rationale: 記事差分を単なる観測で終わらせず、実装・監視・黄金律へ確実に落とし込むため。
+  Date/Author: 2026-02-13 / codex
+
+- Decision: `harness/feature_list.json` は system only ではなく services を含む全EPIC/Fを保持する。
+  Rationale: `docs/onboarding.md` と `scripts/bash/common.sh` が前提とする SoR 仕様（全 feature の解決）に一致させるため。
+  Date/Author: 2026-02-13 / codex
+
+- Decision: 監視ターゲットが存在する状態で bootstrap を 24 時間以上維持した場合は `validate` を失敗させる。
+  Rationale: 監視の初期化状態が固定化して drift を見逃すリスクを防ぐため。
+  Date/Author: 2026-02-13 / codex
+
+- Decision: `publish_monitoring_artifacts` は bootstrap 状態からの初回成功時に `loop=autogrow` へ自動遷移する。
+  Rationale: 手動切り替えを不要にし、監視ライフサイクルを機械的に前進させるため。
+  Date/Author: 2026-02-13 / codex
+
+- Decision: タスク実行は `harness/worktree/worktree_ops.py` を標準入口とし、隔離 worktree と証跡生成を必須化する。
+  Rationale: 「再現→修正→証跡生成」を 1 回の実行フローで再実行可能にするため。
   Date/Author: 2026-02-13 / codex
 
 ## Outcomes & Retrospective

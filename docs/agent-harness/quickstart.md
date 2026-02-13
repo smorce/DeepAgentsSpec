@@ -38,7 +38,29 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 - 自己修復:
   - `harness/agent_radar/self_heal_log.json`
 
-## 4. 典型トラブル
+## 4. タスク隔離実行（reproduce -> fix -> evidence）
+
+タスクごとに隔離 worktree を作成して、再現・修正・検証・証跡生成を一括実行できます。
+
+```bash
+uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py \
+  --task-id TASK-001 \
+  --repro-cmd "bash scripts/run_all_unit_tests.sh" \
+  --repro-expected-exit 1 \
+  --fix-prompt "Fix failing tests for TASK-001 with minimal changes." \
+  --verify-cmd "bash scripts/run_all_unit_tests.sh" \
+  --verify-expected-exit 0 \
+  --screenshot-url "http://localhost:8080" \
+  --metrics-file harness/agent_radar/metrics/latest.json
+```
+
+実行後の成果物は `harness/worktree/runs/<RUN_ID>/` に保存されます。
+- `evidence/summary.md`
+- `artifacts/replay.sh`
+- `logs/*.log`
+- `metrics/run-metrics.json`
+
+## 5. 典型トラブル
 
 1. `validate` が失敗する  
 `autogrow` なら自己修復して再試行します。最終的に失敗する場合は `self_heal_log.json` の `actions` を確認してください。
@@ -53,12 +75,12 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 `RUN_LIVE_MINIRAG_E2E=1 bash scripts/run_all_e2e_tests.sh` を使ってください。  
 未指定時は UI モックシナリオのみ実行されます。
 
-## 5. 日次運用
+## 6. 日次運用
 
 - GitHub Actions: `.github/workflows/agent-radar-daily.yml`
 - 日次ジョブが SoR 更新差分を自動コミットします。
 
-## 6. PR品質ゲート
+## 7. PR品質ゲート
 
 - GitHub Actions: `.github/workflows/quality-gates.yml`
 - `pull_request` で以下を強制実行します。

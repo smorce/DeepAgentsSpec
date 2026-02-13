@@ -29,6 +29,8 @@
 - ランタイム状態スキーマ: `harness/agent_radar/runtime_state_schema.json`
 - 自律成長ログ: `docs/agent-harness/autonomous-growth.md`
 - Codex収集監査ログ: `docs/reports/source-radar/codex-exec/`
+- タスク隔離実行器: `harness/worktree/worktree_ops.py`
+- タスク実行証跡: `harness/worktree/runs/`
 
 ## データ更新責務
 

@@ -105,3 +105,35 @@ Each entry should follow this format:
   Summary: Standardize unattended growth on `autogrow` mode, including backlog-to-implementation promotion, monitoring targets, and automatic rule encoding.
   Details: See ExecPlan at:
     - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-011
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Restore `harness/feature_list.json` as full SoR that includes both system and service epics/features.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-012
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Fail validation when monitoring targets exist and bootstrap mode remains older than 24 hours.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-013
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Automatically transition monitoring loop label from bootstrap to autogrow after first successful control loop.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-014
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Introduce isolated worktree harness runner for one-shot reproduce/fix/verify/evidence workflow.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)

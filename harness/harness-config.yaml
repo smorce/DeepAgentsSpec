@@ -13,6 +13,7 @@ default_scripts:
   run_all_unit_tests: scripts/run_all_unit_tests.sh
   run_all_e2e_tests: scripts/run_all_e2e_tests.sh
   run_agent_harness_cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow
+  run_worktree_task: uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py
 
 e2e:
   scenarios_dir: tests/e2e/scenarios

@@ -348,3 +348,49 @@ target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-A
 target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
 [2026-02-13 09:09Z] plan quality check: PASSED
 target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 09:53Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+[2026-02-13 09:53Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+[2026-02-13 09:56Z] agent-radar: feature_list restored to full SoR (system + services epics/features)
+[2026-02-13 09:56Z] agent-radar: monitoring bootstrap guard added (targets>0 and bootstrap age>24h => validate fail)
+[2026-02-13 09:56Z] agent-radar: monitoring loop auto-transition enabled (bootstrap -> autogrow on first successful loop)
+[2026-02-13 09:56Z] worktree-harness: added isolated reproduce/fix/verify/evidence runner at harness/worktree/worktree_ops.py
+[2026-02-13 09:57Z] worktree-harness: start run_id=20260213T095741Z-SMOKE-WORKTREE task=SMOKE-WORKTREE base_ref=HEAD
+[2026-02-13 09:57Z] worktree-harness: complete run_id=20260213T095741Z-SMOKE-WORKTREE status=success kept=false
