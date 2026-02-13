@@ -101,8 +101,10 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow
 ```
 
 ### SoR ファイル
@@ -112,4 +114,7 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 - `harness/agent_radar/snapshot-latest.json`
 - `harness/agent_radar/new-items.json`
 - `harness/agent_radar/golden_rules.json`
+- `harness/agent_radar/monitoring_targets.json`
+- `harness/agent_radar/implemented/`
 - `docs/agent-harness/state-persistence.md`
+- `docs/agent-harness/autonomous-growth.md`

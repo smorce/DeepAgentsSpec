@@ -2,13 +2,15 @@
 
 ## ローカル実行
 
-- 収集/検証/ガーデニングはローカルで実行可能。
+- 収集/検証/実装/ガーデニングはローカルで実行可能。
 - 主要コマンド:
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog`
+  - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle`
+  - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`
 
 ## CI実行（推奨）
 
@@ -17,7 +19,8 @@
 1. Source update
 2. Boundary validation
 3. Experiment backlog sync
-4. Doc gardening
+4. Autonomous implementation
+5. Doc gardening
 
 失敗時はマージ不可とし、境界逸脱と文書劣化を早期に止めます。
 

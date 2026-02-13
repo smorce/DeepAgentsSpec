@@ -97,3 +97,11 @@ Each entry should follow this format:
   Summary: Retire `EPIC-SYS-001-FOUNDATION` and remove its artifacts/references to keep the active SoR surface minimal.
   Details: See ExecPlan at:
     - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-010
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Summary: Standardize unattended growth on `autogrow` mode, including backlog-to-implementation promotion, monitoring targets, and automatic rule encoding.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)

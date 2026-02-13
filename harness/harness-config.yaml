@@ -14,7 +14,7 @@ default_scripts:
   init: harness/init.sh
   run_all_unit_tests: scripts/run_all_unit_tests.sh
   run_all_e2e_tests: scripts/run_all_e2e_tests.sh
-  run_agent_harness_cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+  run_agent_harness_cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow
 
 e2e:
   scenarios_dir: tests/e2e/scenarios
@@ -31,5 +31,7 @@ agent_radar:
     update: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update
     validate: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate
     backlog: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog
+    implement: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement
     garden: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden
     cycle: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle
+    autogrow: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow

@@ -25,6 +25,10 @@ STATE_FILE = AGENT_RADAR_DIR / "state.json"
 SNAPSHOT_FILE = AGENT_RADAR_DIR / "snapshot-latest.json"
 NEW_ITEMS_FILE = AGENT_RADAR_DIR / "new-items.json"
 EXPERIMENT_BACKLOG_FILE = AGENT_RADAR_DIR / "experiment_backlog.json"
+GOLDEN_RULES_FILE = AGENT_RADAR_DIR / "golden_rules.json"
+MONITORING_TARGETS_FILE = AGENT_RADAR_DIR / "monitoring_targets.json"
+IMPLEMENTED_DIR = AGENT_RADAR_DIR / "implemented"
+AUTONOMOUS_GROWTH_DOC = ROOT / "docs" / "agent-harness" / "autonomous-growth.md"
 PROGRESS_LOG = ROOT / "harness" / "AI-Agent-progress.txt"
 REPORTS_DIR = ROOT / "docs" / "reports" / "source-radar"
 
@@ -44,6 +48,15 @@ GARDEN_PATTERNS = [
 USER_AGENT = (
     "Mozilla/5.0 (compatible; DeepAgentsSpec/1.0; +https://example.invalid/agent-radar)"
 )
+
+THEME_KEYWORDS: dict[str, list[str]] = {
+    "mcp": ["mcp", "tool use", "tool-use", "devtools", "jetbrains"],
+    "skills": ["skill", "skills"],
+    "evals": ["eval", "benchmark", "swe-bench", "verification"],
+    "context": ["context", "memory", "retrieval", "state", "checkpoint", "compaction"],
+    "observability": ["trace", "metric", "log", "observability", "promql", "logql"],
+    "safety": ["safety", "sandbox", "security", "guard"],
+}
 
 
 @dataclass
@@ -614,6 +627,284 @@ def run_backlog() -> int:
     return 0
 
 
+def detect_themes(*texts: str) -> list[str]:
+    joined = " ".join(texts).lower()
+    matched: list[str] = []
+    for theme, keywords in THEME_KEYWORDS.items():
+        if any(keyword in joined for keyword in keywords):
+            matched.append(theme)
+    if not matched:
+        matched.append("general")
+    return matched
+
+
+def upsert_golden_rule(exp_id: str, themes: list[str], title: str) -> bool:
+    rules_doc = read_json(GOLDEN_RULES_FILE, default={"version": 1, "rules": []})
+    rules = rules_doc.get("rules")
+    if not isinstance(rules, list):
+        return False
+
+    rule_id = f"GR-AUTO-{exp_id}"
+    for rule in rules:
+        if str(rule.get("id", "")) == rule_id:
+            return False
+
+    theme_summary = ", ".join(themes)
+    rules.append(
+        {
+            "id": rule_id,
+            "title": f"{exp_id} 自動実装ガイド",
+            "rule": (
+                f"{title} で得た知見（{theme_summary}）は、"
+                "必ず state checkpoint と差し替え表現を伴う実装として反映し、"
+                "検証コマンドで再現可能にする。"
+            ),
+            "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow",
+        }
+    )
+    rules_doc["updated_at"] = iso_now()
+    rules_doc["rules"] = rules
+    write_json(GOLDEN_RULES_FILE, rules_doc)
+    return True
+
+
+def upsert_monitoring_targets(exp_id: str, themes: list[str]) -> bool:
+    monitors_doc = read_json(
+        MONITORING_TARGETS_FILE,
+        default={"version": 1, "updated_at": iso_now(), "targets": []},
+    )
+    targets = monitors_doc.get("targets")
+    if not isinstance(targets, list):
+        return False
+
+    existing_ids = {str(target.get("id", "")) for target in targets}
+    changed = False
+    for theme in themes:
+        target_id = f"MON-{exp_id}-{theme}".upper()
+        if target_id in existing_ids:
+            continue
+        targets.append(
+            {
+                "id": target_id,
+                "theme": theme,
+                "owner": "agent-radar",
+                "name": f"{exp_id} {theme} health check",
+                "query_hint": "autogrow.success_rate",
+                "threshold": ">= 0.95",
+            }
+        )
+        existing_ids.add(target_id)
+        changed = True
+
+    monitors_doc["updated_at"] = iso_now()
+    monitors_doc["targets"] = targets
+    write_json(MONITORING_TARGETS_FILE, monitors_doc)
+    return changed
+
+
+def write_implementation_artifacts(exp_item: dict[str, Any], themes: list[str]) -> list[str]:
+    exp_id = str(exp_item.get("id", "EXP-UNKNOWN"))
+    exp_title = str(exp_item.get("title", "(untitled)"))
+    exp_link = str(exp_item.get("origin_link", ""))
+    exp_source = str(exp_item.get("origin_source_id", exp_item.get("source", "")))
+    exp_hypothesis = str(
+        exp_item.get("hypothesis", "記事由来の改善仮説をハーネス実装へ反映する。")
+    )
+
+    impl_dir = IMPLEMENTED_DIR / exp_id
+    impl_dir.mkdir(parents=True, exist_ok=True)
+
+    spec_path = impl_dir / "spec.md"
+    impl_plan_path = impl_dir / "impl-plan.md"
+    state_strategy_path = impl_dir / "state-strategy.json"
+
+    spec_path.write_text(
+        "\n".join(
+            [
+                f"# {exp_id} Autonomous Implementation Spec",
+                "",
+                f"- Source: `{exp_source}`",
+                f"- Title: {exp_title}",
+                f"- Link: {exp_link or '(not provided)'}",
+                f"- Themes: {', '.join(themes)}",
+                "",
+                "## Goal",
+                "記事由来の知見を、再実行可能なハーネス実装としてリポジトリへ定着させる。",
+                "",
+                "## Acceptance",
+                "- autogrow 実行で同じ結果に収束する",
+                "- validate/garden が継続して成功する",
+                "- 生成物が SoR 配下で追跡可能である",
+                "",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    impl_plan_path.write_text(
+        "\n".join(
+            [
+                f"# {exp_id} Autonomous Implementation Plan",
+                "",
+                f"## Hypothesis",
+                exp_hypothesis,
+                "",
+                "## Steps",
+                "1. Backlog item を実装対象として確定する",
+                "2. 状態退避ポリシーを `state-strategy.json` に固定する",
+                "3. 監視ターゲットと黄金律を機械更新する",
+                "4. autogrow で validate/garden まで実行する",
+                "",
+                "## Verification",
+                "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`",
+                "",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    state_strategy = {
+        "version": 1,
+        "exp_id": exp_id,
+        "updated_at": iso_now(),
+        "checkpoint_policy": {
+            "when": [
+                "before_external_io",
+                "before_long_running_loop",
+                "before_quality_gate",
+            ],
+            "what": [
+                "task_summary",
+                "artifact_refs",
+                "next_action",
+                "failure_summary",
+            ],
+            "where": {
+                "hot": "harness/agent_radar/state.json",
+                "cold": "harness/agent_radar/archive/YYYY/MM/*.jsonl",
+            },
+            "conversation_replacement": [
+                "[[STATE_REF:<id>]]",
+                "[[PLAN_REF:<epic>/<feature>]]",
+                "[[EVAL_REF:<run>]]",
+            ],
+        },
+    }
+    write_json(state_strategy_path, state_strategy)
+
+    return [
+        str(spec_path.relative_to(ROOT)),
+        str(impl_plan_path.relative_to(ROOT)),
+        str(state_strategy_path.relative_to(ROOT)),
+    ]
+
+
+def update_autonomous_growth_doc(items: list[dict[str, Any]]) -> None:
+    AUTONOMOUS_GROWTH_DOC.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# Autonomous Growth",
+        "",
+        "この文書は、自律成長ループの実装結果を記録する SoR です。",
+        "",
+        f"- Updated at: `{iso_now()}`",
+        "",
+        "## Backlog Status",
+        "",
+        "| EXP ID | Status | Themes | Artifacts |",
+        "| --- | --- | --- | --- |",
+    ]
+
+    for item in items:
+        exp_id = str(item.get("id", ""))
+        status = str(item.get("status", ""))
+        themes = ", ".join(item.get("themes", [])) if isinstance(item.get("themes"), list) else ""
+        artifacts = ", ".join(item.get("artifact_paths", [])) if isinstance(item.get("artifact_paths"), list) else ""
+        lines.append(f"| {exp_id} | {status} | {themes} | {artifacts} |")
+
+    lines.append("")
+    lines.append("## Runbook")
+    lines.append("")
+    lines.append("- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`")
+    lines.append("")
+
+    AUTONOMOUS_GROWTH_DOC.write_text("\n".join(lines), encoding="utf-8")
+
+
+def run_implement() -> int:
+    backlog = read_json(EXPERIMENT_BACKLOG_FILE, default={"version": 1, "items": []})
+    items = backlog.get("items")
+    if not isinstance(items, list):
+        print("ERROR: experiment_backlog.json items must be a list.", file=sys.stderr)
+        return 1
+
+    implemented = 0
+    rules_added = 0
+    monitors_added = 0
+    for item in items:
+        status = str(item.get("status", "")).strip().lower()
+        if status not in {"proposed", "ready", "planned"}:
+            continue
+
+        exp_id = str(item.get("id", "")).strip()
+        title = str(item.get("title", "")).strip()
+        link = str(item.get("origin_link", "")).strip()
+        if not exp_id:
+            continue
+
+        themes = detect_themes(title, link)
+        artifact_paths = write_implementation_artifacts(item, themes)
+
+        if upsert_golden_rule(exp_id, themes, title):
+            rules_added += 1
+        if upsert_monitoring_targets(exp_id, themes):
+            monitors_added += 1
+
+        item["themes"] = themes
+        item["artifact_paths"] = artifact_paths
+        item["status"] = "implemented"
+        item["implemented_at"] = iso_now()
+        implemented += 1
+
+    backlog["version"] = int(backlog.get("version", 1))
+    backlog["updated_at"] = iso_now()
+    backlog["items"] = items
+    write_json(EXPERIMENT_BACKLOG_FILE, backlog)
+    update_autonomous_growth_doc(items)
+
+    append_progress(
+        f"implement completed | implemented={implemented} rules_added={rules_added} monitors_changed={monitors_added}"
+    )
+    print(
+        f"OK: implement completed (implemented={implemented} rules_added={rules_added} monitors_changed={monitors_added})"
+    )
+    return 0
+
+
+def run_autogrow() -> int:
+    rc = run_update()
+    if rc != 0:
+        return rc
+    rc = run_validate()
+    if rc != 0:
+        return rc
+    rc = run_backlog()
+    if rc != 0:
+        return rc
+    rc = run_implement()
+    if rc != 0:
+        return rc
+    rc = run_validate()
+    if rc != 0:
+        return rc
+    rc = run_garden()
+    if rc != 0:
+        return rc
+    print("OK: autogrow completed")
+    return 0
+
+
 def run_cycle() -> int:
     rc = run_update()
     if rc != 0:
@@ -622,6 +913,9 @@ def run_cycle() -> int:
     if rc != 0:
         return rc
     rc = run_backlog()
+    if rc != 0:
+        return rc
+    rc = run_implement()
     if rc != 0:
         return rc
     rc = run_garden()
@@ -636,7 +930,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument(
         "--mode",
         required=True,
-        choices=["update", "validate", "backlog", "garden", "cycle"],
+        choices=["update", "validate", "backlog", "implement", "garden", "cycle", "autogrow"],
         help="operation mode",
     )
     args = parser.parse_args(argv)
@@ -650,8 +944,12 @@ def main(argv: list[str]) -> int:
         return run_garden()
     if mode == "backlog":
         return run_backlog()
+    if mode == "implement":
+        return run_implement()
     if mode == "cycle":
         return run_cycle()
+    if mode == "autogrow":
+        return run_autogrow()
 
     print(f"ERROR: unsupported mode: {mode}", file=sys.stderr)
     return 1

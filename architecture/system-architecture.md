@@ -12,8 +12,8 @@
    - SoR: `harness/agent_radar/official_sources.json`
 
 2. Control Loop Layer
-   - `update -> validate -> backlog -> garden` を制御し、境界逸脱と知見未整理を防ぐ。
-   - 実行入口: `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle`
+   - `update -> validate -> backlog -> implement -> validate -> garden` を制御し、境界逸脱と知見未整理を防ぐ。
+   - 実行入口: `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`
 
 3. State & Persistence Layer
    - 実行状態を会話から分離し、JSON/JSONLに永続化する。
@@ -28,6 +28,7 @@
 - 収集器が公式ブログ更新を検知し `snapshot-latest.json` を更新
 - 差分検知器が `new-items.json` を生成
 - バリデータが許可外URL混入や構造破損を拒否
+- 実装器が `experiment_backlog.json` から実装アーティファクトと監視ターゲットを生成
 - ガーデナーが文書劣化を検知
 - 人間判断が必要なものだけをエスカレーション
 

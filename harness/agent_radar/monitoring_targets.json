@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-13T06:45:38Z",
+  "targets": [
+    {
+      "id": "MON-EXP-001-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-001 mcp health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-001-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-001 skills health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    }
+  ]
+}

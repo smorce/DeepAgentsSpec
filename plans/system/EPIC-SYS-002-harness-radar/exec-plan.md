@@ -18,6 +18,8 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
   - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-011/spec.md`
 - F-SYS-012: 状態管理・永続化・差し替え表現
   - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/spec.md`
+- F-SYS-013: 自律実装と監視ターゲット生成
+  - Spec: `plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/spec.md`
 
 ## Progress
 
@@ -29,6 +31,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - [x] (2026-02-13 11:40Z) `new-items.json` から `experiment_backlog.json` へ自動起票する `backlog` モードを追加した。
 - [x] (2026-02-13 11:40Z) GitHub Actions 日次実行ワークフローを追加した。
 - [x] (2026-02-13 15:30Z) `EPIC-SYS-001-foundation` の実体と参照を削除し、現行SoRを `EPIC-SYS-002` に一本化した。
+- [x] (2026-02-13 16:00Z) `implement/autogrow` モードを追加し、収集から実装・監視・黄金律反映までを無人ループ化した。
 
 ## Surprises & Discoveries
 
@@ -63,6 +66,10 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
   Rationale: 現行運用と無関係な初期土台エピックを残すと、エージェント参照時にノイズとなるため。
   Date/Author: 2026-02-13 / codex
 
+- Decision: `autogrow` を日次運用の標準入口とし、`implement` を `cycle` の必須ステップへ昇格する。
+  Rationale: 記事差分を単なる観測で終わらせず、実装・監視・黄金律へ確実に落とし込むため。
+  Date/Author: 2026-02-13 / codex
+
 ## Outcomes & Retrospective
 
 このエピックで、指定6ブログ限定の収集・差分検知・検証・ガーデニングを回す最小ハーネスができた。  
@@ -79,9 +86,10 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 2. 収集・差分検知・状態保存スクリプトを追加する。
 3. 妥当性検証スクリプトを追加する。
 4. 差分から実験バックログへ自動起票する。
-5. ドキュメントガーデニングスクリプトを追加する。
-6. 全体制御スクリプトで一連処理を束ねる。
-7. アーキテクチャ文書と決定ログに反映する。
+5. バックログから実装アーティファクト・監視・黄金律を自動生成する。
+6. ドキュメントガーデニングスクリプトを追加する。
+7. 全体制御スクリプトで一連処理を束ねる。
+8. アーキテクチャ文書と決定ログに反映する。
 
 ## Concrete Steps
 
@@ -89,16 +97,18 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 2. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update` で RSS/HTML 収集と差分検知を実装する。
 3. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate` で構造・許可URL・境界違反を検証する。
 4. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog` で `new-items.json` を `experiment_backlog.json` へ反映する。
-5. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` で SoR 文書のプレースホルダー混入を検出する。
-6. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle` で `update -> validate -> backlog -> garden` を直列実行する。
+5. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement` でバックログを実装へ反映する。
+6. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` で SoR 文書のプレースホルダー混入を検出する。
+7. `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow` で `update -> validate -> backlog -> implement -> validate -> garden` を直列実行する。
 
 ## Validation and Acceptance
 
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle` が 0 で終了し、`harness/agent_radar/snapshot-latest.json` を更新する。
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate` が 0 で終了し、`OK` を返す。
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog` が 0 で終了し、差分のみを実験バックログへ追加する。
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement` が 0 で終了し、対象項目を `implemented` へ遷移させる。
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` が 0 で終了し、対象文書に TODO/NEEDS CLARIFICATION がない。
-- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle` が 0 で終了し、`harness/AI-Agent-progress.txt` に実行ログが残る。
+- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow` が 0 で終了し、`harness/AI-Agent-progress.txt` に実行ログが残る。
 
 ## Idempotence and Recovery
 
@@ -119,5 +129,6 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog`
+  - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement`
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`
-  - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode cycle`
+  - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`

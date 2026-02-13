@@ -31,7 +31,7 @@
       "id": "F-SYS-011",
       "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
       "title": "Feedback loop and control system",
-      "description": "Run update/validate/garden as a mechanical control loop.",
+      "description": "Run update/validate/backlog/implement/garden as a mechanical control loop.",
       "services": [
         "harness"
       ],
@@ -58,6 +58,23 @@
       ],
       "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/spec.md",
       "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-012/checklists/requirements.md"
+    },
+    {
+      "id": "F-SYS-013",
+      "epic_id": "EPIC-SYS-002-HARNESS-RADAR",
+      "title": "Autonomous implementation and monitoring targets",
+      "description": "Convert experiment backlog items into implementation artifacts, monitoring targets, and golden rules without human intervention.",
+      "services": [
+        "harness"
+      ],
+      "status": "passing",
+      "tags": [
+        "harness",
+        "autonomy",
+        "monitoring"
+      ],
+      "spec_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/spec.md",
+      "checklist_path": "plans/system/EPIC-SYS-002-harness-radar/features/F-SYS-013/checklists/requirements.md"
     }
   ]
 }

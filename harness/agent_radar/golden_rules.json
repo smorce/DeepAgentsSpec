@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-02-13T00:00:00Z",
+  "updated_at": "2026-02-13T06:45:38Z",
   "rules": [
     {
       "id": "GR-001",
@@ -19,6 +19,18 @@
       "title": "状態を会話から切り離して永続化",
       "rule": "会話本文に長文状態を埋め込まず、state snapshot id に差し替えて参照する。",
       "verification": "docs/agent-harness/state-persistence.md"
+    },
+    {
+      "id": "GR-004",
+      "title": "差分は必ず実装へ昇格する",
+      "rule": "new-items から作られた backlog 項目は implement/autogrow で実装アーティファクト・監視ターゲット・黄金律へ反映し、放置しない。",
+      "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow"
+    },
+    {
+      "id": "GR-AUTO-EXP-001",
+      "title": "EXP-001 自動実装ガイド",
+      "rule": "MCP/Skills関連の新規記事を検出したときに自動で評価タスクへ変換する で得た知見（mcp, skills）は、必ず state checkpoint と差し替え表現を伴う実装として反映し、検証コマンドで再現可能にする。",
+      "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow"
     }
   ]
 }

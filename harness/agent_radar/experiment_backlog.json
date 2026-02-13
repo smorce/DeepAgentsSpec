@@ -1,13 +1,23 @@
 {
   "version": 1,
-  "updated_at": "2026-02-13T03:40:10Z",
+  "updated_at": "2026-02-13T06:47:39Z",
   "items": [
     {
       "id": "EXP-001",
-      "status": "ready",
+      "status": "implemented",
       "title": "MCP/Skills関連の新規記事を検出したときに自動で評価タスクへ変換する",
       "source": "system",
-      "acceptance": "new-items.json から plans 系ドキュメントへ変換するスクリプトが作成される"
+      "acceptance": "new-items.json から plans 系ドキュメントへ変換するスクリプトが作成される",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "artifact_paths": [
+        "harness/agent_radar/implemented/EXP-001/spec.md",
+        "harness/agent_radar/implemented/EXP-001/impl-plan.md",
+        "harness/agent_radar/implemented/EXP-001/state-strategy.json"
+      ],
+      "implemented_at": "2026-02-13T06:45:38Z"
     }
   ]
 }
