@@ -5,6 +5,11 @@
 このドキュメントは、AIエージェントハーネス進化プロジェクトの唯一の運用参照を定義します。  
 人間の一時的な会話や外部メモではなく、リポジトリ内アーティファクトだけで継続改善を成立させることが目的です。
 
+## 関連文書
+
+- 解説書: `docs/agent-harness/guide.md`
+- クイックスタート: `docs/agent-harness/quickstart.md`
+
 ## SoR の配置
 
 - ソース定義: `harness/agent_radar/official_sources.json`
