@@ -17,10 +17,14 @@
 - 実装アーティファクト: `harness/agent_radar/implemented/`
 - ランタイム状態スキーマ: `harness/agent_radar/runtime_state_schema.json`
 - 自律成長ログ: `docs/agent-harness/autonomous-growth.md`
+- Codex収集監査ログ: `docs/reports/source-radar/codex-exec/`
 
 ## データ更新責務
 
-- 収集器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update`): ソース取得、差分検出、SoR更新
+- 収集器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update --collector auto`): ソース取得、差分検出、SoR更新
+  - `--collector auto`: Codex収集を試行し、失敗時は native 収集へフォールバック
+  - `--collector codex`: Codex収集を強制（失敗時はエラー終了）
+  - `--collector native`: Python実装のみで収集
 - 検証器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate`): 境界逸脱や構造崩れの検出
 - バックログ同期器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog`): `new-items.json` を実験バックログへ自動反映
 - 実装器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement`): バックログ項目を実装アーティファクト・監視・黄金律へ反映
@@ -31,4 +35,5 @@
 
 - 許可ソースは6ブログのみ。
 - 許可外ドメインのリンクは `RadarItem` として保存しない。
+- `latest_url` と `evidence_url` は source ごとの許可プレフィックスで検証する。
 - 収集失敗は許容するが、失敗イベントは進捗ログへ残す。

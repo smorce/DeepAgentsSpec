@@ -12,8 +12,10 @@
 ## 実行コマンド
 
 ```bash
-uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto
 ```
+
+Codex収集を強制したい場合は `--collector codex` を指定する。
 
 ## 失敗時ポリシー
 
@@ -21,6 +23,7 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 - validate 失敗: 終了コード 1 で停止（マージ不可ゲート）。
 - implement 失敗: 対象 backlog 項目を保持し、次回ループで再試行する。
 - garden 失敗: TODO/未確定記法が残っているため修正必須。
+- codex 収集失敗: `docs/reports/source-radar/codex-exec/` に監査ログを保存し、`auto` 時は native 収集へフォールバックする。
 
 ## 監視対象
 

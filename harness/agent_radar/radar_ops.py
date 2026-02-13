@@ -5,9 +5,13 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import email.utils
 import hashlib
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -31,6 +35,7 @@ IMPLEMENTED_DIR = AGENT_RADAR_DIR / "implemented"
 AUTONOMOUS_GROWTH_DOC = ROOT / "docs" / "agent-harness" / "autonomous-growth.md"
 PROGRESS_LOG = ROOT / "harness" / "AI-Agent-progress.txt"
 REPORTS_DIR = ROOT / "docs" / "reports" / "source-radar"
+CODEX_AUDIT_DIR = REPORTS_DIR / "codex-exec"
 
 GARDEN_TARGETS = [
     ROOT / "architecture" / "system-architecture.md",
@@ -65,14 +70,18 @@ class RadarItem:
     link: str
     published: str
     collected_via: str
+    evidence_url: str = ""
 
     def to_dict(self) -> dict[str, str]:
-        return {
+        data = {
             "title": self.title,
             "link": self.link,
             "published": self.published,
             "collected_via": self.collected_via,
         }
+        if self.evidence_url:
+            data["evidence_url"] = self.evidence_url
+        return data
 
 
 @dataclass
@@ -146,6 +155,27 @@ def normalize_space(text: str) -> str:
     return " ".join(text.split())
 
 
+def normalize_origin_path(url: str) -> str:
+    raw = normalize_space(url)
+    if not raw:
+        return ""
+    parsed = urllib.parse.urlparse(raw)
+    if parsed.scheme.lower() != "https":
+        return ""
+    host = parsed.netloc.lower()
+    path = parsed.path or "/"
+    return f"https://{host}{path}"
+
+
+def normalize_prefix(prefix: str) -> str:
+    origin_path = normalize_origin_path(prefix)
+    if not origin_path:
+        return ""
+    if origin_path.endswith("/"):
+        return origin_path
+    return f"{origin_path}/"
+
+
 def fingerprint_links(links: list[str]) -> str:
     joined = "\n".join(links)
     return hashlib.sha256(joined.encode("utf-8")).hexdigest()
@@ -185,7 +215,15 @@ def parse_feed(feed_url: str, source: dict[str, Any]) -> tuple[list[RadarItem], 
             continue
         if not title:
             title = link
-        items.append(RadarItem(title=title, link=link, published=published, collected_via="rss"))
+        items.append(
+            RadarItem(
+                title=title,
+                link=link,
+                published=normalize_published(published),
+                collected_via="rss",
+                evidence_url=feed_url,
+            )
+        )
         if len(items) >= max_items:
             return dedupe_items(items, max_items), errors
 
@@ -206,7 +244,15 @@ def parse_feed(feed_url: str, source: dict[str, Any]) -> tuple[list[RadarItem], 
             continue
         if not title:
             title = link
-        items.append(RadarItem(title=title, link=link, published=published, collected_via="rss"))
+        items.append(
+            RadarItem(
+                title=title,
+                link=link,
+                published=normalize_published(published),
+                collected_via="rss",
+                evidence_url=feed_url,
+            )
+        )
         if len(items) >= max_items:
             break
 
@@ -238,7 +284,15 @@ def parse_html(homepage: str, source: dict[str, Any]) -> tuple[list[RadarItem], 
             continue
         if title == "":
             continue
-        items.append(RadarItem(title=title, link=href, published="", collected_via="html"))
+        items.append(
+            RadarItem(
+                title=title,
+                link=href,
+                published="",
+                collected_via="html",
+                evidence_url=homepage,
+            )
+        )
         if len(items) >= max_items:
             break
 
@@ -246,7 +300,42 @@ def parse_html(homepage: str, source: dict[str, Any]) -> tuple[list[RadarItem], 
 
 
 def has_allowed_prefix(link: str, prefixes: list[str]) -> bool:
-    return any(link.startswith(prefix) for prefix in prefixes)
+    link_norm = normalize_origin_path(link)
+    if not link_norm:
+        return False
+    for prefix in prefixes:
+        prefix_norm = normalize_prefix(prefix)
+        if not prefix_norm:
+            continue
+        if link_norm.startswith(prefix_norm):
+            return True
+        if prefix_norm.endswith("/") and link_norm == prefix_norm[:-1]:
+            return True
+    return False
+
+
+def normalize_published(raw: str) -> str:
+    value = normalize_space(raw)
+    if not value:
+        return ""
+
+    try:
+        parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=dt.timezone.utc)
+        return parsed.astimezone(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    except ValueError:
+        pass
+
+    try:
+        parsed_rss = email.utils.parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        return ""
+    if parsed_rss is None:
+        return ""
+    if parsed_rss.tzinfo is None:
+        parsed_rss = parsed_rss.replace(tzinfo=dt.timezone.utc)
+    return parsed_rss.astimezone(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def dedupe_items(items: list[RadarItem], max_items: int) -> list[RadarItem]:
@@ -296,6 +385,232 @@ def collect_source(source: dict[str, Any]) -> SourceResult:
     )
 
 
+def extract_json_object(text: str) -> dict[str, Any]:
+    trimmed = text.strip()
+    if not trimmed:
+        raise RuntimeError("codex output is empty")
+    try:
+        data = json.loads(trimmed)
+    except json.JSONDecodeError:
+        left = trimmed.find("{")
+        right = trimmed.rfind("}")
+        if left < 0 or right < 0 or right <= left:
+            raise RuntimeError("codex output does not contain a json object") from None
+        snippet = trimmed[left : right + 1]
+        try:
+            data = json.loads(snippet)
+        except json.JSONDecodeError as exc:  # noqa: PERF203
+            raise RuntimeError("codex output is not valid json") from exc
+
+    if not isinstance(data, dict):
+        raise RuntimeError("codex output root must be object")
+    return data
+
+
+def unique_file(path: Path) -> Path:
+    if not path.exists():
+        return path
+    stem = path.stem
+    suffix = path.suffix
+    for idx in range(1, 1000):
+        candidate = path.with_name(f"{stem}-{idx:03d}{suffix}")
+        if not candidate.exists():
+            return candidate
+    raise RuntimeError(f"failed to allocate unique path: {path}")
+
+
+def write_codex_audit(stdout_text: str, stderr_text: str, return_code: int) -> Path:
+    CODEX_AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    base = CODEX_AUDIT_DIR / f"{utc_now().strftime('%Y%m%dT%H%M%SZ')}.md"
+    path = unique_file(base)
+    lines = [
+        "# Codex Exec Audit",
+        "",
+        f"- generated_at: `{iso_now()}`",
+        f"- return_code: `{return_code}`",
+        "",
+        "## STDERR",
+        "",
+        "```text",
+        stderr_text.rstrip(),
+        "```",
+        "",
+        "## STDOUT",
+        "",
+        "```text",
+        stdout_text.rstrip(),
+        "```",
+        "",
+    ]
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return path
+
+
+def evidence_prefixes_for_source(source: dict[str, Any]) -> list[str]:
+    prefixes: list[str] = []
+    for value in source.get("allowed_entry_prefixes", []):
+        prefixes.append(str(value))
+    prefixes.append(str(source.get("homepage", "")))
+    for value in source.get("feeds", []):
+        prefixes.append(str(value))
+
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for value in prefixes:
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        deduped.append(value)
+    return deduped
+
+
+def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
+    source_lines = []
+    for src in sources:
+        source_lines.append(f"- {src['homepage']}")
+
+    return "\n".join(
+        [
+            "あなたはローカル環境で実行中です。次の6ブログだけを確認し、各ブログの最新記事を1件返してください。",
+            "",
+            "【許可されたブログ（これ以外はアクセス禁止）】",
+            *source_lines,
+            "",
+            "【要件】",
+            "- 推測禁止。不明項目は null を返すこと",
+            "- 各ブログについて latest_title / latest_url / latest_date / method / evidence_url を1件返すこと",
+            "- method は rss / atom / html のいずれか",
+            "- possibleなら RSS/Atom を優先。なければ HTML 推定",
+            "- latest_url と evidence_url は必ず許可されたブログ配下のURLのみ",
+            "- 出力は JSON のみ。説明文や Markdown 禁止",
+            "- 許可外URLを1件でも使った場合は {\"error\":\"OUT_OF_SCOPE\"} のみを返す",
+            "",
+            "【出力JSON】",
+            "{",
+            '  "checked_at": "<UTC ISO8601>",',
+            '  "results": [',
+            "    {",
+            '      "site": "<homepage>",',
+            '      "latest_title": "<string|null>",',
+            '      "latest_url": "<string|null>",',
+            '      "latest_date": "<string|null>",',
+            '      "method": "<rss|atom|html>",',
+            '      "evidence_url": "<string|null>"',
+            "    }",
+            "  ]",
+            "}",
+        ]
+    )
+
+
+def run_codex_exec(prompt: str, timeout_sec: int = 600) -> tuple[str, Path]:
+    cmd = ["codex", "exec", prompt]
+    try:
+        result = subprocess.run(
+            cmd,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout_sec,
+            env=os.environ.copy(),
+        )
+    except subprocess.TimeoutExpired as exc:
+        stderr_text = (exc.stderr or "").strip()
+        stdout_text = (exc.stdout or "").strip()
+        audit_path = write_codex_audit(stdout_text, stderr_text, return_code=124)
+        raise RuntimeError(f"codex exec timed out after {timeout_sec}s (audit={audit_path})") from exc
+
+    audit_path = write_codex_audit(result.stdout, result.stderr, return_code=result.returncode)
+    if result.returncode != 0:
+        raise RuntimeError(f"codex exec failed with code={result.returncode} (audit={audit_path})")
+    return result.stdout.strip(), audit_path
+
+
+def collect_sources_with_codex_exec(sources: list[dict[str, Any]]) -> tuple[list[SourceResult], Path]:
+    if shutil.which("codex") is None:
+        raise RuntimeError("codex command is not available")
+
+    prompt = build_codex_latest_prompt(sources)
+    stdout_text, audit_path = run_codex_exec(prompt)
+    payload = extract_json_object(stdout_text)
+
+    if payload.get("error") == "OUT_OF_SCOPE":
+        raise RuntimeError(f"codex returned OUT_OF_SCOPE (audit={audit_path})")
+
+    raw_results = payload.get("results")
+    if not isinstance(raw_results, list):
+        raise RuntimeError(f"codex output results must be list (audit={audit_path})")
+    if len(raw_results) != len(sources):
+        raise RuntimeError(
+            f"codex output results count mismatch: expected={len(sources)} got={len(raw_results)} (audit={audit_path})"
+        )
+
+    source_by_homepage: dict[str, dict[str, Any]] = {}
+    for source in sources:
+        source_by_homepage[normalize_prefix(str(source.get("homepage", "")))] = source
+
+    seen_homepages: set[str] = set()
+    result_by_id: dict[str, SourceResult] = {}
+    for entry in raw_results:
+        if not isinstance(entry, dict):
+            raise RuntimeError(f"codex result item must be object (audit={audit_path})")
+
+        homepage_key = normalize_prefix(str(entry.get("site", "")))
+        if not homepage_key:
+            raise RuntimeError(f"codex result has invalid site url (audit={audit_path})")
+        if homepage_key in seen_homepages:
+            raise RuntimeError(f"codex result has duplicate site: {homepage_key} (audit={audit_path})")
+
+        source = source_by_homepage.get(homepage_key)
+        if source is None:
+            raise RuntimeError(f"codex result site is out of allowed scope: {homepage_key} (audit={audit_path})")
+
+        seen_homepages.add(homepage_key)
+
+        latest_title = normalize_space(str(entry.get("latest_title", "") or ""))
+        latest_url = str(entry.get("latest_url", "") or "").strip()
+        latest_date = str(entry.get("latest_date", "") or "").strip()
+        method = normalize_space(str(entry.get("method", "") or "")).lower()
+        evidence_url = str(entry.get("evidence_url", "") or "").strip()
+
+        if method not in {"rss", "atom", "html"}:
+            raise RuntimeError(f"codex result has invalid method: {method} (audit={audit_path})")
+        if not latest_title:
+            raise RuntimeError(f"codex result latest_title is empty for site={homepage_key} (audit={audit_path})")
+        if not latest_url:
+            raise RuntimeError(f"codex result latest_url is empty for site={homepage_key} (audit={audit_path})")
+
+        if not has_allowed_prefix(latest_url, source.get("allowed_entry_prefixes", [])):
+            raise RuntimeError(f"codex latest_url out of boundary: {latest_url} (audit={audit_path})")
+
+        if evidence_url and not has_allowed_prefix(evidence_url, evidence_prefixes_for_source(source)):
+            raise RuntimeError(f"codex evidence_url out of boundary: {evidence_url} (audit={audit_path})")
+
+        item = RadarItem(
+            title=latest_title,
+            link=latest_url,
+            published=normalize_published(latest_date),
+            collected_via=f"codex-{method}",
+            evidence_url=evidence_url,
+        )
+
+        source_id = str(source.get("id", ""))
+        result_by_id[source_id] = SourceResult(
+            source_id=source_id,
+            name=str(source.get("name", "")),
+            homepage=str(source.get("homepage", "")),
+            items=[item],
+            errors=[],
+        )
+
+    missing_source_ids = [str(source.get("id", "")) for source in sources if str(source.get("id", "")) not in result_by_id]
+    if missing_source_ids:
+        raise RuntimeError(f"codex result missing sources: {', '.join(missing_source_ids)} (audit={audit_path})")
+
+    ordered = [result_by_id[str(source.get("id", ""))] for source in sources]
+    return ordered, audit_path
+
+
 def append_progress(summary: str) -> None:
     ts = utc_now().strftime("[%Y-%m-%d %H:%MZ]")
     line = f"{ts} agent-radar: {summary}\n"
@@ -343,7 +658,7 @@ def write_daily_report(snapshot: dict[str, Any], new_items: list[dict[str, str]]
             f.write(report_block)
 
 
-def run_update() -> int:
+def run_update(collector_mode: str = "auto") -> int:
     cfg = read_json(OFFICIAL_SOURCES, default={})
     sources = cfg.get("sources", [])
     if not sources:
@@ -364,8 +679,26 @@ def run_update() -> int:
 
     total_items = 0
 
-    for source in sources:
-        result = collect_source(source)
+    collector_warnings: list[str] = []
+    collector_used = "native"
+    results: list[SourceResult] = []
+
+    if collector_mode in {"auto", "codex"}:
+        try:
+            results, audit_path = collect_sources_with_codex_exec(sources)
+            collector_used = "codex"
+            append_progress(f"codex collector used | audit={audit_path.relative_to(ROOT)}")
+        except RuntimeError as exc:
+            if collector_mode == "codex":
+                print(f"ERROR: {exc}", file=sys.stderr)
+                return 1
+            collector_warnings.append(str(exc))
+
+    if not results:
+        results = [collect_source(source) for source in sources]
+        collector_used = "native"
+
+    for result in results:
         source_links = [item.link for item in result.items]
         current_set = set(source_links)
         previous_set = previous_links_map.get(result.source_id, set())
@@ -378,6 +711,8 @@ def run_update() -> int:
                         "title": item.title,
                         "link": item.link,
                         "published": item.published,
+                        "collected_via": item.collected_via,
+                        "evidence_url": item.evidence_url,
                     }
                 )
 
@@ -402,32 +737,43 @@ def run_update() -> int:
 
     snapshot = {
         "generated_at": now,
+        "collector": collector_used,
         "total_sources": len(snapshot_sources),
         "total_items": total_items,
         "sources": snapshot_sources,
     }
+    if collector_warnings:
+        snapshot["collector_warnings"] = collector_warnings
     state = {
         "version": 1,
         "last_run_at": now,
+        "last_collector": collector_used,
         "sources": state_sources,
     }
     new_items_doc = {
         "generated_at": now,
+        "collector": collector_used,
         "new_item_count": len(new_items),
         "new_items": new_items,
     }
+    if collector_warnings:
+        new_items_doc["collector_warnings"] = collector_warnings
 
     write_json(SNAPSHOT_FILE, snapshot)
     write_json(STATE_FILE, state)
     write_json(NEW_ITEMS_FILE, new_items_doc)
     write_daily_report(snapshot, new_items)
 
-    append_progress(
-        f"update completed | sources={len(snapshot_sources)} items={total_items} new={len(new_items)}"
+    summary = (
+        f"update completed | collector={collector_used} "
+        f"sources={len(snapshot_sources)} items={total_items} new={len(new_items)}"
     )
+    if collector_warnings:
+        summary += f" warnings={len(collector_warnings)}"
+    append_progress(summary)
 
     print(
-        f"OK: update completed (sources={len(snapshot_sources)} total_items={total_items} new_items={len(new_items)})"
+        f"OK: update completed (collector={collector_used} sources={len(snapshot_sources)} total_items={total_items} new_items={len(new_items)})"
     )
     return 0
 
@@ -492,10 +838,14 @@ def run_validate() -> int:
         if not source_cfg:
             continue
         allowed = source_cfg.get("allowed_entry_prefixes", [])
+        evidence_allowed = evidence_prefixes_for_source(source_cfg)
         for item in source_snap.get("items", []):
             link = str(item.get("link", ""))
             if not has_allowed_prefix(link, allowed):
                 errors.append(f"snapshot link out of boundary: {sid} {link}")
+            evidence_url = str(item.get("evidence_url", ""))
+            if evidence_url and not has_allowed_prefix(evidence_url, evidence_allowed):
+                errors.append(f"snapshot evidence_url out of boundary: {sid} {evidence_url}")
 
     for item in new_items_doc.get("new_items", []):
         sid = item.get("source_id", "")
@@ -505,8 +855,12 @@ def run_validate() -> int:
             errors.append(f"new item has unknown source id: {sid}")
             continue
         allowed = source_cfg.get("allowed_entry_prefixes", [])
+        evidence_allowed = evidence_prefixes_for_source(source_cfg)
         if not has_allowed_prefix(link, allowed):
             errors.append(f"new item link out of boundary: {sid} {link}")
+        evidence_url = str(item.get("evidence_url", ""))
+        if evidence_url and not has_allowed_prefix(evidence_url, evidence_allowed):
+            errors.append(f"new item evidence_url out of boundary: {sid} {evidence_url}")
 
     if errors:
         for err in errors:
@@ -882,8 +1236,8 @@ def run_implement() -> int:
     return 0
 
 
-def run_autogrow() -> int:
-    rc = run_update()
+def run_autogrow(collector_mode: str = "auto") -> int:
+    rc = run_update(collector_mode=collector_mode)
     if rc != 0:
         return rc
     rc = run_validate()
@@ -905,8 +1259,8 @@ def run_autogrow() -> int:
     return 0
 
 
-def run_cycle() -> int:
-    rc = run_update()
+def run_cycle(collector_mode: str = "auto") -> int:
+    rc = run_update(collector_mode=collector_mode)
     if rc != 0:
         return rc
     rc = run_validate()
@@ -933,11 +1287,18 @@ def main(argv: list[str]) -> int:
         choices=["update", "validate", "backlog", "implement", "garden", "cycle", "autogrow"],
         help="operation mode",
     )
+    parser.add_argument(
+        "--collector",
+        default="auto",
+        choices=["auto", "native", "codex"],
+        help="collector mode for update/cycle/autogrow",
+    )
     args = parser.parse_args(argv)
 
     mode = args.mode
+    collector_mode = args.collector
     if mode == "update":
-        return run_update()
+        return run_update(collector_mode=collector_mode)
     if mode == "validate":
         return run_validate()
     if mode == "garden":
@@ -947,9 +1308,9 @@ def main(argv: list[str]) -> int:
     if mode == "implement":
         return run_implement()
     if mode == "cycle":
-        return run_cycle()
+        return run_cycle(collector_mode=collector_mode)
     if mode == "autogrow":
-        return run_autogrow()
+        return run_autogrow(collector_mode=collector_mode)
 
     print(f"ERROR: unsupported mode: {mode}", file=sys.stderr)
     return 1
