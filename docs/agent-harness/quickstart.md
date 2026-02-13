@@ -2,7 +2,7 @@
 
 ## 前提
 
-- ブランチ: `feat/agent-harness-sor-radar`
+- ブランチ: 任意（対象変更を含む作業ブランチ）
 - 実行環境: Python 3.11+ / `uv` 利用可能
 - 実行ディレクトリ: リポジトリルート
 
@@ -49,7 +49,23 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 3. OneDrive のリンクモード問題  
 必ず `--link-mode=copy` を維持してください。
 
+4. E2E の live API シナリオを回したい  
+`RUN_LIVE_MINIRAG_E2E=1 bash scripts/run_all_e2e_tests.sh` を使ってください。  
+未指定時は UI モックシナリオのみ実行されます。
+
 ## 5. 日次運用
 
 - GitHub Actions: `.github/workflows/agent-radar-daily.yml`
 - 日次ジョブが SoR 更新差分を自動コミットします。
+
+## 6. PR品質ゲート
+
+- GitHub Actions: `.github/workflows/quality-gates.yml`
+- `pull_request` で以下を強制実行します。
+  - `scripts/format_or_lint.sh`
+  - `scripts/validate_spec.sh`
+  - `scripts/validate_plan.sh`
+  - `radar_ops.py --mode validate`
+  - `scripts/garden_agent_docs.sh`
+  - `scripts/run_all_unit_tests.sh`
+  - `scripts/run_all_e2e_tests.sh`

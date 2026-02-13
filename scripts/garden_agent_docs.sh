@@ -14,7 +14,13 @@ TARGETS=(
 
 PATTERN='TODO:|\[NEEDS CLARIFICATION|\[NEEDS\s+CLARIFICATION'
 
-if rg -n -e "$PATTERN" "${TARGETS[@]}"; then
+if command -v rg >/dev/null 2>&1; then
+  MATCH_CMD=(rg -n -e "$PATTERN" "${TARGETS[@]}")
+else
+  MATCH_CMD=(grep -R -n -E "$PATTERN" "${TARGETS[@]}")
+fi
+
+if "${MATCH_CMD[@]}"; then
   echo "ERROR: doc gardening failed due to unresolved placeholders." >&2
   exit 1
 fi

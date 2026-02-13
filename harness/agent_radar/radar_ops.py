@@ -153,6 +153,19 @@ def iso_now() -> str:
     return utc_now().replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def parse_iso_datetime(raw: str) -> dt.datetime | None:
+    value = normalize_space(raw)
+    if not value:
+        return None
+    try:
+        parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=dt.timezone.utc)
+    return parsed.astimezone(dt.timezone.utc)
+
+
 def read_json(path: Path, default: Any) -> Any:
     if not path.exists():
         return default
@@ -1058,6 +1071,86 @@ def validate_monitoring_targets_schema() -> list[str]:
     return errors
 
 
+def validate_monitoring_artifacts() -> list[str]:
+    errors: list[str] = []
+    now = utc_now()
+    freshness_limit = dt.timedelta(hours=36)
+
+    targets_doc = read_json(MONITORING_TARGETS_FILE, default={"targets": []})
+    targets = targets_doc.get("targets") if isinstance(targets_doc, dict) else []
+    if not isinstance(targets, list):
+        return ["monitoring_targets targets must be list"]
+    if len(targets) == 0:
+        return []
+
+    latest_doc = read_json(METRICS_LATEST_FILE, default={})
+    results_doc = read_json(MONITORING_RESULTS_FILE, default={})
+
+    if not isinstance(latest_doc, dict):
+        errors.append("metrics latest payload must be object")
+        return errors
+    if not isinstance(results_doc, dict):
+        errors.append("monitoring results payload must be object")
+        return errors
+
+    latest_generated_at = parse_iso_datetime(str(latest_doc.get("generated_at", "")))
+    results_generated_at = parse_iso_datetime(str(results_doc.get("generated_at", "")))
+    if latest_generated_at is None:
+        errors.append("metrics latest generated_at is missing or invalid")
+    elif now - latest_generated_at > freshness_limit:
+        errors.append("metrics latest generated_at is stale")
+    if results_generated_at is None:
+        errors.append("monitoring results generated_at is missing or invalid")
+    elif now - results_generated_at > freshness_limit:
+        errors.append("monitoring results generated_at is stale")
+
+    latest_loop = str(latest_doc.get("loop", "")).strip()
+    results_loop = str(results_doc.get("loop", "")).strip()
+    bootstrap_mode = latest_loop == "bootstrap" or results_loop == "bootstrap"
+
+    metrics = latest_doc.get("metrics")
+    if not bootstrap_mode:
+        if not isinstance(metrics, dict) or len(metrics) == 0:
+            errors.append("metrics latest metrics must be a non-empty object")
+        else:
+            required_metrics = [
+                "autogrow.success",
+                "autogrow.success_rate",
+                "radar.monitor_target_count",
+            ]
+            for metric_name in required_metrics:
+                if metric_name not in metrics:
+                    errors.append(f"metrics latest missing required metric: {metric_name}")
+
+    evaluations = results_doc.get("evaluations")
+    if not bootstrap_mode:
+        if not isinstance(evaluations, list):
+            errors.append("monitoring results evaluations must be list")
+            evaluations = []
+        total_targets = results_doc.get("total_targets")
+        if not isinstance(total_targets, int):
+            errors.append("monitoring results total_targets must be int")
+        else:
+            if total_targets != len(targets):
+                errors.append(
+                    f"monitoring results total_targets mismatch: expected={len(targets)} got={total_targets}"
+                )
+            if total_targets != len(evaluations):
+                errors.append(
+                    f"monitoring results evaluations mismatch: total_targets={total_targets} evaluations={len(evaluations)}"
+                )
+
+        pass_count = results_doc.get("pass_count")
+        if not isinstance(pass_count, int):
+            errors.append("monitoring results pass_count must be int")
+        elif isinstance(total_targets, int) and not (0 <= pass_count <= total_targets):
+            errors.append(
+                f"monitoring results pass_count out of range: pass_count={pass_count} total_targets={total_targets}"
+            )
+
+    return errors
+
+
 def run_validate() -> int:
     cfg = read_json(OFFICIAL_SOURCES, default={})
     sources = cfg.get("sources", [])
@@ -1069,6 +1162,7 @@ def run_validate() -> int:
     errors.extend(validate_source_boundary(sources))
     errors.extend(validate_mutation_index())
     errors.extend(validate_monitoring_targets_schema())
+    errors.extend(validate_monitoring_artifacts())
 
     src_map = {src["id"]: src for src in sources if "id" in src}
     expected_ids = set(src_map.keys())
@@ -1955,6 +2049,13 @@ def run_implement() -> int:
             if mutation_ref:
                 mutation_exists = (ROOT / mutation_ref).exists()
             if mutation_exists:
+                title = str(item.get("title", "")).strip()
+                link = str(item.get("origin_link", "")).strip()
+                themes = item.get("themes")
+                if not isinstance(themes, list) or not themes:
+                    themes = detect_themes(title, link)
+                upsert_mutation_index(exp_id, ROOT / mutation_ref, themes)
+                item["themes"] = themes
                 continue
 
             title = str(item.get("title", "")).strip()

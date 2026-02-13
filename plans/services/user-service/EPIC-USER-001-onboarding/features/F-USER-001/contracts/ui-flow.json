@@ -1,0 +1,16 @@
+{
+  "name": "signup-ui-flow",
+  "version": "0.1.0",
+  "states": [
+    "idle",
+    "submitting",
+    "success",
+    "error"
+  ],
+  "inputs": ["email", "password"],
+  "actions": [
+    "validate_inputs",
+    "submit_signup",
+    "render_result"
+  ]
+}

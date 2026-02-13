@@ -89,9 +89,14 @@ GitHub Actions で日次実行されます。
   - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`
 - 変更があれば SoR を自動コミット/自動 push
 
+加えて、PR 時には `.github/workflows/quality-gates.yml` で
+Spec/Plan/SoR/テストの品質ゲートを強制します。
+
 ## 7. 運用上の判断ポイント
 
 - `collector=codex` は厳格収集モード（失敗時エラー終了）
 - `collector=auto` は運用推奨（失敗時 native へフォールバック）
 - 監視しきい値変更は `monitoring_targets.json` を編集し、`validate` 通過を必須とする
 - 自己修復ログの増加は、設計ドリフトの兆候として週次で確認する
+- `monitoring_targets.json` が 1 件以上ある場合、`metrics/latest.json` と `monitoring_results.json` は
+  鮮度（36時間以内）と件数整合を保つ必要がある

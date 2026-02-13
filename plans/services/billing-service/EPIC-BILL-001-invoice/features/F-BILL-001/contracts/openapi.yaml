@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: Billing Invoice API
+  version: 0.1.0
+paths:
+  /billing/invoices:
+    post:
+      summary: Issue invoice
+      operationId: issueInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, customer_id, items]
+              properties:
+                order_id:
+                  type: string
+                customer_id:
+                  type: string
+                currency:
+                  type: string
+                  default: JPY
+                items:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: [sku, quantity, unit_price]
+                    properties:
+                      sku:
+                        type: string
+                      quantity:
+                        type: integer
+                        minimum: 1
+                      unit_price:
+                        type: number
+                        minimum: 0
+      responses:
+        '201':
+          description: Invoice issued
+        '400':
+          description: Validation error

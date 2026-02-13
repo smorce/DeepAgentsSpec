@@ -28,6 +28,8 @@ ls docs/reports/source-radar/
 
 - GitHub Actions: `.github/workflows/agent-radar-daily.yml`
 - 実行時刻: 毎日 `00:15 UTC`
+- PR品質ゲート: `.github/workflows/quality-gates.yml`
+  - Spec/Plan/SoR/Doc/Test の検証をブロッキング実行
 
 ## 障害対応
 
@@ -38,6 +40,8 @@ ls docs/reports/source-radar/
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate` 失敗:
   - 許可外リンク混入または SoR構造破損。
   - `official_sources.json` と `snapshot-latest.json` の境界を確認する。
+  - `mutation` の hash 不整合時は `--mode implement` または `--mode autogrow` を再実行し整合を回復する。
+  - `monitoring_targets.json` が存在する場合は `metrics/latest.json` / `monitoring_results.json` の鮮度と整合を確認する。
 
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog` 失敗:
   - `new-items.json` または `experiment_backlog.json` の構造崩れ。
@@ -49,6 +53,10 @@ ls docs/reports/source-radar/
 
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` 失敗:
   - 対象文書の `TODO:` / `NEEDS CLARIFICATION` / `プレースホルダー` を除去する。
+
+- `scripts/run_all_e2e_tests.sh`:
+  - デフォルトでは UI モックシナリオのみ実行される。
+  - live API シナリオが必要な場合は `RUN_LIVE_MINIRAG_E2E=1` を指定する。
 
 ## エスカレーション条件
 

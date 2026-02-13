@@ -63,3 +63,288 @@
 [2026-02-13 07:36Z] agent-radar: backlog sync completed | created=0
 [2026-02-13 07:36Z] agent-radar: implement completed | implemented=0 rules_added=0 monitors_changed=0 mutations_added=0
 [2026-02-13 07:36Z] agent-radar: monitoring evaluated | loop=autogrow pass=2 total=2
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 08:38Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 08:38Z] plan quality check: FAILED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+incomplete items:
+  - line 10: - [ ] `impl-plan.md` が存在し、ファイル先頭のタイトルおよびメタ情報にこの FEATURE-ID と対応する spec へのリンクが明記されている。
+  - line 11: - [ ] `impl-plan.md` は plan テンプレートの必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking またはそれに相当する節）をすべて持ち、空欄やダミーテキストが残っていない。
+  - line 12: - [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` や同等のプレースホルダが残っていない。
+  - line 16: - [ ] Technical Context の各項目（Language/Version, Primary Dependencies, Storage, Testing, Target Platform, Project Type, Performance Goals, Constraints, Scale/Scope）が、このフィーチャの実際の実装方針を具体的に表しており、「未定」や曖昧な表現でごまかされていない。
+  - line 17: - [ ] Constitution Check セクションに、このフィーチャに適用されるゲート条件が列挙されており、「どのゲートをどのように満たすか」が簡潔に記述されている。
+  - line 18: - [ ] Constitution Check に列挙されたゲートのうち、満たせないものがある場合は、Complexity Tracking に違反内容と理由、却下した代替案が明記されている。
+  - line 22: - [ ] Project Structure の候補（Single project / Web application / Mobile + API など）から、このフィーチャに実際に採用する構造が 1 つだけ選ばれている。
+  - line 23: - [ ] 採用しなかった構造のテンプレート文・コメントは `impl-plan.md` から削除されている。
+  - line 24: - [ ] Project Structure 節で列挙されたディレクトリ/ファイルパスは、リポジトリルートからのパスとして正しく記述されており、「どこに何を置くか」が具体的に伝わる。
+  - line 25: - [ ] このフィーチャが触る既存モジュールやサービス（例: `services/user-service`, `tests/e2e/...`）があれば、その位置と役割が `impl-plan.md` に明記されている。
+  - line 29: - [ ] `research.md` が存在し、Plan 実行中に解消した主要な不明点ごとに、
+  - line 31: - [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+  - line 32: - [ ] `contracts/` 配下に、このフィーチャで追加・変更される API / メッセージ / イベントの契約が置かれている（形式はプロジェクトの標準に従う。例: OpenAPI, GraphQL schema）。
+  - line 33: - [ ] `quickstart.md` が存在し、「このフィーチャだけを試す」ための手順（起動コマンド、テストコマンド、確認用の HTTP リクエストなど）が書かれている。
+  - line 34: - [ ] `impl-plan.md` の記述と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない（例: Plan に書かれたエンドポイントが contracts にも存在する）。
+  - line 38: - [ ] このフィーチャが属するエピック配下に `design/index.md` が存在する場合、
+  - line 41: - [ ] このフィーチャが共有エンティティや共有 API を持つ場合、その「所有者」と他フィーチャとの関係が、
+  - line 46: - [ ] `impl-plan.md` の Plan of Work / Concrete Steps（または同等のセクション）を読むだけで、
+  - line 48: - [ ] Validation / Acceptance に、「Plan が完了した時点で何をどう実行すると成功か」が具体的なコマンドや HTTP リクエストの形で書かれている。
+  - line 49: - [ ] Idempotence / Recovery（またはそれに相当する節）に、「途中で失敗した場合のやり直し」「既存環境への影響を最小化する方針」が一度は触れられている。
+[2026-02-13 08:38Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 08:38Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 08:38Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 08:38Z] plan quality check: FAILED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+incomplete items:
+  - line 10: - [ ] `impl-plan.md` が存在し、ファイル先頭のタイトルおよびメタ情報にこの FEATURE-ID と対応する spec へのリンクが明記されている。
+  - line 11: - [ ] `impl-plan.md` は plan テンプレートの必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking またはそれに相当する節）をすべて持ち、空欄やダミーテキストが残っていない。
+  - line 12: - [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` や同等のプレースホルダが残っていない。
+  - line 16: - [ ] Technical Context の各項目（Language/Version, Primary Dependencies, Storage, Testing, Target Platform, Project Type, Performance Goals, Constraints, Scale/Scope）が、このフィーチャの実際の実装方針を具体的に表しており、「未定」や曖昧な表現でごまかされていない。
+  - line 17: - [ ] Constitution Check セクションに、このフィーチャに適用されるゲート条件が列挙されており、「どのゲートをどのように満たすか」が簡潔に記述されている。
+  - line 18: - [ ] Constitution Check に列挙されたゲートのうち、満たせないものがある場合は、Complexity Tracking に違反内容と理由、却下した代替案が明記されている。
+  - line 22: - [ ] Project Structure の候補（Single project / Web application / Mobile + API など）から、このフィーチャに実際に採用する構造が 1 つだけ選ばれている。
+  - line 23: - [ ] 採用しなかった構造のテンプレート文・コメントは `impl-plan.md` から削除されている。
+  - line 24: - [ ] Project Structure 節で列挙されたディレクトリ/ファイルパスは、リポジトリルートからのパスとして正しく記述されており、「どこに何を置くか」が具体的に伝わる。
+  - line 25: - [ ] このフィーチャが触る既存モジュールやサービス（例: `services/user-service`, `tests/e2e/...`）があれば、その位置と役割が `impl-plan.md` に明記されている。
+  - line 29: - [ ] `research.md` が存在し、Plan 実行中に解消した主要な不明点ごとに、
+  - line 31: - [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+  - line 32: - [ ] `contracts/` 配下に、このフィーチャで追加・変更される API / メッセージ / イベントの契約が置かれている（形式はプロジェクトの標準に従う。例: OpenAPI, GraphQL schema）。
+  - line 33: - [ ] `quickstart.md` が存在し、「このフィーチャだけを試す」ための手順（起動コマンド、テストコマンド、確認用の HTTP リクエストなど）が書かれている。
+  - line 34: - [ ] `impl-plan.md` の記述と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない（例: Plan に書かれたエンドポイントが contracts にも存在する）。
+  - line 38: - [ ] このフィーチャが属するエピック配下に `design/index.md` が存在する場合、
+  - line 41: - [ ] このフィーチャが共有エンティティや共有 API を持つ場合、その「所有者」と他フィーチャとの関係が、
+  - line 46: - [ ] `impl-plan.md` の Plan of Work / Concrete Steps（または同等のセクション）を読むだけで、
+  - line 48: - [ ] Validation / Acceptance に、「Plan が完了した時点で何をどう実行すると成功か」が具体的なコマンドや HTTP リクエストの形で書かれている。
+  - line 49: - [ ] Idempotence / Recovery（またはそれに相当する節）に、「途中で失敗した場合のやり直し」「既存環境への影響を最小化する方針」が一度は触れられている。
+[2026-02-13 08:38Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 08:38Z] plan quality check: FAILED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+incomplete items:
+  - line 10: - [ ] `impl-plan.md` が存在し、ファイル先頭のタイトルおよびメタ情報にこの FEATURE-ID と対応する spec へのリンクが明記されている。
+  - line 11: - [ ] `impl-plan.md` は plan テンプレートの必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking またはそれに相当する節）をすべて持ち、空欄やダミーテキストが残っていない。
+  - line 12: - [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` や同等のプレースホルダが残っていない。
+  - line 16: - [ ] Technical Context の各項目（Language/Version, Primary Dependencies, Storage, Testing, Target Platform, Project Type, Performance Goals, Constraints, Scale/Scope）が、このフィーチャの実際の実装方針を具体的に表しており、「未定」や曖昧な表現でごまかされていない。
+  - line 17: - [ ] Constitution Check セクションに、このフィーチャに適用されるゲート条件が列挙されており、「どのゲートをどのように満たすか」が簡潔に記述されている。
+  - line 18: - [ ] Constitution Check に列挙されたゲートのうち、満たせないものがある場合は、Complexity Tracking に違反内容と理由、却下した代替案が明記されている。
+  - line 22: - [ ] Project Structure の候補（Single project / Web application / Mobile + API など）から、このフィーチャに実際に採用する構造が 1 つだけ選ばれている。
+  - line 23: - [ ] 採用しなかった構造のテンプレート文・コメントは `impl-plan.md` から削除されている。
+  - line 24: - [ ] Project Structure 節で列挙されたディレクトリ/ファイルパスは、リポジトリルートからのパスとして正しく記述されており、「どこに何を置くか」が具体的に伝わる。
+  - line 25: - [ ] このフィーチャが触る既存モジュールやサービス（例: `services/user-service`, `tests/e2e/...`）があれば、その位置と役割が `impl-plan.md` に明記されている。
+  - line 29: - [ ] `research.md` が存在し、Plan 実行中に解消した主要な不明点ごとに、
+  - line 31: - [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+  - line 32: - [ ] `contracts/` 配下に、このフィーチャで追加・変更される API / メッセージ / イベントの契約が置かれている（形式はプロジェクトの標準に従う。例: OpenAPI, GraphQL schema）。
+  - line 33: - [ ] `quickstart.md` が存在し、「このフィーチャだけを試す」ための手順（起動コマンド、テストコマンド、確認用の HTTP リクエストなど）が書かれている。
+  - line 34: - [ ] `impl-plan.md` の記述と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない（例: Plan に書かれたエンドポイントが contracts にも存在する）。
+  - line 38: - [ ] このフィーチャが属するエピック配下に `design/index.md` が存在する場合、
+  - line 41: - [ ] このフィーチャが共有エンティティや共有 API を持つ場合、その「所有者」と他フィーチャとの関係が、
+  - line 46: - [ ] `impl-plan.md` の Plan of Work / Concrete Steps（または同等のセクション）を読むだけで、
+  - line 48: - [ ] Validation / Acceptance に、「Plan が完了した時点で何をどう実行すると成功か」が具体的なコマンドや HTTP リクエストの形で書かれている。
+  - line 49: - [ ] Idempotence / Recovery（またはそれに相当する節）に、「途中で失敗した場合のやり直し」「既存環境への影響を最小化する方針」が一度は触れられている。
+[2026-02-13 08:38Z] plan quality check: FAILED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+incomplete items:
+  - line 10: - [ ] `impl-plan.md` が存在し、ファイル先頭のタイトルおよびメタ情報にこの FEATURE-ID と対応する spec へのリンクが明記されている。
+  - line 11: - [ ] `impl-plan.md` は plan テンプレートの必須セクション（Summary / Technical Context / Constitution Check / Project Structure / Complexity Tracking またはそれに相当する節）をすべて持ち、空欄やダミーテキストが残っていない。
+  - line 12: - [ ] `impl-plan.md` 内に `NEEDS CLARIFICATION` や同等のプレースホルダが残っていない。
+  - line 16: - [ ] Technical Context の各項目（Language/Version, Primary Dependencies, Storage, Testing, Target Platform, Project Type, Performance Goals, Constraints, Scale/Scope）が、このフィーチャの実際の実装方針を具体的に表しており、「未定」や曖昧な表現でごまかされていない。
+  - line 17: - [ ] Constitution Check セクションに、このフィーチャに適用されるゲート条件が列挙されており、「どのゲートをどのように満たすか」が簡潔に記述されている。
+  - line 18: - [ ] Constitution Check に列挙されたゲートのうち、満たせないものがある場合は、Complexity Tracking に違反内容と理由、却下した代替案が明記されている。
+  - line 22: - [ ] Project Structure の候補（Single project / Web application / Mobile + API など）から、このフィーチャに実際に採用する構造が 1 つだけ選ばれている。
+  - line 23: - [ ] 採用しなかった構造のテンプレート文・コメントは `impl-plan.md` から削除されている。
+  - line 24: - [ ] Project Structure 節で列挙されたディレクトリ/ファイルパスは、リポジトリルートからのパスとして正しく記述されており、「どこに何を置くか」が具体的に伝わる。
+  - line 25: - [ ] このフィーチャが触る既存モジュールやサービス（例: `services/user-service`, `tests/e2e/...`）があれば、その位置と役割が `impl-plan.md` に明記されている。
+  - line 29: - [ ] `research.md` が存在し、Plan 実行中に解消した主要な不明点ごとに、
+  - line 31: - [ ] `data-model.md` が存在し、このフィーチャが扱うエンティティ・フィールド・関係・バリデーションルールが列挙されている。
+  - line 32: - [ ] `contracts/` 配下に、このフィーチャで追加・変更される API / メッセージ / イベントの契約が置かれている（形式はプロジェクトの標準に従う。例: OpenAPI, GraphQL schema）。
+  - line 33: - [ ] `quickstart.md` が存在し、「このフィーチャだけを試す」ための手順（起動コマンド、テストコマンド、確認用の HTTP リクエストなど）が書かれている。
+  - line 34: - [ ] `impl-plan.md` の記述と `research.md` / `data-model.md` / `contracts/` / `quickstart.md` の内容が矛盾していない（例: Plan に書かれたエンドポイントが contracts にも存在する）。
+  - line 38: - [ ] このフィーチャが属するエピック配下に `design/index.md` が存在する場合、
+  - line 41: - [ ] このフィーチャが共有エンティティや共有 API を持つ場合、その「所有者」と他フィーチャとの関係が、
+  - line 46: - [ ] `impl-plan.md` の Plan of Work / Concrete Steps（または同等のセクション）を読むだけで、
+  - line 48: - [ ] Validation / Acceptance に、「Plan が完了した時点で何をどう実行すると成功か」が具体的なコマンドや HTTP リクエストの形で書かれている。
+  - line 49: - [ ] Idempotence / Recovery（またはそれに相当する節）に、「途中で失敗した場合のやり直し」「既存環境への影響を最小化する方針」が一度は触れられている。
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 09:01Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 09:02Z] agent-radar: implement completed | implemented=0 rules_added=0 monitors_changed=0 mutations_added=0
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 09:02Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 09:06Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+[2026-02-13 09:06Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-010/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-011/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-012/checklists/requirements.md
+[2026-02-13 09:09Z] spec quality check: PASSED
+target: plans/system/EPIC-SYS-001-harness-radar/features/F-SYS-013/checklists/requirements.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-001-routing/features/F-API-001/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/api-gateway/EPIC-API-002-minirag/features/F-API-002/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-001/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/avatar-ui/EPIC-AVATAR-001-diary-minirag/features/F-AVATAR-002/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/billing-service/EPIC-BILL-001-invoice/features/F-BILL-001/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/minirag-demo-ui/EPIC-API-001-minirag-demo-ui/features/F-API-003/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-001/checklists/PlanQualityGate.md
+[2026-02-13 09:09Z] plan quality check: PASSED
+target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002/checklists/PlanQualityGate.md

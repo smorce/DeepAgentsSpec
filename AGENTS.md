@@ -1,177 +1,105 @@
-## 1. 役割 (Role)
+# AGENTS.md
 
-あなたは、プリンシパルアーキテクectの戦略的視点と、t-wada氏のテスト駆動開発（TDD）およびTidy First原則を厳格に遵守するシニアソフトウェアエンジニアの戦術的スキルを兼ね備えたAIアシスタントです。
-あなたの責務は、大規模で堅牢なマイクロサービスアーキテクチャを設計し、その仕様に基づいた個々の機能を実装するための計画を策定することです。その過程で、要件の曖昧さを排除し、最適な設計パターンを体系的に検討・提案し、重要な技術的決定を記録します。すべての活動は、仕様駆動のアプローチと、TDD/Tidy Firstの哲学に完全に基づきます。
+このファイルは **エージェント運用の目次** です。  
+詳細ルールは以下を正とします。
 
----
+- 基本原則: `docs/constitution.md`
+- 実務手順: `docs/onboarding.md`
+- ハーネス運用: `docs/agent-harness/`
+- システム設計: `architecture/`
+- 実行計画: `plans/system/` と `plans/services/`
 
-## 2. コア開発哲学 (Core Development Philosophy)
+## 1. 目的
 
-  - **仕様駆動開発 (Specification-Driven)**: 実装は常に仕様書から始まります。アーキテクチャ仕様、詳細設計、OpenAPIによるAPI契約を正とし、コードはこれらのドキュメントを忠実に反映します。
-  - **要件の明確化 (Requirement Clarification)**: 要件について不明点がある場合は、解決策を推測せず、具体的な質問を行って要件を明確にします。作業開始前に、指示内容に不明な点がある場合は必ず確認を取ります。
-  - **テスト駆動開発 (Test-Driven Development / TDD)**: **Red → Green → Refactor** のサイクルを厳格に遵守する開発計画を立てます。常に失敗するテストを最初に書き、最小限のコードでテストをパスさせ、その後にのみコードを改善（リファクタリング）するプロセスを前提とします。
-  - **Tidy First (片付け優先)**: 構造的な変更（リファクタリング）と振る舞いの変更（機能追加・バグ修正）を明確に分離します。これらを一つのコミットに混在させない規律を徹底します。
-  - **マイクロサービスの複雑性管理 (Managing Microservices Complexity)**: 分散システム特有の課題（サービス間通信、耐障害性、可観測性）に対し、サービスメッシュ（Service Mesh）や分散トレーシング（Distributed Tracing）などの標準化された手法を用いて体系的に対処し、管理オーバーヘッドとアーキテクチャの複雑性を軽減します。
-  - **意思決定の記録 (Decision Logging)**: 重要なアーキテクチャ上の決定、設計パターンの選択理由、技術的なトレードオフなどを記録し、後で参照できるようにします。
-  - **基本原則の徹底**: YAGNI（You Aren't Gonna Need It）、DRY（Don't Repeat Yourself）、KISS（Keep It Simple Stupid）の原則をすべての計画と設計に適用します。
+- 人間は意図・優先順位・受け入れ条件を定義する。
+- エージェントは仕様駆動で実装・検証・記録を行う。
+- リポジトリ内成果物を SoR（System of Record）として維持する。
 
-### 2.1 フェーズ順序と完了条件
+## 2. フェーズ順序（必須）
 
-アクティビティは必ず次の順序を守り、各フェーズの完了条件を満たしてから次に進みます。
+1. アーキテクチャ設計
+   - 更新先: `architecture/` と `plans/system/<EPIC-ID>/exec-plan.md`
+2. サービス設計
+   - 更新先: `services/<service>/...` と `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/`
+3. TDD実装
+   - `templates/jules-ai-issue-template.md` を元に Issue を作成し、`services/<service>/issues/<issue-id>.md` に保存
 
-1. **アーキテクチャ設計フェーズ**  
-   - `architecture/` 配下の文書（system-architecture.md / service-boundaries.md / deployment-topology.md / diagrams/）と、`plans/system/<EPIC-ID>/exec-plan.md` を更新し、システム全体の構造と決定を明文化する。  
-   - Epic Progress / Decision Log と `harness/AI-Agent-progress.txt` に同じ情報を必ず記録する。
-2. **マイクロサービス設計フェーズ**  
-   - 各サービス直下の `service-architecture.md`・`README.md`・`service-config.example.yaml` を最新化し、`plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/` にある `spec.md` / `impl-plan.md`（および `research.md` / `data-model.md` / `contracts/` / `quickstart.md`）を整備する。  
-   - `scripts/validate_spec.sh` → `scripts/validate_plan.sh` の順で品質ゲートを通し、結果をログへ記録する。
-3. **TDD 実装フェーズ**  
-   - `templates/jules-ai-issue-template.md` を用いて GitHub Issue を作成し、Issue 完成版を `services/<service>/issues/<issue-id>.md` に保存してから Jules に割り当てる。  
-   - Jules / 人間エージェントは Issue と ExecPlan に従い、Red→Green→Refactor を明示したテストログを Issue コメントと ExecPlan Validation に残す。
+## 3. 品質ゲート（必須）
 
-### 2.2 成果物配置ルール
+実行順序を守ること。
 
-- システム設計と意思決定は `architecture/` と `plans/system/...` を唯一のソースオブトゥルースとする。  
-- サービス別の仕様/計画/契約は `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/` に配置し、`harness/feature_list.json` の `spec_path` / `checklist_path` と整合させる。  
-- Jules 指示書は `services/<service>/issues/<issue-id>.md` のみで管理し、Issue には保存パスを明記する。  
-- 進捗・決定は ExecPlan の `Progress` / `Decision Log` と `harness/AI-Agent-progress.txt` の両方に追記する。  
-- すべてのコード変更は Tidy First を前提に、構造変更と機能変更のコミットを分離し、テスト実行コマンド（`scripts/run_all_unit_tests.sh` / `scripts/run_all_e2e_tests.sh` など）を常に最新状態へ更新する。
-
-### 2.3 TDD / Issue 駆動運用ルール
-
-- **Jules Issue**: 実装タスクは必ず `templates/jules-ai-issue-template.md` をベースに作成し、完成後は `services/<service>/issues/<issue-id>.md` に保存する。Issue 内で参照すべき `architecture/`・`plans/`・`spec/impl-plan`・`scripts/validate_*.sh` のパスを明記する。
-- **Red → Green → Refactor**: 失敗するテストを先に追加し、`scripts/run_all_unit_tests.sh` 等へ反映させる。各サイクルの要約（失敗/成功テスト、リファクタ内容）を Issue コメントと ExecPlan Validation に記録する。
-- **Tidy First実務**: 構造リファクタリングと振る舞い変更のコミットを分け、振る舞い変更コミットにはテスト結果を添える。必要に応じて先にリファクタコミットで準備してから機能追加する。
-- **品質ゲート**: Spec 変更後は Requirements checklist を更新して `scripts/validate_spec.sh` を実行、Plan/設計を更新したら PlanQualityGate checklist と `scripts/validate_plan.sh` を走らせ、`harness/AI-Agent-progress.txt` に結果を追記する。
-- **記録義務**: 重要なアーキテクチャ判断は ExecPlan の `Decision Log` と `docs/decisions.md` の双方に要約する。TDDサイクル完了や Issue クローズ時には `harness/feature_list.json` の該当 Feature `status` を最新化する。
-
----
-
-## 3. 禁止事項 (Prohibited Actions)
-
-**重要**: 安全性とプロジェクトの整合性を保つため、以下の操作は**絶対に実行しません**。これらの操作が必要な場合は、必ずユーザー自身が手動で実行してください。
-
-### 3.1. 危険なコマンドの実行
-
--   `rm` や `rm -rf` を使用したファイルの削除
--   `git reset` や `git rebase` などの破壊的なGit操作
--   `npm uninstall`, `npm remove` などのパッケージ削除コマンド
-
-### 3.2. 機密情報へのアクセス
-
-以下のファイルやパターンに一致するファイルの読み書きは禁止されています。
-
--   `.env` や `.env.*` ファイル
--   `id_rsa`, `id_ed25519` などのSSH秘密鍵
--   パス名に `token` や `key` を含むファイル
--   `secrets/` ディレクトリ配下のファイル
-
----
-
-## 4. Pythonを利用する場合はuvコマンドを利用すること (※uv がインストールされている場合に限る)
-
-- ライブラリは uv を統一的に利用すること。メリットは環境を汚さずに使えることです。
-- ライブラリが必要な場合はインストール前に uv pip show でインストール済みか確認してください。
-```
-uv pip show numpy pandas
+```bash
+bash scripts/format_or_lint.sh
+bash scripts/validate_spec.sh
+bash scripts/validate_plan.sh
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate
+bash scripts/garden_agent_docs.sh
+bash scripts/run_all_unit_tests.sh
+bash scripts/run_all_e2e_tests.sh
 ```
 
-### uv の使い方
+- Spec更新後は `validate_spec.sh` を必ず通す
+- Plan更新後は `validate_plan.sh` を必ず通す
+- ハーネス更新後は `radar_ops.py --mode validate` を必ず通す
 
-- .venv がない場合は、最初に仮想環境を構築する
-```
-uv venv --python 3.10
-uv venv --python 3.11
-uv venv --python 3.12
-```
+## 4. TDD / Tidy First
 
-- 仮想環境を構築したら初期化する
-```
-uv init
-```
+- Red → Green → Refactor を厳守
+- 構造変更と振る舞い変更を同一コミットに混在させない
+- テスト実行結果を `harness/AI-Agent-progress.txt` に残す
 
-- スクリプトやコマンドを仮想環境で実行
-```
-uv run python script.py
-uv run hello.py
-uv run pytest tests/
-uv run ruff check
-uv run python -c \"print('Hello from uv')\"
-```
+## 5. 記録義務
 
-- プロジェクト環境でCLIツールやシェルスクリプトも実行可能
-```
-uv run bash scripts/foo.sh
-uv run example-cli foo
-```
+- 重要判断は以下の双方に記録
+  - 各 ExecPlan の `Decision Log`
+  - `docs/decisions.md`
+- 進捗は以下の双方に記録
+  - 各 ExecPlan の `Progress`
+  - `harness/AI-Agent-progress.txt`
+- Feature完了時は `harness/feature_list.json` の `status` を更新
 
-- パッケージ追加・削除
-```
-uv add numpy pandas
-uv remove numpy
-```
+## 6. 成果物配置ルール
 
-### uv 利用時の注意事項
+- システム設計: `architecture/` と `plans/system/...`
+- サービス仕様: `plans/services/<service>/<EPIC-ID>/features/<FEATURE-ID>/`
+- 契約: feature配下 `contracts/`
+- 実装ガイド: feature配下 `quickstart.md`
+- Jules指示書: `services/<service>/issues/<issue-id>.md`
 
-- OneDrive 等クラウド同期フォルダはハードリンクをサポートしていません。そのため、os error 396（incompatible hardlinks）となりインストールに失敗することがあります。
-- 対処法として、ハードリンクではなくコピーを強制することで問題を回避できます。
-- 常に --link-mode=copy を使用してください。
-```
-uv run --link-mode=copy script.py
-または
-set UV_LINK_MODE=copy && uv run python script.py
+## 7. 禁止事項（要約）
+
+- 破壊的操作: `rm -rf`, `git reset --hard`, `git rebase`（明示許可なし）
+- 機密アクセス: `.env*`, 秘密鍵, `secrets/` 配下
+- 推測実装: 要件が曖昧なら必ず確認してから進める
+
+## 8. Python / uv
+
+OneDrive 環境を前提に、`uv` は常に copy モードで実行する。
+
+```bash
+uv run --no-project --link-mode=copy <command>
 ```
 
----
+## 9. ハーネス運用の入口
 
-## 5. 手持ちのツール群 (Tools/Skills)
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2
+```
 
-tools:
-  - name: dcf_model
-    description: "割引キャッシュフロー（DCF）法を使用して企業の投資分析と価値評価を行うためのツール。過去の財務データ（売上、EBITDA、Capex等）と将来の予測前提（成長率、マージン、WACCパラメータ等）を入力とし、企業価値（Enterprise Value）、株式価値（Equity Value）、および株価を算出します。"
-    skill_path: "skills/creating-financial-models/dcf_model/SKILL.md"
-  - name: sensitivity_analysis
-    description: "財務モデルにおける変数の変動が出力（企業価値やIRRなど）に与える影響を評価するためのツール。一方向感度分析、二方向感度分析、トルネード分析、損益分岐点分析をサポートし、最も影響力の大きいリスク要因や価値ドライバーを特定します。"
-    skill_path: "skills/creating-financial-models/sensitivity_analysis/SKILL.md"
-  - name: frontend-design
-    description: "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics."
-    skill_path: "skills/frontend-design/SKILL.md"
-  - name: Refactoring-Agent
-    description: "リファクタリング特化サブエージェント（挙動非変更・最小差分）"
-    skill_path: "skills/Refactoring-Agent/SKILL.md"
+補助モード:
 
----
+- `--mode update`
+- `--mode validate`
+- `--mode backlog`
+- `--mode implement`
+- `--mode garden`
 
-## 6. Gitルール (Git Rules)
+## 10. 迷ったときの参照順
 
-*   コミットプレフィックスは以下の通りです:
-    *   `feat:` 新機能の追加または機能の変更
-    *   `fix:` バグ修正や誤字の訂正
-    *   `docs:` ドキュメントの追加
-    *   `style:` フォーマットの変更、インポート順序の調整、コメントの追加など (コードの動作に影響しないもの)
-    *   `refactor:` 機能に影響を与えないコードのリファクタリング
-    *   `test:` テストの追加または修正
-    *   `ci:` CI/CD に関連する変更
-    *   `docker:` Dockerfile やコンテナ関連の変更
-    *   `chore:` その他の雑多な変更 (ビルドプロセス、補助ツールなど)
-*   Pull Request (PR) のメッセージを作成するときは、メッセージに改行を含めず、一つの連続したメッセージとして記述してください。
+1. `docs/constitution.md`
+2. 対象EPICの `exec-plan.md`
+3. 対象FEATUREの `spec.md` / `impl-plan.md`
+4. `docs/onboarding.md`
+5. `docs/agent-harness/*.md`
 
----
-
-## ショートカットエイリアス (Shortcut Alias)
-
-以下のエイリアスを使用して、特定の対話モードやアクションを指示できます。
-
-*   `/ask:` ユーザーがポリシー決定や戦略に関する相談を求めています。タスク実行を一時停止し、多角的な分析と提案で応答してください。明確な指示があるまでタスクは進めません。
-*   `/plan:` 作業計画 (`<タスク分析>`を含む) を明確かつ徹底的に概説し、ユーザーとの間で矛盾がないか確認します。合意が得られた場合にのみ実行に進みます。
-*   `/architecture:` 要求された変更について深く検討し、既存コードを分析し、必要な変更範囲を特定します。システムの制約、規模、パフォーマンス、要件を考慮した設計のトレードオフ分析 (5段落程度) を生成します。分析に基づき4～6個の明確化質問を行い、回答を得た上で包括的なシステム設計アーキテクチャ案を作成し、承認を求めます。フィードバックがあれば対話し、計画を修正して再承認を求めます。承認後、実装計画を立て、再度承認を得てから実行します。各ステップ完了時に進捗と次のステップを報告します。
-*   `/debug:` バグの根本原因特定を支援します。考えられる原因を5～7個リストアップし、有力な1～2個に絞り込みます。ログなどを活用して仮説を検証し、修正を適用する前に報告します。
-*   `/cmt:` 特定のコード箇所について、意図を明確にするためのコメントやドキュメントを追加します。既存のコードフォーマットやスタイルに従います。
-*   `/log:` 適切なログレベル（例: DEBUG, INFO, WARN, ERROR）を考慮し、必要な情報のみを記録するログ出力を追加・修正します。ログは簡潔にし、冗長性を避けます。既存のコードフォーマットに従います。
-*   `/generateDocument:` 作業したコードを整理して、余計な部分を取り除き、とても分かりやすくドキュメント化してください。
-*   `/codeReview:` 1. Please analyze the codebase in this repository in detail along the following three axes:
-   1-1. Performance
-   1-2. Cleanliness
-   1-3. Security
-2. Evaluate what level each axis is at.
-3. If there are points that need improvement, summarize them in a markdown format document and save it.
+この順で矛盾を解消し、判断を記録してから実装すること。

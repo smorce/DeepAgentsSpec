@@ -81,17 +81,27 @@ const sampleDocuments = [
 const searchResults = [
   {
     doc_id: "plan-apac-2026",
-    title: "2026年度 APAC 調達計画",
-    summary: "APAC地域向けノートPC調達の方針とタイムラインを整理した概要。",
-    relevance: 0.92,
-    source_fields: ["summary"],
+    mode: "mini",
+    answer: "APAC調達計画の関連情報です。",
+    sources: [
+      {
+        doc_id: "plan-apac-2026",
+        title: "2026年度 APAC 調達計画",
+        summary: "APAC地域向けノートPC調達の方針とタイムラインを整理した概要。",
+      },
+    ],
   },
   {
     doc_id: "budget-review-2026",
-    title: "2026年度調達予算レビュー",
-    summary: "FY2026調達予算とコスト削減目標のレビュー。",
-    relevance: 0.84,
-    source_fields: ["summary"],
+    mode: "mini",
+    answer: "予算レビューの関連情報です。",
+    sources: [
+      {
+        doc_id: "budget-review-2026",
+        title: "2026年度調達予算レビュー",
+        summary: "FY2026調達予算とコスト削減目標のレビュー。",
+      },
+    ],
   },
 ];
 
@@ -130,8 +140,22 @@ const run = async () => {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
     const url = request.url();
-    if (!url.startsWith("http://localhost:8000")) {
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,POST,DELETE,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
+    if (!url.includes("/minirag/")) {
       request.continue();
+      return;
+    }
+
+    if (request.method() === "OPTIONS") {
+      request.respond({
+        status: 204,
+        headers: corsHeaders,
+        body: "",
+      });
       return;
     }
 
@@ -139,9 +163,9 @@ const run = async () => {
       request.respond({
         status: 200,
         contentType: "application/json",
+        headers: corsHeaders,
         body: JSON.stringify({
-          registered_count: sampleDocuments.length,
-          documents: sampleDocuments,
+          inserted: sampleDocuments.length,
         }),
       });
       return;
@@ -151,9 +175,10 @@ const run = async () => {
       request.respond({
         status: 200,
         contentType: "application/json",
+        headers: corsHeaders,
         body: JSON.stringify({
-          count: searchResults.length,
           results: searchResults,
+          note: "2件",
         }),
       });
       return;
@@ -163,8 +188,9 @@ const run = async () => {
       request.respond({
         status: 200,
         contentType: "application/json",
+        headers: corsHeaders,
         body: JSON.stringify({
-          deleted_count: 1,
+          deleted: 1,
         }),
       });
       return;
@@ -174,8 +200,9 @@ const run = async () => {
       request.respond({
         status: 200,
         contentType: "application/json",
+        headers: corsHeaders,
         body: JSON.stringify({
-          deleted_count: sampleDocuments.length,
+          deleted: sampleDocuments.length,
         }),
       });
       return;
@@ -184,6 +211,7 @@ const run = async () => {
     request.respond({
       status: 404,
       contentType: "application/json",
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Not mocked" }),
     });
   });
