@@ -13,8 +13,14 @@
 - 新規差分: `harness/agent_radar/new-items.json`
 - 黄金律: `harness/agent_radar/golden_rules.json`
 - 監視ターゲット: `harness/agent_radar/monitoring_targets.json`
+- 監視評価結果: `harness/agent_radar/monitoring_results.json`
 - 実験バックログ: `harness/agent_radar/experiment_backlog.json`
 - 実装アーティファクト: `harness/agent_radar/implemented/`
+- 自己改変モジュール: `harness/agent_radar/mutations/`
+- 自己改変インデックス: `harness/agent_radar/mutations/index.json`
+- 実行メトリクス: `harness/agent_radar/metrics/latest.json`
+- 実行メトリクス履歴: `harness/agent_radar/metrics/history.jsonl`
+- 自己修復ログ: `harness/agent_radar/self_heal_log.json`
 - ランタイム状態スキーマ: `harness/agent_radar/runtime_state_schema.json`
 - 自律成長ログ: `docs/agent-harness/autonomous-growth.md`
 - Codex収集監査ログ: `docs/reports/source-radar/codex-exec/`
@@ -28,8 +34,10 @@
 - 検証器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate`): 境界逸脱や構造崩れの検出
 - バックログ同期器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode backlog`): `new-items.json` を実験バックログへ自動反映
 - 実装器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement`): バックログ項目を実装アーティファクト・監視・黄金律へ反映
+- 監視評価器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow` 内): 実行メトリクスを生成し `monitoring_targets.json` を評価
+- 自己修復器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --self-heal-max-retries 2`): 失敗時に原因カテゴリ別の修復を実行し再試行
 - ガーデナー (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`): 文書劣化（TODO/未確定記法）の検出
-- 制御器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow`): 収集から実装までを自律実行する入口
+- 制御器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`): 収集から実装までを自律実行する入口
 
 ## 境界
 

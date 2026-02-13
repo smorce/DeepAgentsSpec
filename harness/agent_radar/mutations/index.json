@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-13T07:29:47Z",
+  "modules": [
+    {
+      "id": "EXP-001",
+      "module": "mutation_exp_001",
+      "path": "harness/agent_radar/mutations/mutation_exp_001.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-13T07:29:47Z",
+      "updated_at": "2026-02-13T07:29:47Z",
+      "sha256": "b83031c41fe76395995078b21982e3fa16d7fc7ef8d47c280b50c8c1a77fa36a"
+    }
+  ]
+}

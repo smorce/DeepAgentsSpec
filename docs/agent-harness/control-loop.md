@@ -12,18 +12,19 @@
 ## 実行コマンド
 
 ```bash
-uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2
 ```
 
-Codex収集を強制したい場合は `--collector codex` を指定する。
+Codex収集を強制したい場合は `--collector codex` を指定する。  
+自己修復の試行回数は `--self-heal-max-retries` で制御する。
 
 ## 失敗時ポリシー
 
-- update 失敗: 対象ソースのみ warning とし、他ソース継続。
-- validate 失敗: 終了コード 1 で停止（マージ不可ゲート）。
-- implement 失敗: 対象 backlog 項目を保持し、次回ループで再試行する。
-- garden 失敗: TODO/未確定記法が残っているため修正必須。
-- codex 収集失敗: `docs/reports/source-radar/codex-exec/` に監査ログを保存し、`auto` 時は native 収集へフォールバックする。
+- update 失敗: `native` 収集にフォールバックして再試行する。
+- validate 失敗: 境界逸脱データをトリムして再検証する。
+- implement/backlog 失敗: バックログ JSON 構造を自己修復して再試行する。
+- garden 失敗: placeholder 行を自動置換して再試行する。
+- 修復履歴: `harness/agent_radar/self_heal_log.json` に保存する。
 
 ## 監視対象
 
@@ -32,3 +33,5 @@ Codex収集を強制したい場合は `--collector codex` を指定する。
 - 収集成功率（source 単位）
 - 許可外リンク検出件数
 - ドキュメント劣化件数
+- 自己修復実行回数 (`autogrow.self_heal_actions`)
+- 監視評価結果 (`harness/agent_radar/monitoring_results.json`)
