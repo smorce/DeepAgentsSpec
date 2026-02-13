@@ -19,3 +19,6 @@
 [2026-02-13 03:40Z] agent-radar: backlog sync completed | created=0
 [2026-02-13 03:40Z] agent-radar: update completed | sources=6 items=79 new=0
 [2026-02-13 03:40Z] agent-radar: backlog sync completed | created=0
+[2026-02-13 06:11Z] agent-radar: update completed | sources=6 items=79 new=0
+[2026-02-13 06:11Z] agent-radar: backlog sync completed | created=0
+[2026-02-13 06:30Z] agent-radar: retired EPIC-SYS-001-FOUNDATION and removed references

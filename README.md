@@ -43,7 +43,7 @@ architecture/
        │（システムの「あるべき姿」「全体像」を説明）
        │
 plans/system/
-  └── EPIC-SYS-001-foundation/exec-plan.md
+  └── EPIC-SYS-002-harness-radar/exec-plan.md
        ↑
        │（architecture を前提に、
        │  「このリポジトリで何をどう変えるか」を落とし込む）

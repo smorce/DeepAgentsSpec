@@ -49,7 +49,7 @@ plans/
   README.md                             # plans/specs/ExecPlans のワークフローと使用ルール
 
   system/
-    EPIC-SYS-001-foundation/
+    EPIC-SYS-002-harness-radar/
       exec-plan.md                      # このシステムレベルエピックの ExecPlan
       design/
         index.md                        # システムレベルエピックの設計インデックス（サービス横断の地図）

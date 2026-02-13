@@ -18,14 +18,6 @@ Each entry should follow this format:
 
 ## Entries
 
-- ID: DEC-2025-001
-  Date: 2025-01-01
-  Scope: system
-  Related epics: EPIC-SYS-001-FOUNDATION
-  Summary: Adopt "architecture → microservices" repository layout with a global feature_list.json and epic-level ExecPlans.
-  Details: See ExecPlan at:
-    - plans/system/EPIC-SYS-001-foundation.md (Decision Log)
-
 - ID: DEC-2025-002
   Date: 2025-01-01
   Scope: multi-service
@@ -95,5 +87,13 @@ Each entry should follow this format:
   Scope: system
   Related epics: EPIC-SYS-002-HARNESS-RADAR
   Summary: Add `backlog` step and daily GitHub Actions cycle to continuously convert source diffs into experiment backlog items.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-009
+  Date: 2026-02-13
+  Scope: system
+  Related epics: EPIC-SYS-002-HARNESS-RADAR
+  Summary: Retire `EPIC-SYS-001-FOUNDATION` and remove its artifacts/references to keep the active SoR surface minimal.
   Details: See ExecPlan at:
     - plans/system/EPIC-SYS-002-harness-radar/exec-plan.md (Decision Log)

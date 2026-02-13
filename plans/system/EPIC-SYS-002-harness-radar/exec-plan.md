@@ -28,6 +28,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - [x] (2026-02-13 11:27Z) `harness/agent_radar/radar_ops.py` に制御ループを統合し、`validate` と `cycle` の実行成功を確認した。
 - [x] (2026-02-13 11:40Z) `new-items.json` から `experiment_backlog.json` へ自動起票する `backlog` モードを追加した。
 - [x] (2026-02-13 11:40Z) GitHub Actions 日次実行ワークフローを追加した。
+- [x] (2026-02-13 15:30Z) `EPIC-SYS-001-foundation` の実体と参照を削除し、現行SoRを `EPIC-SYS-002` に一本化した。
 
 ## Surprises & Discoveries
 
@@ -56,6 +57,10 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 
 - Decision: `cycle` に `backlog` ステップを組み込み、差分検知と実験起票を機械的に連結する。
   Rationale: `new-items.json` の見落としを防ぎ、知見取り込みを人手待ちにしないため。
+  Date/Author: 2026-02-13 / codex
+
+- Decision: `EPIC-SYS-001-foundation` を廃止し、システムレベルのSoR管理対象を `EPIC-SYS-002-HARNESS-RADAR` へ一本化する。
+  Rationale: 現行運用と無関係な初期土台エピックを残すと、エージェント参照時にノイズとなるため。
   Date/Author: 2026-02-13 / codex
 
 ## Outcomes & Retrospective
