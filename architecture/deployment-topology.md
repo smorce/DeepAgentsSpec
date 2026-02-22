@@ -35,3 +35,4 @@
 
 - MCP経由の外部検証結果（例: UI検証）を state schema に連結
 - GitHub Actions 以外の外部 Scheduler 連携を追加
+- SoR由来の自動ドキュメント更新対象を `autonomous-growth.md` 以外へ拡張

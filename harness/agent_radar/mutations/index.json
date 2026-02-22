@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-02-13T09:02:35Z",
+  "updated_at": "2026-02-19T03:40:03Z",
   "modules": [
     {
       "id": "EXP-001",
@@ -11,8 +11,1113 @@
         "skills"
       ],
       "created_at": "2026-02-13T07:29:47Z",
-      "updated_at": "2026-02-13T09:02:35Z",
-      "sha256": "28f0308bb8fda48bbc3de69ce9cd44c639772bffd599e48b9b816f72a413c792"
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "333772aa7014b17b4848657cd92f1c9646dd377487f3ca9d6a6ad6558501e0f6"
+    },
+    {
+      "id": "EXP-002",
+      "module": "mutation_exp_002",
+      "path": "harness/agent_radar/mutations/mutation_exp_002.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "2e95c49f45cf55dd3531ca34b355843604a836a4f48540dbf7d490ef27f4e4ce"
+    },
+    {
+      "id": "EXP-003",
+      "module": "mutation_exp_003",
+      "path": "harness/agent_radar/mutations/mutation_exp_003.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "478ec52ab9e0e00d980a85febe165195371b7ad639380e6437b712f1e88bd4db"
+    },
+    {
+      "id": "EXP-004",
+      "module": "mutation_exp_004",
+      "path": "harness/agent_radar/mutations/mutation_exp_004.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "scalability",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "7845d3dc1d7962773d15f5851f795d110d8d0dc9bb919fc27934f2c8366a5abc"
+    },
+    {
+      "id": "EXP-005",
+      "module": "mutation_exp_005",
+      "path": "harness/agent_radar/mutations/mutation_exp_005.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "reliability",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "2b66d3b541675a534977fb58e97a99328450f5db2057410de683676ecba6f5b3"
+    },
+    {
+      "id": "EXP-006",
+      "module": "mutation_exp_006",
+      "path": "harness/agent_radar/mutations/mutation_exp_006.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "33dc1cefe2b0e776125ebaf2270e1450bfcd25efe564cc61f95c7e31ad9d3ed5"
+    },
+    {
+      "id": "EXP-007",
+      "module": "mutation_exp_007",
+      "path": "harness/agent_radar/mutations/mutation_exp_007.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "df3ee9bf44cab53e08c68091a805aafc98186bd7d77d2591cab37f1309897a7c"
+    },
+    {
+      "id": "EXP-008",
+      "module": "mutation_exp_008",
+      "path": "harness/agent_radar/mutations/mutation_exp_008.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "001e16363163dc1d860cb183023621ec772aef83635631e930ac32106036556d"
+    },
+    {
+      "id": "EXP-009",
+      "module": "mutation_exp_009",
+      "path": "harness/agent_radar/mutations/mutation_exp_009.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:33Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "43a2520e9fa3267d6b1e0276009f3fc468a26e94698cdbb31e003ef945da5186"
+    },
+    {
+      "id": "EXP-010",
+      "module": "mutation_exp_010",
+      "path": "harness/agent_radar/mutations/mutation_exp_010.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "6684097755b6bdd0a773d1bfa57727869a027ebacaf737d34d9159968084c980"
+    },
+    {
+      "id": "EXP-011",
+      "module": "mutation_exp_011",
+      "path": "harness/agent_radar/mutations/mutation_exp_011.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:39:59Z",
+      "sha256": "90ce6c81ca2a1864585ed2fa3ff0c447fb90d67e0dfb4f9de0cacfa0a93c05c2"
+    },
+    {
+      "id": "EXP-012",
+      "module": "mutation_exp_012",
+      "path": "harness/agent_radar/mutations/mutation_exp_012.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "c3a10c658b8a09600fe20d72bf28097126f52dbe43a8e24cb9fe82a81faac15a"
+    },
+    {
+      "id": "EXP-013",
+      "module": "mutation_exp_013",
+      "path": "harness/agent_radar/mutations/mutation_exp_013.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "27673aa71c06f8343a73c1c9dfa96300905d97c31f7d779bffcb901c5779ca32"
+    },
+    {
+      "id": "EXP-014",
+      "module": "mutation_exp_014",
+      "path": "harness/agent_radar/mutations/mutation_exp_014.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "9d6d435503d99d50d26d9722dc291c59fa56d7fa72fd9bbaf65c6b839bd8b6fa"
+    },
+    {
+      "id": "EXP-015",
+      "module": "mutation_exp_015",
+      "path": "harness/agent_radar/mutations/mutation_exp_015.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "90c1c591cf23b6fe5e44a9a6c7ba15955e71aaa5fbc725e4708d013a9596a6a7"
+    },
+    {
+      "id": "EXP-016",
+      "module": "mutation_exp_016",
+      "path": "harness/agent_radar/mutations/mutation_exp_016.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "scalability",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "52e34fd6df1abbc5d2dde0eac144ceb06b032591ca5aef9e7035e367043dbc86"
+    },
+    {
+      "id": "EXP-017",
+      "module": "mutation_exp_017",
+      "path": "harness/agent_radar/mutations/mutation_exp_017.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "context",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "b2e78909a8b79d5b319286b43beed2138e38c4e93488d1727eaa58d625c931d2"
+    },
+    {
+      "id": "EXP-018",
+      "module": "mutation_exp_018",
+      "path": "harness/agent_radar/mutations/mutation_exp_018.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "ffb32b8c812ae761dd679879496dd3bcc6e42b5bdc653960d1bd48ea06a8f0c3"
+    },
+    {
+      "id": "EXP-019",
+      "module": "mutation_exp_019",
+      "path": "harness/agent_radar/mutations/mutation_exp_019.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "cd5752e4267c2d181b5d200257522e31da251bbe0130691b6df5231b44566b23"
+    },
+    {
+      "id": "EXP-020",
+      "module": "mutation_exp_020",
+      "path": "harness/agent_radar/mutations/mutation_exp_020.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "4df350431d77bb611e189b025b34a78dcb81c54aadf3e24d2d48c8ea06197262"
+    },
+    {
+      "id": "EXP-021",
+      "module": "mutation_exp_021",
+      "path": "harness/agent_radar/mutations/mutation_exp_021.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "842cc16ea43b044bc9a16510713e87af25e765ddbef5712360ce0cef690ce209"
+    },
+    {
+      "id": "EXP-022",
+      "module": "mutation_exp_022",
+      "path": "harness/agent_radar/mutations/mutation_exp_022.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "9929bf62408897b5e9e4efb1a6b50b9fdeff1eb7c0a3888e805897b3b3f950ec"
+    },
+    {
+      "id": "EXP-023",
+      "module": "mutation_exp_023",
+      "path": "harness/agent_radar/mutations/mutation_exp_023.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "context"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "625225be20ec4cde57b9a4898da461565625667bc55d3c1d0446dfa926396bef"
+    },
+    {
+      "id": "EXP-024",
+      "module": "mutation_exp_024",
+      "path": "harness/agent_radar/mutations/mutation_exp_024.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "context"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "7e9e96d21db02cf65d88814593f5ebb5bd2c2dd58881bba8070dc05de6457efa"
+    },
+    {
+      "id": "EXP-025",
+      "module": "mutation_exp_025",
+      "path": "harness/agent_radar/mutations/mutation_exp_025.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "5722aeb1811f0dcf958e522bfc8a85da634ad9ee6c312b44cc0baac8b5f7d8ac"
+    },
+    {
+      "id": "EXP-026",
+      "module": "mutation_exp_026",
+      "path": "harness/agent_radar/mutations/mutation_exp_026.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "a9fad4ec33da11c29720781a8bd3201d35766392c57728772f87ff3b503815ad"
+    },
+    {
+      "id": "EXP-027",
+      "module": "mutation_exp_027",
+      "path": "harness/agent_radar/mutations/mutation_exp_027.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "6f7544a5a5aa2fa29da18fe8968437b9dcf07ccd3e34eac813e9a9c30d48c12c"
+    },
+    {
+      "id": "EXP-028",
+      "module": "mutation_exp_028",
+      "path": "harness/agent_radar/mutations/mutation_exp_028.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "614eaca4bb7d8c55e82dce32286aba3928ff40dd66925c2e0a82954c934de3be"
+    },
+    {
+      "id": "EXP-029",
+      "module": "mutation_exp_029",
+      "path": "harness/agent_radar/mutations/mutation_exp_029.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "37d79c1a32d75f38df0c59916c7f807c83a1b4945f9e4ee7f9a596d9a36bebcc"
+    },
+    {
+      "id": "EXP-030",
+      "module": "mutation_exp_030",
+      "path": "harness/agent_radar/mutations/mutation_exp_030.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:00Z",
+      "sha256": "6d0424d7595f0033737c5f5b4951c01959309f7a556012105c590679efa1a4a3"
+    },
+    {
+      "id": "EXP-031",
+      "module": "mutation_exp_031",
+      "path": "harness/agent_radar/mutations/mutation_exp_031.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "environment",
+        "evals",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:34Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "bb7a84ce07b11e66c9c4ac3a4964235e742cff2c53b814e43fd10f35592fc02c"
+    },
+    {
+      "id": "EXP-032",
+      "module": "mutation_exp_032",
+      "path": "harness/agent_radar/mutations/mutation_exp_032.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "1a1912d47374470e6a75d662ece38730964a8091b59593439d16d3036b70af37"
+    },
+    {
+      "id": "EXP-033",
+      "module": "mutation_exp_033",
+      "path": "harness/agent_radar/mutations/mutation_exp_033.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "c582500e74817997348b26c27df328ee581894cb152b79fce129b97bb5fe38eb"
+    },
+    {
+      "id": "EXP-034",
+      "module": "mutation_exp_034",
+      "path": "harness/agent_radar/mutations/mutation_exp_034.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "context",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "9f313eeaa574d527596b181a3c8c0ba0652871dbe750856474968a21381132fa"
+    },
+    {
+      "id": "EXP-035",
+      "module": "mutation_exp_035",
+      "path": "harness/agent_radar/mutations/mutation_exp_035.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "ef1e772b5e4d518cf48275e5efadb3eeaf0a24d72bebaf9648bfd25df87ffa9c"
+    },
+    {
+      "id": "EXP-036",
+      "module": "mutation_exp_036",
+      "path": "harness/agent_radar/mutations/mutation_exp_036.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "063eab32ed7a854298c43ea1522d70d89398d244eb21d7a720755619d61611f0"
+    },
+    {
+      "id": "EXP-037",
+      "module": "mutation_exp_037",
+      "path": "harness/agent_radar/mutations/mutation_exp_037.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "41a440c99715b107cd11e2d347ad94f57637af45f4e5ecc9af2a80317988859d"
+    },
+    {
+      "id": "EXP-038",
+      "module": "mutation_exp_038",
+      "path": "harness/agent_radar/mutations/mutation_exp_038.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "8189b9c431f620a042295533d27e946d385488733ddf3d9c8945e50dd692ca0b"
+    },
+    {
+      "id": "EXP-039",
+      "module": "mutation_exp_039",
+      "path": "harness/agent_radar/mutations/mutation_exp_039.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "91a81f66ebc716f8db6b4a8dc41d0ce61b720f9e51eed14d4b2d00f3898f50b1"
+    },
+    {
+      "id": "EXP-040",
+      "module": "mutation_exp_040",
+      "path": "harness/agent_radar/mutations/mutation_exp_040.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "66c561db809d2bf3971afa0defa259d863fdf03e1ad7d25b8436d95b0e10f351"
+    },
+    {
+      "id": "EXP-041",
+      "module": "mutation_exp_041",
+      "path": "harness/agent_radar/mutations/mutation_exp_041.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "dec72dfb2e08be87bb99ef43b5eec0fc92acab4475277f69523fc25b77e93072"
+    },
+    {
+      "id": "EXP-042",
+      "module": "mutation_exp_042",
+      "path": "harness/agent_radar/mutations/mutation_exp_042.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "a507ce7c19926e44e6379cc02a3fd53b6fda959c7cb629c8d1d992bdbb294e28"
+    },
+    {
+      "id": "EXP-043",
+      "module": "mutation_exp_043",
+      "path": "harness/agent_radar/mutations/mutation_exp_043.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "56cea9aa2f24b378c2c0845165fb8e9bf9b07937e934d9041254b826218607aa"
+    },
+    {
+      "id": "EXP-044",
+      "module": "mutation_exp_044",
+      "path": "harness/agent_radar/mutations/mutation_exp_044.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "344b0d2f43985009210774005a5ea4d01b4d48129bc9b6b05e06559bcaa1c9ec"
+    },
+    {
+      "id": "EXP-045",
+      "module": "mutation_exp_045",
+      "path": "harness/agent_radar/mutations/mutation_exp_045.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "7bdb390b9011f9c69f8bf0446a5ac59af7411b543dc98aa9e2d304fd96dee0bd"
+    },
+    {
+      "id": "EXP-046",
+      "module": "mutation_exp_046",
+      "path": "harness/agent_radar/mutations/mutation_exp_046.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "6e239ad00bc069d8087eae70b0e5e9e563bdc4574a0ce4560951ac2149796be6"
+    },
+    {
+      "id": "EXP-047",
+      "module": "mutation_exp_047",
+      "path": "harness/agent_radar/mutations/mutation_exp_047.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "dfe19d8d7cb9ac233a230090bf7684f31812d4304c991914e32e088605dc6d2a"
+    },
+    {
+      "id": "EXP-048",
+      "module": "mutation_exp_048",
+      "path": "harness/agent_radar/mutations/mutation_exp_048.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "491ff84cc45637f4a02e93e4e135c74ec82fc864881bc7e60e973b7fc3e18f7b"
+    },
+    {
+      "id": "EXP-049",
+      "module": "mutation_exp_049",
+      "path": "harness/agent_radar/mutations/mutation_exp_049.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:01Z",
+      "sha256": "8a29bb0f66e3f5054d1f2474923f04c3ca21b9fe3248a776b7e6f38826a6da51"
+    },
+    {
+      "id": "EXP-050",
+      "module": "mutation_exp_050",
+      "path": "harness/agent_radar/mutations/mutation_exp_050.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "781dad18da2d374920dc991e0d5d785a0e267a4acca415b2c0f5acb58ccceea4"
+    },
+    {
+      "id": "EXP-051",
+      "module": "mutation_exp_051",
+      "path": "harness/agent_radar/mutations/mutation_exp_051.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:35Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "15c53a1b94a8c7f651a57aeebb9f26a45fdf980d836a5374fdd04fbc90dac18c"
+    },
+    {
+      "id": "EXP-052",
+      "module": "mutation_exp_052",
+      "path": "harness/agent_radar/mutations/mutation_exp_052.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "1406a5f14c763c09218548e7a1d5a27e25ebf77ecd6e02fd65a92b0893d1c38b"
+    },
+    {
+      "id": "EXP-053",
+      "module": "mutation_exp_053",
+      "path": "harness/agent_radar/mutations/mutation_exp_053.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "317faf0f1e2c18e74914dcf8a2c5f4ba4b2b3387a5dbfce071ca4a3321ce82c3"
+    },
+    {
+      "id": "EXP-054",
+      "module": "mutation_exp_054",
+      "path": "harness/agent_radar/mutations/mutation_exp_054.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "c5cd6c8eb1fa70e4ea5a7eb26aa265ae0d0fab87a7d55f1941248dc8afd0b41f"
+    },
+    {
+      "id": "EXP-055",
+      "module": "mutation_exp_055",
+      "path": "harness/agent_radar/mutations/mutation_exp_055.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "12d44b6b48c8dab964457f1dc0262fafb1493f86d8aa5583c44a50f1155ccc35"
+    },
+    {
+      "id": "EXP-056",
+      "module": "mutation_exp_056",
+      "path": "harness/agent_radar/mutations/mutation_exp_056.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "5abe8ba1f3a30fd12e118f9ce722f3d96004c12360b58a5d69949e7821c0d385"
+    },
+    {
+      "id": "EXP-057",
+      "module": "mutation_exp_057",
+      "path": "harness/agent_radar/mutations/mutation_exp_057.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "7233580779c2018b60b6ac45410dc2712cd1f03a91691d067a2d8536ba6d5f18"
+    },
+    {
+      "id": "EXP-058",
+      "module": "mutation_exp_058",
+      "path": "harness/agent_radar/mutations/mutation_exp_058.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "7de03abfff0bb07c752e546409de99dd1aa2a124501cc8899381542857a6bb47"
+    },
+    {
+      "id": "EXP-059",
+      "module": "mutation_exp_059",
+      "path": "harness/agent_radar/mutations/mutation_exp_059.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "ca4c112cad09f4d77df149dcd950bba8b0083a46cbcd1c0ee93e1f8ef21f22fc"
+    },
+    {
+      "id": "EXP-060",
+      "module": "mutation_exp_060",
+      "path": "harness/agent_radar/mutations/mutation_exp_060.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "8ab3cea5eeaa9972859f03d366ff69b41427fac7b5057f96e5147cb517a86a64"
+    },
+    {
+      "id": "EXP-061",
+      "module": "mutation_exp_061",
+      "path": "harness/agent_radar/mutations/mutation_exp_061.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "environment",
+        "evals"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "06140e6d15da8732d0e7b46ac75070a64f9411992f7b1494fa5f99e161759f83"
+    },
+    {
+      "id": "EXP-062",
+      "module": "mutation_exp_062",
+      "path": "harness/agent_radar/mutations/mutation_exp_062.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "99ee9e5eef53119d7ccef73e50ced96e302360f161f3dc8b038b7f7de83f1c4e"
+    },
+    {
+      "id": "EXP-063",
+      "module": "mutation_exp_063",
+      "path": "harness/agent_radar/mutations/mutation_exp_063.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "95b609a4e93baf5664fa4d2bd8ad26d5149014b6e1d6fe5f05f27842b32eb451"
+    },
+    {
+      "id": "EXP-064",
+      "module": "mutation_exp_064",
+      "path": "harness/agent_radar/mutations/mutation_exp_064.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "957b88dfc455a69a19dc51b3a4becf92d48165a9f1b0ffde1c40fac871acaf82"
+    },
+    {
+      "id": "EXP-065",
+      "module": "mutation_exp_065",
+      "path": "harness/agent_radar/mutations/mutation_exp_065.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "a4ddd0c47682eb2072c2773bf2cd849329e38f7abf6f8fe3e8bb75ed3423b609"
+    },
+    {
+      "id": "EXP-066",
+      "module": "mutation_exp_066",
+      "path": "harness/agent_radar/mutations/mutation_exp_066.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "d7c507cbb096c56ead9b500ddcaaac000af432ac0e89c8fa2f0715a6f92e2e3b"
+    },
+    {
+      "id": "EXP-067",
+      "module": "mutation_exp_067",
+      "path": "harness/agent_radar/mutations/mutation_exp_067.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "safety"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:02Z",
+      "sha256": "46c320667d80d338d6ad1206317545ed9fbde51d71d39c1fea22ab09d21f4cbe"
+    },
+    {
+      "id": "EXP-068",
+      "module": "mutation_exp_068",
+      "path": "harness/agent_radar/mutations/mutation_exp_068.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "context"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "531c4584975d12f861c2e62d255e8e099abfb7a18fc12e2adc0c1fc873a0e2f7"
+    },
+    {
+      "id": "EXP-069",
+      "module": "mutation_exp_069",
+      "path": "harness/agent_radar/mutations/mutation_exp_069.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "feedback"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "5ed12d43cfbf084d379778950232f92ae7c36db5f28cc414ee43ffeb7e5578d3"
+    },
+    {
+      "id": "EXP-070",
+      "module": "mutation_exp_070",
+      "path": "harness/agent_radar/mutations/mutation_exp_070.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:36Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "9e1347634e20e0565aa574a89026aed8af6eb6e8c4161c7b0b5c58bd3d7c6bbf"
+    },
+    {
+      "id": "EXP-071",
+      "module": "mutation_exp_071",
+      "path": "harness/agent_radar/mutations/mutation_exp_071.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "2a4ecf051ba7b1bab313eed7905300a2fefc06951786867df3655f88e6e798be"
+    },
+    {
+      "id": "EXP-072",
+      "module": "mutation_exp_072",
+      "path": "harness/agent_radar/mutations/mutation_exp_072.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "04424dfa17baaef19ce46ee603de13a4c19361e76b9a521fabd2a0e691eb080b"
+    },
+    {
+      "id": "EXP-073",
+      "module": "mutation_exp_073",
+      "path": "harness/agent_radar/mutations/mutation_exp_073.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "37b9e2b0ed214de18ac29e9debb186de293b1b982b55187107d75e0662b200a0"
+    },
+    {
+      "id": "EXP-074",
+      "module": "mutation_exp_074",
+      "path": "harness/agent_radar/mutations/mutation_exp_074.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "ae3c3a6258af9ed2bdcdc76f269a0b61bf12d70d98531c303ab12cd30c9915b5"
+    },
+    {
+      "id": "EXP-075",
+      "module": "mutation_exp_075",
+      "path": "harness/agent_radar/mutations/mutation_exp_075.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "d89ff167e0a3c5f3d39fcc49367bddbeae8a3da0439de4b0f1c90e46c546742a"
+    },
+    {
+      "id": "EXP-076",
+      "module": "mutation_exp_076",
+      "path": "harness/agent_radar/mutations/mutation_exp_076.py",
+      "themes": [
+        "mcp",
+        "skills"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "985d7199fc19eed612160a3e373f46fc17a8c9bd12dfcbb98a1b55e4ec7daa39"
+    },
+    {
+      "id": "EXP-077",
+      "module": "mutation_exp_077",
+      "path": "harness/agent_radar/mutations/mutation_exp_077.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "evals",
+        "context"
+      ],
+      "created_at": "2026-02-15T07:31:37Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "123c3a226198b40d77c9df4277f72a3681731bedb9c83b811328f44c3b98b4ac"
+    },
+    {
+      "id": "EXP-078",
+      "module": "mutation_exp_078",
+      "path": "harness/agent_radar/mutations/mutation_exp_078.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T01:41:11Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "4286b1b2b87f8a60343854bbf0de09ffe891d962ce794fb5c072d53ecf960e3c"
+    },
+    {
+      "id": "EXP-079",
+      "module": "mutation_exp_079",
+      "path": "harness/agent_radar/mutations/mutation_exp_079.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T01:41:11Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "69958d85428935692d1ec5c7b47842b2a5902fd2bfccf60a155459a2f63cdcd2"
+    },
+    {
+      "id": "EXP-080",
+      "module": "mutation_exp_080",
+      "path": "harness/agent_radar/mutations/mutation_exp_080.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T01:41:11Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "8fc437841aec975b25f84e609308c144059ebd069b243f3ceec5fe0b232a07e2"
+    },
+    {
+      "id": "EXP-081",
+      "module": "mutation_exp_081",
+      "path": "harness/agent_radar/mutations/mutation_exp_081.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T01:41:11Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "c19b44632257a852bdf05fdbdc949469d7bdc40bb092ed58a401bfeaa97ffd82"
+    },
+    {
+      "id": "EXP-082",
+      "module": "mutation_exp_082",
+      "path": "harness/agent_radar/mutations/mutation_exp_082.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T03:40:03Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "6cd6bf3f047db2599ecef4a2c5352a2ce09ecf888b44daa0959ca43467418abd"
+    },
+    {
+      "id": "EXP-083",
+      "module": "mutation_exp_083",
+      "path": "harness/agent_radar/mutations/mutation_exp_083.py",
+      "themes": [
+        "mcp",
+        "skills",
+        "observability",
+        "scalability",
+        "reliability",
+        "context",
+        "environment",
+        "evals",
+        "safety",
+        "feedback"
+      ],
+      "created_at": "2026-02-19T03:40:03Z",
+      "updated_at": "2026-02-19T03:40:03Z",
+      "sha256": "ba5d81c6dffc90ceade7b9ca18f916c448e71e04d2dd89f517491eee62c7ac0d"
     }
   ]
 }

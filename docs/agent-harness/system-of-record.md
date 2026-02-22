@@ -43,7 +43,7 @@
 - 実装器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement`): バックログ項目を実装アーティファクト・監視・黄金律へ反映
 - 監視評価器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow` 内): 実行メトリクスを生成し `monitoring_targets.json` を評価
 - 自己修復器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --self-heal-max-retries 2`): 失敗時に原因カテゴリ別の修復を実行し再試行
-- ガーデナー (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`): 文書劣化（TODO/未確定記法）の検出
+- ガーデナー (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`): 文書劣化（TODO/未確定記法）と SoR同期ズレ（古い文書）の検出
 - 制御器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`): 収集から実装までを自律実行する入口
 
 ## 境界

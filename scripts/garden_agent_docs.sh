@@ -25,4 +25,6 @@ if "${MATCH_CMD[@]}"; then
   exit 1
 fi
 
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden >/dev/null
+
 echo "doc-gardening: OK"

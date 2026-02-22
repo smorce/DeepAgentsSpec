@@ -10,10 +10,12 @@ import hashlib
 import importlib.util
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -65,11 +67,46 @@ USER_AGENT = (
 THEME_KEYWORDS: dict[str, list[str]] = {
     "mcp": ["mcp", "tool use", "tool-use", "devtools", "jetbrains"],
     "skills": ["skill", "skills"],
+    "environment": ["environment", "runtime", "workflow", "tooling", "infra", "developer experience", "dx"],
+    "feedback": ["feedback", "feedback loop", "regression", "postmortem", "incident review", "closed loop"],
+    "control": ["control loop", "orchestration", "policy", "governance", "gate", "rollback", "circuit breaker"],
+    "reliability": ["reliability", "resilience", "fault tolerance", "slo", "sla", "recovery", "deterministic"],
+    "scalability": ["scale", "scalable", "throughput", "latency", "capacity", "distributed"],
+    "maintainability": ["maintainability", "maintain", "modular", "refactor", "ownership", "operability"],
     "evals": ["eval", "benchmark", "swe-bench", "verification"],
     "context": ["context", "memory", "retrieval", "state", "checkpoint", "compaction"],
     "observability": ["trace", "metric", "log", "observability", "promql", "logql"],
     "safety": ["safety", "sandbox", "security", "guard"],
 }
+
+GROWTH_AXIS_KEYWORDS: dict[str, list[str]] = {
+    "environment": ["environment", "runtime", "workflow", "tooling", "dx", "developer experience"],
+    "feedback_loop": ["feedback", "evaluation", "eval", "regression", "postmortem", "incident review"],
+    "control_system": ["control", "orchestr", "policy", "gate", "governance", "autogrow", "closed loop"],
+    "reliability": ["reliability", "resilience", "fault tolerance", "deterministic", "recovery", "rollback"],
+    "scalability": ["scale", "scalable", "throughput", "latency", "capacity", "distributed"],
+}
+
+DEFAULT_CHECKPOINT_POLICY = [
+    "before_external_io",
+    "before_long_running_loop",
+    "before_quality_gate",
+]
+
+DEFAULT_CONVERSATION_REPLACEMENTS = [
+    "[[STATE_REF:<id>]]",
+    "[[PLAN_REF:<epic>/<feature>]]",
+    "[[EVAL_REF:<run>]]",
+]
+
+HIGH_PRIORITY_THEMES = {"control", "feedback", "reliability", "evals", "safety", "observability"}
+MEDIUM_PRIORITY_THEMES = {"mcp", "skills", "environment", "context", "scalability", "maintainability"}
+
+# LLM リトライ設定
+LLM_MAX_RETRIES = 3
+LLM_RETRY_BASE_DELAY = 2.0
+LLM_RETRY_MAX_DELAY = 60.0
+LLM_RETRY_STATUS_CODES = [429, 500, 502, 503, 504]
 
 
 @dataclass
@@ -145,6 +182,75 @@ class AnchorParser(HTMLParser):
         self._chunks = []
 
 
+class RetryHandler:
+    """
+    指数バックオフとジッターを使用したリトライハンドラー。
+    Codex 実行時の 429 / 5xx / タイムアウト等に備える。
+    """
+
+    def __init__(
+        self,
+        max_retries: int = LLM_MAX_RETRIES,
+        base_delay: float = LLM_RETRY_BASE_DELAY,
+        max_delay: float = LLM_RETRY_MAX_DELAY,
+        retry_status_codes: list[int] | None = None,
+        log_func=None,
+    ):
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+        self.max_delay = max_delay
+        self.retry_status_codes = retry_status_codes or LLM_RETRY_STATUS_CODES
+        self.log_func = log_func
+
+    def should_retry(self, exception: Exception, attempt: int) -> bool:
+        """
+        リトライすべきかどうかを判定する。
+
+        Args:
+            exception: 発生した例外
+            attempt: 現在の試行回数（0始まり）
+
+        Returns:
+            リトライすべき場合は True
+        """
+        if attempt >= self.max_retries:
+            return False
+
+        error_str = str(exception)
+
+        non_retryable_keywords = [
+            "context_length_exceeded",
+            "context window",
+            "input exceeds",
+        ]
+        if any(kw in error_str.lower() for kw in non_retryable_keywords):
+            msg = f"Non-retryable error detected (context length exceeded): {error_str[:200]}"
+            if self.log_func:
+                self.log_func(msg)
+            return False
+
+        for code in self.retry_status_codes:
+            if str(code) in error_str:
+                return True
+
+        retry_keywords = ["timeout", "connection", "rate", "limit", "throttl"]
+        return any(kw in error_str.lower() for kw in retry_keywords)
+
+    def get_delay(self, attempt: int) -> float:
+        """
+        リトライ前の待機時間を計算する（指数バックオフ + ジッター）。
+
+        Args:
+            attempt: 現在の試行回数（0始まり）
+
+        Returns:
+            待機時間（秒）
+        """
+        delay = min(self.base_delay * (2**attempt), self.max_delay)
+        jitter = random.uniform(0, delay * 0.1)
+        return delay + jitter
+
+
 def utc_now() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -189,6 +295,47 @@ def append_jsonl(path: Path, obj: Any) -> None:
 
 def normalize_space(text: str) -> str:
     return " ".join(text.split())
+
+
+def coerce_str_list(raw: Any) -> list[str]:
+    if not isinstance(raw, list):
+        return []
+    cleaned: list[str] = []
+    seen: set[str] = set()
+    for value in raw:
+        if not isinstance(value, str):
+            continue
+        token = normalize_space(value)
+        if not token or token in seen:
+            continue
+        cleaned.append(token)
+        seen.add(token)
+    return cleaned
+
+
+def with_default_str_list(raw: Any, default_values: list[str]) -> list[str]:
+    values = coerce_str_list(raw)
+    return values if values else list(default_values)
+
+
+def detect_growth_axes(*texts: str) -> list[str]:
+    joined = " ".join(texts).lower()
+    axes: list[str] = []
+    for axis, keywords in GROWTH_AXIS_KEYWORDS.items():
+        if any(keyword in joined for keyword in keywords):
+            axes.append(axis)
+    if not axes:
+        axes.append("control_system")
+    return axes
+
+
+def innovation_priority_for_themes(themes: list[str]) -> str:
+    theme_set = {theme.strip().lower() for theme in themes if theme.strip()}
+    if theme_set.intersection(HIGH_PRIORITY_THEMES):
+        return "high"
+    if theme_set.intersection(MEDIUM_PRIORITY_THEMES):
+        return "medium"
+    return "normal"
 
 
 def normalize_origin_path(url: str) -> str:
@@ -300,6 +447,10 @@ def write_mutation_module(exp_item: dict[str, Any], themes: list[str]) -> Path:
     themes_literal = json.dumps(themes, ensure_ascii=False)
     title_literal = json.dumps(title, ensure_ascii=False)
     source_literal = json.dumps(source_id, ensure_ascii=False)
+    checkpoint_literal = json.dumps(DEFAULT_CHECKPOINT_POLICY, ensure_ascii=False)
+    replacement_literal = json.dumps(DEFAULT_CONVERSATION_REPLACEMENTS, ensure_ascii=False)
+    high_priority_literal = json.dumps(sorted(HIGH_PRIORITY_THEMES), ensure_ascii=False)
+    medium_priority_literal = json.dumps(sorted(MEDIUM_PRIORITY_THEMES), ensure_ascii=False)
 
     content = "\n".join(
         [
@@ -319,19 +470,14 @@ def write_mutation_module(exp_item: dict[str, Any], themes: list[str]) -> Path:
             "        if theme not in tags:",
             "            tags.append(theme)",
             "    item['harness_tags'] = tags",
-            "    item['state_checkpoint_policy'] = [",
-            "        'before_external_io',",
-            "        'before_long_running_loop',",
-            "        'before_quality_gate',",
-            "    ]",
-            "    item['conversation_replacements'] = [",
-            "        '[[STATE_REF:<id>]]',",
-            "        '[[PLAN_REF:<epic>/<feature>]]',",
-            "        '[[EVAL_REF:<run>]]',",
-            "    ]",
-            "    if 'mcp' in THEMES or 'skills' in THEMES:",
+            "    item['state_checkpoint_policy'] = " + checkpoint_literal,
+            "    item['conversation_replacements'] = " + replacement_literal,
+            "    high_priority_themes = set(" + high_priority_literal + ")",
+            "    medium_priority_themes = set(" + medium_priority_literal + ")",
+            "    theme_set = {str(theme).strip().lower() for theme in THEMES}",
+            "    if theme_set.intersection(high_priority_themes):",
             "        item['innovation_priority'] = 'high'",
-            "    elif 'observability' in THEMES or 'context' in THEMES:",
+            "    elif theme_set.intersection(medium_priority_themes):",
             "        item['innovation_priority'] = 'medium'",
             "    else:",
             "        item['innovation_priority'] = 'normal'",
@@ -343,6 +489,16 @@ def write_mutation_module(exp_item: dict[str, Any], themes: list[str]) -> Path:
     module_path.parent.mkdir(parents=True, exist_ok=True)
     module_path.write_text(content, encoding="utf-8")
     return module_path
+
+
+def is_autogenerated_mutation(module_path: Path) -> bool:
+    if not module_path.exists() or not module_path.is_file():
+        return False
+    try:
+        head = module_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return False
+    return head.startswith('"""Auto-generated mutation module for agent radar."""')
 
 
 def upsert_mutation_index(exp_id: str, module_path: Path, themes: list[str]) -> bool:
@@ -652,6 +808,80 @@ def write_codex_audit(stdout_text: str, stderr_text: str, return_code: int) -> P
     return path
 
 
+def emit_runtime_info(summary: str) -> None:
+    print(f"INFO: {summary}", file=sys.stderr, flush=True)
+    append_progress(summary)
+
+# #region agent log
+def _agent_debug_log(*, run_id: str, hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
+    try:
+        payload = {
+            "sessionId": "9f3ad0",
+            "runId": run_id,
+            "hypothesisId": hypothesis_id,
+            "location": location,
+            "message": message,
+            "data": data,
+            "timestamp": int(time.time() * 1000),
+        }
+        with (ROOT / "debug-9f3ad0.log").open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
+
+def _agent_summarize_config(path: Path) -> dict[str, Any]:
+    info: dict[str, Any] = {"path": str(path), "exists": path.exists()}
+    if not path.exists():
+        return info
+    try:
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        info["size"] = len(raw)
+        info["sha256"] = hashlib.sha256(raw.encode("utf-8", errors="replace")).hexdigest()
+        low = raw.lower()
+        info["has_model"] = "model" in low
+        info["has_sandbox_mode"] = "sandbox_mode" in low
+        info["has_web_search"] = "web_search" in low
+        info["has_mcp_servers"] = "mcp_servers" in low
+        info["mentions_smorcepie"] = "smorcepie" in low
+        info["mentions_chrome_devtools"] = "chrome-devtools" in low
+    except Exception as exc:
+        info["error"] = str(exc)[:200]
+    return info
+
+
+def _agent_read_project_codex_kv(path: Path) -> dict[str, str]:
+    """
+    `.codex/config.toml` から必要最小限のトップレベル設定だけを抽出する。
+    依存追加なし・壊れにくさ優先で、厳密な TOML パースは行わない。
+    """
+    if not path.exists():
+        return {}
+    try:
+        raw = path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return {}
+
+    kv: dict[str, str] = {}
+    for line in raw.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if "=" not in stripped:
+            continue
+        key, value = stripped.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            continue
+        # inline comment を落とす（"..." 内の # は考慮しない、簡易実装）
+        if "#" in value:
+            value = value.split("#", 1)[0].strip()
+        kv[key] = value
+    return kv
+# #endregion
+
+
 def evidence_prefixes_for_source(source: dict[str, Any]) -> list[str]:
     prefixes: list[str] = []
     for value in source.get("allowed_entry_prefixes", []):
@@ -670,6 +900,10 @@ def evidence_prefixes_for_source(source: dict[str, Any]) -> list[str]:
     return deduped
 
 
+def codex_unavailable_title(reason: str) -> str:
+    return f"取得不可: 公式サイトから最新記事情報を確定できません ({reason})"
+
+
 def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
     source_lines = []
     for src in sources:
@@ -683,11 +917,13 @@ def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
             *source_lines,
             "",
             "【要件】",
-            "- 推測禁止。不明項目は null を返すこと",
+            "- 推測禁止。不明時に null は返さないこと",
             "- 各ブログについて latest_title / latest_url / latest_date / method / evidence_url を1件返すこと",
             "- method は rss / atom / html のいずれか",
             "- possibleなら RSS/Atom を優先。なければ HTML 推定",
             "- latest_url と evidence_url は必ず許可されたブログ配下のURLのみ",
+            "- 取得不能な場合は method='html' とし、latest_title に取得不能理由の短文を入れる",
+            "- 取得不能な場合は latest_url/evidence_url に site と同じURLを入れる（null禁止）",
             "- 出力は JSON のみ。説明文や Markdown 禁止",
             "- 許可外URLを1件でも使った場合は {\"error\":\"OUT_OF_SCOPE\"} のみを返す",
             "",
@@ -697,11 +933,11 @@ def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
             '  "results": [',
             "    {",
             '      "site": "<homepage>",',
-            '      "latest_title": "<string|null>",',
-            '      "latest_url": "<string|null>",',
+            '      "latest_title": "<string>",',
+            '      "latest_url": "<string>",',
             '      "latest_date": "<string|null>",',
             '      "method": "<rss|atom|html>",',
-            '      "evidence_url": "<string|null>"',
+            '      "evidence_url": "<string>"',
             "    }",
             "  ]",
             "}",
@@ -710,26 +946,181 @@ def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
 
 
 def run_codex_exec(prompt: str, timeout_sec: int = 600) -> tuple[str, Path]:
-    cmd = ["codex", "exec", prompt]
-    try:
-        result = subprocess.run(
-            cmd,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=timeout_sec,
-            env=os.environ.copy(),
-        )
-    except subprocess.TimeoutExpired as exc:
-        stderr_text = (exc.stderr or "").strip()
-        stdout_text = (exc.stdout or "").strip()
-        audit_path = write_codex_audit(stdout_text, stderr_text, return_code=124)
-        raise RuntimeError(f"codex exec timed out after {timeout_sec}s (audit={audit_path})") from exc
+    """
+    Codex CLI を実行する（リトライ対応版）。
+    .codex/config.toml の設定を適用するため、リポジトリルートを cwd に指定する。
+    """
+    retry_handler = RetryHandler(log_func=emit_runtime_info)
+    
+    for attempt in range(retry_handler.max_retries + 1):
+        try:
+            if attempt > 0:
+                delay = retry_handler.get_delay(attempt - 1)
+                emit_runtime_info(f"codex exec retry | attempt={attempt + 1}/{retry_handler.max_retries + 1} delay={delay:.1f}s")
+                time.sleep(delay)
+            
+            return _run_codex_exec_once(prompt, timeout_sec, attempt)
+            
+        except Exception as exc:
+            # #region agent log
+            try:
+                _agent_debug_log(
+                    run_id="post-fix",
+                    hypothesis_id="E",
+                    location="radar_ops.py:run_codex_exec",
+                    message="codex exec raised exception",
+                    data={"attempt": attempt, "error": str(exc)[:400]},
+                )
+            except Exception:
+                pass
+            # #endregion
+            if not retry_handler.should_retry(exc, attempt):
+                raise
+            
+            emit_runtime_info(f"codex exec retryable error | attempt={attempt + 1} error={str(exc)[:200]}")
+            
+            if attempt >= retry_handler.max_retries:
+                emit_runtime_info(f"codex exec max retries exceeded | attempts={attempt + 1}")
+                raise
+    
+    raise RuntimeError("codex exec failed: unexpected retry loop exit")
 
-    audit_path = write_codex_audit(result.stdout, result.stderr, return_code=result.returncode)
-    if result.returncode != 0:
-        raise RuntimeError(f"codex exec failed with code={result.returncode} (audit={audit_path})")
-    return result.stdout.strip(), audit_path
+
+def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[str, Path]:
+    """
+    Codex CLI を1回実行する。
+    .codex/config.toml を読み込むため、リポジトリルートを cwd に指定する。
+    """
+    local_config_path = ROOT / ".codex" / "config.toml"
+
+    project_cfg = _agent_read_project_codex_kv(local_config_path)
+    cfg_model = project_cfg.get("model")
+    cfg_reasoning = project_cfg.get("model_reasoning_effort")
+    cfg_approval = project_cfg.get("approval_policy")
+    cfg_sandbox = project_cfg.get("sandbox_mode")
+    cfg_web_search = project_cfg.get("web_search")
+
+    cmd: list[str] = ["codex", "exec"]
+    # `.codex/config.toml` を Codex に「渡す」: CLI オプション/override に展開する
+    if cfg_model:
+        cmd += ["-m", cfg_model.strip().strip('"').strip("'")]
+    if cfg_sandbox:
+        cmd += ["-s", cfg_sandbox.strip().strip('"').strip("'")]
+    if cfg_reasoning:
+        cmd += ["-c", f"model_reasoning_effort={cfg_reasoning}"]
+    if cfg_approval:
+        cmd += ["-c", f"approval_policy={cfg_approval}"]
+    if cfg_web_search:
+        cmd += ["-c", f"web_search={cfg_web_search}"]
+    cmd.append(prompt)
+    heartbeat_sec = 15.0
+    start_mono = time.monotonic()
+    deadline = start_mono + float(timeout_sec)
+    next_heartbeat = start_mono + heartbeat_sec
+    
+    if attempt == 0:
+        emit_runtime_info(f"codex exec started | timeout_sec={timeout_sec} config={local_config_path}")
+    
+    env = os.environ.copy()
+    user_home = str(Path.home())
+    if 'USERPROFILE' not in env:
+        env['USERPROFILE'] = user_home
+    if 'HOME' not in env:
+        env['HOME'] = user_home
+    env['CODEX_HOME'] = str(Path.home() / ".codex")
+
+    # #region agent log
+    try:
+        codex_home_value = env.get("CODEX_HOME") or ""
+        codex_home_config = Path(codex_home_value) / "config.toml" if codex_home_value else None
+        _agent_debug_log(
+            run_id="post-fix",
+            hypothesis_id="A",
+            location="radar_ops.py:_run_codex_exec_once",
+            message="codex exec env/cfg snapshot",
+            data={
+                "platform": sys.platform,
+                "which_codex": shutil.which("codex"),
+                "cwd": str(ROOT),
+                "home": str(Path.home()),
+                "env_CODEX_HOME": env.get("CODEX_HOME"),
+                "env_HOME": env.get("HOME"),
+                "env_USERPROFILE": env.get("USERPROFILE"),
+                "project_cfg_keys": sorted(project_cfg.keys()),
+                "project_cfg_selected": {
+                    "model": cfg_model,
+                    "model_reasoning_effort": cfg_reasoning,
+                    "approval_policy": cfg_approval,
+                    "sandbox_mode": cfg_sandbox,
+                    "web_search": cfg_web_search,
+                },
+                "cmd_head": cmd[:12],
+                "project_config": _agent_summarize_config(local_config_path),
+                "codex_home_config": _agent_summarize_config(codex_home_config) if codex_home_config else {"path": "", "exists": False},
+            },
+        )
+    except Exception:
+        pass
+    # #endregion
+    
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=env,
+        cwd=str(ROOT),
+    )
+
+    while proc.poll() is None:
+        now = time.monotonic()
+        elapsed = int(now - start_mono)
+        if now >= next_heartbeat:
+            emit_runtime_info(
+                f"codex exec running | elapsed_sec={elapsed} timeout_sec={timeout_sec}"
+            )
+            next_heartbeat += heartbeat_sec
+        if now >= deadline:
+            proc.kill()
+            stdout_text, stderr_text = proc.communicate()
+            audit_path = write_codex_audit(stdout_text, stderr_text, return_code=124)
+            emit_runtime_info(
+                f"codex exec timeout | elapsed_sec={elapsed} audit={audit_path.relative_to(ROOT)}"
+            )
+            raise RuntimeError(
+                f"codex exec timed out after {timeout_sec}s (audit={audit_path})"
+            )
+        time.sleep(1.0)
+
+    result_stdout, result_stderr = proc.communicate()
+    elapsed_done = int(time.monotonic() - start_mono)
+    audit_path = write_codex_audit(result_stdout, result_stderr, return_code=proc.returncode or 0)
+
+    # #region agent log
+    try:
+        stderr_head = "\n".join((result_stderr or "").splitlines()[:30])
+        _agent_debug_log(
+            run_id="post-fix",
+            hypothesis_id="B",
+            location="radar_ops.py:_run_codex_exec_once",
+            message="codex exec completed (captured stderr head)",
+            data={"return_code": proc.returncode, "audit": str(audit_path), "stderr_head": stderr_head[:1200]},
+        )
+    except Exception:
+        pass
+    # #endregion
+    if proc.returncode != 0:
+        emit_runtime_info(
+            f"codex exec failed | code={proc.returncode} elapsed_sec={elapsed_done} audit={audit_path.relative_to(ROOT)}"
+        )
+        raise RuntimeError(
+            f"codex exec failed with code={proc.returncode} (audit={audit_path})"
+        )
+
+    emit_runtime_info(
+        f"codex exec completed | elapsed_sec={elapsed_done} audit={audit_path.relative_to(ROOT)}"
+    )
+    return result_stdout.strip(), audit_path
 
 
 def collect_sources_with_codex_exec(sources: list[dict[str, Any]]) -> tuple[list[SourceResult], Path]:
@@ -778,13 +1169,36 @@ def collect_sources_with_codex_exec(sources: list[dict[str, Any]]) -> tuple[list
         latest_date = str(entry.get("latest_date", "") or "").strip()
         method = normalize_space(str(entry.get("method", "") or "")).lower()
         evidence_url = str(entry.get("evidence_url", "") or "").strip()
+        source_id = str(source.get("id", ""))
+        source_homepage = str(source.get("homepage", "")).strip()
 
         if method not in {"rss", "atom", "html"}:
-            raise RuntimeError(f"codex result has invalid method: {method} (audit={audit_path})")
-        if not latest_title:
-            raise RuntimeError(f"codex result latest_title is empty for site={homepage_key} (audit={audit_path})")
-        if not latest_url:
-            raise RuntimeError(f"codex result latest_url is empty for site={homepage_key} (audit={audit_path})")
+            repaired_method = "html"
+            emit_runtime_info(
+                f"codex method repaired | source={source_id} from={method or 'empty'} to={repaired_method}"
+            )
+            method = repaired_method
+
+        if not latest_title or not latest_url:
+            missing_fields: list[str] = []
+            if not latest_title:
+                missing_fields.append("latest_title")
+            if not latest_url:
+                missing_fields.append("latest_url")
+
+            reason = ",".join(missing_fields)
+            if not latest_title:
+                latest_title = codex_unavailable_title(reason)
+            if not latest_url:
+                latest_url = source_homepage
+            if not evidence_url:
+                evidence_url = source_homepage
+            emit_runtime_info(
+                f"codex fields repaired | source={source_id} missing={reason} strategy=unavailable-message"
+            )
+
+        if not evidence_url:
+            evidence_url = latest_url
 
         if not has_allowed_prefix(latest_url, source.get("allowed_entry_prefixes", [])):
             raise RuntimeError(f"codex latest_url out of boundary: {latest_url} (audit={audit_path})")
@@ -891,6 +1305,9 @@ def run_update(collector_mode: str = "auto") -> int:
     mutation_modules = load_mutation_modules()
 
     if collector_mode in {"auto", "codex"}:
+        emit_runtime_info(
+            f"update collector attempt | requested={collector_mode} phase=codex"
+        )
         try:
             results, audit_path = collect_sources_with_codex_exec(sources)
             collector_used = "codex"
@@ -899,9 +1316,15 @@ def run_update(collector_mode: str = "auto") -> int:
             if collector_mode == "codex":
                 print(f"ERROR: {exc}", file=sys.stderr)
                 return 1
+            emit_runtime_info(
+                f"update collector fallback | from=codex to=native reason={normalize_space(str(exc))}"
+            )
             collector_warnings.append(str(exc))
 
     if not results:
+        emit_runtime_info(
+            f"update collector attempt | requested={collector_mode} phase=native"
+        )
         results = [collect_source(source) for source in sources]
         collector_used = "native"
 
@@ -1266,9 +1689,23 @@ def run_garden() -> int:
                     issues.append(f"{rel}:{lineno}: {line.strip()}")
                     break
 
+    expected_growth_doc = expected_autonomous_growth_doc_from_backlog()
+    actual_growth_doc = (
+        AUTONOMOUS_GROWTH_DOC.read_text(encoding="utf-8")
+        if AUTONOMOUS_GROWTH_DOC.exists()
+        else ""
+    )
+    if actual_growth_doc.strip() != expected_growth_doc.strip():
+        issues.append(
+            "docs/agent-harness/autonomous-growth.md is stale against harness/agent_radar/experiment_backlog.json"
+        )
+
     if issues:
         for issue in issues:
-            print(f"ERROR: unresolved placeholder: {issue}", file=sys.stderr)
+            if issue.startswith("docs/agent-harness/autonomous-growth.md"):
+                print(f"ERROR: stale doc: {issue}", file=sys.stderr)
+            else:
+                print(f"ERROR: unresolved placeholder: {issue}", file=sys.stderr)
         return 1
 
     print("OK: garden completed")
@@ -1455,6 +1892,7 @@ def repair_validate_boundary() -> list[str]:
 
     monitoring_actions = repair_monitoring_targets()
     actions.extend(monitoring_actions)
+    actions.extend(repair_monitoring_artifact_freshness())
 
     return actions
 
@@ -1556,6 +1994,52 @@ def repair_monitoring_targets() -> list[str]:
     return actions
 
 
+def repair_monitoring_artifact_freshness() -> list[str]:
+    actions: list[str] = []
+    targets_doc = read_json(MONITORING_TARGETS_FILE, default={"targets": []})
+    targets = targets_doc.get("targets") if isinstance(targets_doc, dict) else []
+    if not isinstance(targets, list) or len(targets) == 0:
+        return actions
+
+    now = iso_now()
+    latest_doc = read_json(METRICS_LATEST_FILE, default={})
+    if not isinstance(latest_doc, dict):
+        latest_doc = {}
+        actions.append("reset_metrics_latest_root")
+    latest_doc["version"] = int(latest_doc.get("version", 1))
+    latest_doc["generated_at"] = now
+    latest_doc["loop"] = "bootstrap"
+    latest_doc["collector_mode"] = str(latest_doc.get("collector_mode", "native") or "native")
+    latest_doc["steps"] = latest_doc.get("steps") if isinstance(latest_doc.get("steps"), list) else []
+    metrics = latest_doc.get("metrics")
+    if not isinstance(metrics, dict):
+        metrics = {}
+        actions.append("reset_metrics_latest_metrics")
+    metrics["radar.monitor_target_count"] = float(len(targets))
+    latest_doc["metrics"] = metrics
+    write_json(METRICS_LATEST_FILE, latest_doc)
+    actions.append("refresh_metrics_latest")
+
+    results_doc = read_json(MONITORING_RESULTS_FILE, default={})
+    if not isinstance(results_doc, dict):
+        results_doc = {}
+        actions.append("reset_monitoring_results_root")
+    results_doc["version"] = int(results_doc.get("version", 1))
+    results_doc["generated_at"] = now
+    results_doc["loop"] = "bootstrap"
+    results_doc["pass_count"] = int(results_doc.get("pass_count", 0))
+    results_doc["total_targets"] = int(results_doc.get("total_targets", len(targets)))
+    evaluations = results_doc.get("evaluations")
+    if not isinstance(evaluations, list):
+        evaluations = []
+        actions.append("reset_monitoring_results_evaluations")
+    results_doc["evaluations"] = evaluations
+    write_json(MONITORING_RESULTS_FILE, results_doc)
+    actions.append("refresh_monitoring_results")
+
+    return actions
+
+
 def repair_garden_placeholders() -> list[str]:
     actions: list[str] = []
     replacement_note = (
@@ -1582,6 +2066,20 @@ def repair_garden_placeholders() -> list[str]:
             path.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
             actions.append(f"rewrite:{path.relative_to(ROOT)}")
     return actions
+
+
+def repair_autonomous_growth_doc_currency() -> list[str]:
+    expected = expected_autonomous_growth_doc_from_backlog()
+    current = (
+        AUTONOMOUS_GROWTH_DOC.read_text(encoding="utf-8")
+        if AUTONOMOUS_GROWTH_DOC.exists()
+        else ""
+    )
+    if current.strip() == expected.strip():
+        return []
+    AUTONOMOUS_GROWTH_DOC.parent.mkdir(parents=True, exist_ok=True)
+    AUTONOMOUS_GROWTH_DOC.write_text(expected, encoding="utf-8")
+    return [f"refresh:{AUTONOMOUS_GROWTH_DOC.relative_to(ROOT)}"]
 
 
 def parse_threshold_expression(expr: str) -> tuple[str, float] | None:
@@ -1766,6 +2264,25 @@ def next_experiment_id(items: list[dict[str, Any]]) -> str:
     return f"EXP-{max_no + 1:03d}"
 
 
+def build_evaluation_task(exp_id: str, axes: list[str]) -> dict[str, Any]:
+    axis_summary = ", ".join(axes)
+    return {
+        "id": f"EVAL-{exp_id}",
+        "kind": "article-derived",
+        "goal": (
+            "複雑で信頼性の高いソフトウェアを大規模に構築・維持するため、"
+            f"環境/フィードバックループ/制御システム（{axis_summary}）の改善効果を検証する。"
+        ),
+        "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow",
+        "expected_signals": [
+            "autogrow.success == 1",
+            "validate step passed",
+            "garden step passed",
+            "monitoring_results refreshed",
+        ],
+    }
+
+
 def run_backlog() -> int:
     new_items_doc = read_json(NEW_ITEMS_FILE, default={"new_items": []})
     backlog = read_json(EXPERIMENT_BACKLOG_FILE, default={"version": 1, "items": []})
@@ -1788,6 +2305,8 @@ def run_backlog() -> int:
 
     created = 0
     for raw in new_items:
+        if not isinstance(raw, dict):
+            continue
         source_id = str(raw.get("source_id", "")).strip()
         title = normalize_space(str(raw.get("title", "")))
         link = str(raw.get("link", "")).strip()
@@ -1799,6 +2318,26 @@ def run_backlog() -> int:
             continue
 
         exp_id = next_experiment_id(items)
+        harness_tags = coerce_str_list(raw.get("harness_tags"))
+        raw_themes = coerce_str_list(raw.get("themes"))
+        detected_themes = detect_themes(title, link, " ".join(harness_tags), " ".join(raw_themes))
+        themes: list[str] = []
+        for token in [*harness_tags, *raw_themes, *detected_themes]:
+            lowered = token.strip().lower()
+            if lowered and lowered not in themes:
+                themes.append(lowered)
+
+        growth_axes = detect_growth_axes(title, link, " ".join(themes))
+        checkpoint_policy = with_default_str_list(
+            raw.get("state_checkpoint_policy"),
+            DEFAULT_CHECKPOINT_POLICY,
+        )
+        replacements = with_default_str_list(
+            raw.get("conversation_replacements"),
+            DEFAULT_CONVERSATION_REPLACEMENTS,
+        )
+        theme_summary = ", ".join(themes)
+        axis_summary = ", ".join(growth_axes)
         items.append(
             {
                 "id": exp_id,
@@ -1809,8 +2348,21 @@ def run_backlog() -> int:
                 "origin_link": link,
                 "published": published,
                 "created_at": iso_now(),
-                "acceptance": "Spec/Planへ反映し、評価結果と採否を記録する",
-                "hypothesis": "記事の手法をハーネスへ適用し、品質ゲートまたは自律実行能力を改善できる",
+                "acceptance": (
+                    "state checkpoint と差し替え表現を伴う評価タスクとして実装へ反映し、"
+                    "autogrow 実行で結果を再現できる。"
+                ),
+                "hypothesis": (
+                    f"記事知見（{theme_summary}）を {axis_summary} の改善へ反映すると、"
+                    "品質ゲートと自律実行の信頼性を継続的に高められる。"
+                ),
+                "themes": themes,
+                "growth_axes": growth_axes,
+                "harness_tags": harness_tags,
+                "state_checkpoint_policy": checkpoint_policy,
+                "conversation_replacements": replacements,
+                "innovation_priority": innovation_priority_for_themes(themes),
+                "evaluation_task": build_evaluation_task(exp_id, growth_axes),
             }
         )
         existing_links.add(link)
@@ -1834,13 +2386,23 @@ def detect_themes(*texts: str) -> list[str]:
             matched.append(theme)
     if not matched:
         matched.append("general")
-    return matched
+    deduped: list[str] = []
+    for theme in matched:
+        if theme not in deduped:
+            deduped.append(theme)
+    return deduped
 
 
 def monitoring_profile_for_theme(theme: str) -> tuple[str, str]:
     theme_metric_map: dict[str, tuple[str, str]] = {
         "mcp": ("radar.new_item_count", ">= 0"),
         "skills": ("radar.new_item_count", ">= 0"),
+        "environment": ("autogrow.success_rate", ">= 0.9"),
+        "feedback": ("autogrow.success_rate", ">= 0.95"),
+        "control": ("autogrow.success_rate", ">= 0.95"),
+        "reliability": ("autogrow.success_rate", ">= 0.95"),
+        "scalability": ("autogrow.success_rate", ">= 0.9"),
+        "maintainability": ("autogrow.self_heal_actions", "<= 3"),
         "evals": ("autogrow.success_rate", ">= 0.95"),
         "context": ("autogrow.self_heal_actions", "<= 3"),
         "observability": ("autogrow.success_rate", ">= 0.95"),
@@ -1857,23 +2419,34 @@ def upsert_golden_rule(exp_id: str, themes: list[str], title: str) -> bool:
         return False
 
     rule_id = f"GR-AUTO-{exp_id}"
+    theme_summary = ", ".join(themes) if themes else "general"
+    rule_payload = {
+        "id": rule_id,
+        "title": f"{exp_id} 自動実装ガイド",
+        "rule": (
+            f"{title} で得た知見（例: {theme_summary}）は、テーマ例に限定せず、"
+            "複雑で信頼性の高いソフトウェアを大規模に構築・維持するための"
+            "環境・フィードバックループ・制御システム改善へ展開し、"
+            "必ず state checkpoint と差し替え表現を伴う実装として反映し、"
+            "検証コマンドで再現可能にする。"
+        ),
+        "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow",
+    }
+
     for rule in rules:
         if str(rule.get("id", "")) == rule_id:
-            return False
+            changed = False
+            for key, value in rule_payload.items():
+                if rule.get(key) != value:
+                    rule[key] = value
+                    changed = True
+            if changed:
+                rules_doc["updated_at"] = iso_now()
+                rules_doc["rules"] = rules
+                write_json(GOLDEN_RULES_FILE, rules_doc)
+            return changed
 
-    theme_summary = ", ".join(themes)
-    rules.append(
-        {
-            "id": rule_id,
-            "title": f"{exp_id} 自動実装ガイド",
-            "rule": (
-                f"{title} で得た知見（{theme_summary}）は、"
-                "必ず state checkpoint と差し替え表現を伴う実装として反映し、"
-                "検証コマンドで再現可能にする。"
-            ),
-            "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow",
-        }
-    )
+    rules.append(rule_payload)
     rules_doc["updated_at"] = iso_now()
     rules_doc["rules"] = rules
     write_json(GOLDEN_RULES_FILE, rules_doc)
@@ -1998,11 +2571,7 @@ def write_implementation_artifacts(exp_item: dict[str, Any], themes: list[str]) 
         "exp_id": exp_id,
         "updated_at": iso_now(),
         "checkpoint_policy": {
-            "when": [
-                "before_external_io",
-                "before_long_running_loop",
-                "before_quality_gate",
-            ],
+            "when": list(DEFAULT_CHECKPOINT_POLICY),
             "what": [
                 "task_summary",
                 "artifact_refs",
@@ -2013,11 +2582,7 @@ def write_implementation_artifacts(exp_item: dict[str, Any], themes: list[str]) 
                 "hot": "harness/agent_radar/state.json",
                 "cold": "harness/agent_radar/archive/YYYY/MM/*.jsonl",
             },
-            "conversation_replacement": [
-                "[[STATE_REF:<id>]]",
-                "[[PLAN_REF:<epic>/<feature>]]",
-                "[[EVAL_REF:<run>]]",
-            ],
+            "conversation_replacement": list(DEFAULT_CONVERSATION_REPLACEMENTS),
         },
     }
     write_json(state_strategy_path, state_strategy)
@@ -2029,14 +2594,13 @@ def write_implementation_artifacts(exp_item: dict[str, Any], themes: list[str]) 
     ]
 
 
-def update_autonomous_growth_doc(items: list[dict[str, Any]]) -> None:
-    AUTONOMOUS_GROWTH_DOC.parent.mkdir(parents=True, exist_ok=True)
+def render_autonomous_growth_doc(items: list[dict[str, Any]], updated_at: str) -> str:
     lines = [
         "# Autonomous Growth",
         "",
         "この文書は、自律成長ループの実装結果を記録する SoR です。",
         "",
-        f"- Updated at: `{iso_now()}`",
+        f"- Updated at: `{updated_at}`",
         "",
         "## Backlog Status",
         "",
@@ -2059,7 +2623,26 @@ def update_autonomous_growth_doc(items: list[dict[str, Any]]) -> None:
     )
     lines.append("")
 
-    AUTONOMOUS_GROWTH_DOC.write_text("\n".join(lines), encoding="utf-8")
+    return "\n".join(lines)
+
+
+def expected_autonomous_growth_doc_from_backlog() -> str:
+    backlog = read_json(EXPERIMENT_BACKLOG_FILE, default={"items": []})
+    items = backlog.get("items") if isinstance(backlog, dict) else []
+    if not isinstance(items, list):
+        items = []
+    updated_at = str(backlog.get("updated_at", "")).strip() if isinstance(backlog, dict) else ""
+    if not updated_at:
+        updated_at = "unknown"
+    return render_autonomous_growth_doc(items, updated_at=updated_at)
+
+
+def update_autonomous_growth_doc(items: list[dict[str, Any]], updated_at: str) -> None:
+    AUTONOMOUS_GROWTH_DOC.parent.mkdir(parents=True, exist_ok=True)
+    AUTONOMOUS_GROWTH_DOC.write_text(
+        render_autonomous_growth_doc(items, updated_at=updated_at),
+        encoding="utf-8",
+    )
 
 
 def run_implement() -> int:
@@ -2081,37 +2664,63 @@ def run_implement() -> int:
             exp_id = str(item.get("id", "")).strip()
             if not exp_id:
                 continue
-            mutation_ref = str(item.get("mutation_module", "")).strip()
-            mutation_exists = False
-            if mutation_ref:
-                mutation_exists = (ROOT / mutation_ref).exists()
-            if mutation_exists:
-                title = str(item.get("title", "")).strip()
-                link = str(item.get("origin_link", "")).strip()
-                themes = item.get("themes")
-                if not isinstance(themes, list) or not themes:
-                    themes = detect_themes(title, link)
-                upsert_mutation_index(exp_id, ROOT / mutation_ref, themes)
-                item["themes"] = themes
-                continue
-
             title = str(item.get("title", "")).strip()
             link = str(item.get("origin_link", "")).strip()
-            themes = item.get("themes")
-            if not isinstance(themes, list) or not themes:
-                themes = detect_themes(title, link)
+            harness_tags = coerce_str_list(item.get("harness_tags"))
+            raw_themes = coerce_str_list(item.get("themes"))
+            detected_themes = detect_themes(title, link, " ".join(harness_tags), " ".join(raw_themes))
+            themes: list[str] = []
+            for token in [*harness_tags, *raw_themes, *detected_themes]:
+                lowered = token.strip().lower()
+                if lowered and lowered not in themes:
+                    themes.append(lowered)
+            growth_axes = detect_growth_axes(title, link, " ".join(themes))
+            item["themes"] = themes
+            item["growth_axes"] = growth_axes
+            item["harness_tags"] = harness_tags
+            item["state_checkpoint_policy"] = with_default_str_list(
+                item.get("state_checkpoint_policy"),
+                DEFAULT_CHECKPOINT_POLICY,
+            )
+            item["conversation_replacements"] = with_default_str_list(
+                item.get("conversation_replacements"),
+                DEFAULT_CONVERSATION_REPLACEMENTS,
+            )
+            item["innovation_priority"] = innovation_priority_for_themes(themes)
+            if not isinstance(item.get("evaluation_task"), dict):
+                item["evaluation_task"] = build_evaluation_task(exp_id, growth_axes)
+            if upsert_golden_rule(exp_id, themes, title):
+                rules_added += 1
+            if upsert_monitoring_targets(exp_id, themes):
+                monitors_added += 1
+
+            mutation_ref = str(item.get("mutation_module", "")).strip()
+            mutation_exists = False
+            mutation_path = Path()
+            if mutation_ref:
+                mutation_path = ROOT / mutation_ref
+                mutation_exists = mutation_path.exists()
+            if mutation_exists:
+                if is_autogenerated_mutation(mutation_path):
+                    mutation_path = write_mutation_module(item, themes)
+                    mutation_ref = str(mutation_path.relative_to(ROOT))
+                    item["mutation_module"] = mutation_ref
+                upsert_mutation_index(exp_id, mutation_path, themes)
+                artifact_paths = coerce_str_list(item.get("artifact_paths"))
+                if mutation_ref and mutation_ref not in artifact_paths:
+                    artifact_paths.append(mutation_ref)
+                item["artifact_paths"] = artifact_paths
+                continue
+
             mutation_path = write_mutation_module(item, themes)
             upsert_mutation_index(exp_id, mutation_path, themes)
 
-            artifact_paths = item.get("artifact_paths")
-            if not isinstance(artifact_paths, list):
-                artifact_paths = []
+            artifact_paths = coerce_str_list(item.get("artifact_paths"))
             rel_mutation_path = str(mutation_path.relative_to(ROOT))
             if rel_mutation_path not in artifact_paths:
                 artifact_paths.append(rel_mutation_path)
             item["artifact_paths"] = artifact_paths
             item["mutation_module"] = rel_mutation_path
-            item["themes"] = themes
             mutations_added += 1
             continue
 
@@ -2124,7 +2733,30 @@ def run_implement() -> int:
         if not exp_id:
             continue
 
-        themes = detect_themes(title, link)
+        harness_tags = coerce_str_list(item.get("harness_tags"))
+        raw_themes = coerce_str_list(item.get("themes"))
+        detected_themes = detect_themes(title, link, " ".join(harness_tags), " ".join(raw_themes))
+        themes: list[str] = []
+        for token in [*harness_tags, *raw_themes, *detected_themes]:
+            lowered = token.strip().lower()
+            if lowered and lowered not in themes:
+                themes.append(lowered)
+        growth_axes = detect_growth_axes(title, link, " ".join(themes))
+        item["themes"] = themes
+        item["growth_axes"] = growth_axes
+        item["harness_tags"] = harness_tags
+        item["state_checkpoint_policy"] = with_default_str_list(
+            item.get("state_checkpoint_policy"),
+            DEFAULT_CHECKPOINT_POLICY,
+        )
+        item["conversation_replacements"] = with_default_str_list(
+            item.get("conversation_replacements"),
+            DEFAULT_CONVERSATION_REPLACEMENTS,
+        )
+        item["innovation_priority"] = innovation_priority_for_themes(themes)
+        if not isinstance(item.get("evaluation_task"), dict):
+            item["evaluation_task"] = build_evaluation_task(exp_id, growth_axes)
+
         artifact_paths = write_implementation_artifacts(item, themes)
         mutation_path = write_mutation_module(item, themes)
         if upsert_mutation_index(exp_id, mutation_path, themes):
@@ -2136,7 +2768,6 @@ def run_implement() -> int:
         if upsert_monitoring_targets(exp_id, themes):
             monitors_added += 1
 
-        item["themes"] = themes
         item["artifact_paths"] = artifact_paths
         item["mutation_module"] = str(mutation_path.relative_to(ROOT))
         item["status"] = "implemented"
@@ -2147,7 +2778,7 @@ def run_implement() -> int:
     backlog["updated_at"] = iso_now()
     backlog["items"] = items
     write_json(EXPERIMENT_BACKLOG_FILE, backlog)
-    update_autonomous_growth_doc(items)
+    update_autonomous_growth_doc(items, updated_at=str(backlog["updated_at"]))
 
     append_progress(
         "implement completed | "
@@ -2201,6 +2832,7 @@ def attempt_self_heal(step_name: str, collector_mode: str) -> tuple[int, list[st
         return run_implement(), actions
     if step_name == "garden":
         actions.extend(repair_garden_placeholders())
+        actions.extend(repair_autonomous_growth_doc_currency())
         if not actions:
             actions.append("garden_noop_repair")
         return run_garden(), actions

@@ -137,3 +137,11 @@ Each entry should follow this format:
   Summary: Introduce isolated worktree harness runner for one-shot reproduce/fix/verify/evidence workflow.
   Details: See ExecPlan at:
     - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-015
+  Date: 2026-02-14
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Expand article-to-task conversion beyond MCP/Skills and enforce doc-gardening freshness checks against SoR backlog state.
+  Details: See ExecPlan at:
+    - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)

@@ -1,0 +1,23 @@
+# model: codex -m gpt-5.3-codex
+model = "gpt-5.1-codex-mini"
+
+# -c model_reasoning_effort="medium"
+model_reasoning_effort = "medium"
+
+# --yolo 相当（危険）
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+# web サーチ True（ライブ）
+# ※ CLI の --search と同等：web_search = "live"
+web_search = "live"
+
+
+# ---------------------------------------------------------
+# プロジェクト用 Codex 設定（trusted 時のみ読み込まれる）
+# ---------------------------------------------------------
+# chrome-devtools MCP をヘッドレスで起動（このリポジトリで codex exec するとき用）
+
+[mcp_servers."chrome-devtools"]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--headless=true"]

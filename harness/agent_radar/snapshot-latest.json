@@ -1,154 +1,21 @@
 {
-  "generated_at": "2026-02-13T07:36:17Z",
-  "collector": "native",
+  "generated_at": "2026-02-19T03:40:04Z",
+  "collector": "codex",
   "total_sources": 6,
-  "total_items": 80,
+  "total_items": 6,
   "sources": [
     {
       "id": "qwen",
       "name": "Qwen Official Blog",
       "homepage": "https://qwenlm.github.io/blog/",
-      "item_count": 20,
+      "item_count": 1,
       "items": [
         {
           "title": "Qwen3Guard: Real-time Safety for Your Token Stream",
           "link": "https://qwenlm.github.io/blog/qwen3guard/",
-          "published": "2025-09-22T20:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen-Image-Edit: Image Editing with Higher Quality and Efficiency",
-          "link": "https://qwenlm.github.io/blog/qwen-image-edit/",
-          "published": "2025-08-18T17:30:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen-Image: Crafting with Native Text Rendering",
-          "link": "https://qwenlm.github.io/blog/qwen-image/",
-          "published": "2025-08-04T14:08:30Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "GSPO: Towards Scalable Reinforcement Learning for Language Models",
-          "link": "https://qwenlm.github.io/blog/gspo/",
-          "published": "2025-07-27T07:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen-MT: Where Speed Meets Smart Translation",
-          "link": "https://qwenlm.github.io/blog/qwen-mt/",
-          "published": "2025-07-24T14:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen3-Coder: Agentic Coding in the World",
-          "link": "https://qwenlm.github.io/blog/qwen3-coder/",
-          "published": "2025-07-22T13:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Time to Speak Some Dialects, Qwen-TTS!",
-          "link": "https://qwenlm.github.io/blog/qwen-tts/",
-          "published": "2025-06-27T07:01:30Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen VLo: From \"Understanding\" the World to \"Depicting\" It",
-          "link": "https://qwenlm.github.io/blog/qwen-vlo/",
-          "published": "2025-06-26T14:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models",
-          "link": "https://qwenlm.github.io/blog/qwen3-embedding/",
-          "published": "2025-06-05T13:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen3: Think Deeper, Act Faster",
-          "link": "https://qwenlm.github.io/blog/qwen3/",
-          "published": "2025-04-28T20:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "QVQ-Max: Think with Evidence",
-          "link": "https://qwenlm.github.io/blog/qvq-max-preview/",
-          "published": "2025-03-27T16:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen2.5 Omni: See, Hear, Talk, Write, Do It All!",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-omni/",
-          "published": "2025-03-26T16:00:45Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen2.5-VL-32B: Smarter and Lighter",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-vl-32b/",
-          "published": "2025-03-23T16:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "QwQ-32B: Embracing the Power of Reinforcement Learning",
-          "link": "https://qwenlm.github.io/blog/qwq-32b/",
-          "published": "2025-03-05T16:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "<think>...</think> QwQ-Max-Preview",
-          "link": "https://qwenlm.github.io/blog/qwq-max-preview/",
-          "published": "2025-02-24T18:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen2.5-Max: Exploring the Intelligence of Large-scale MoE Model",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-max/",
-          "published": "2025-01-28T15:00:04Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen2.5-1M: Deploy Your Own Qwen with Context Length up to 1M Tokens",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-1m/",
-          "published": "2025-01-26T16:00:03Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Qwen2.5 VL! Qwen2.5 VL! Qwen2.5 VL!",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-vl/",
-          "published": "2025-01-26T11:08:30Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Global-batch load balance almost free lunch to improve your MoE LLM training",
-          "link": "https://qwenlm.github.io/blog/global-load-balance/",
-          "published": "2025-01-20T16:00:03Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
-        },
-        {
-          "title": "Towards Effective Process Supervision in Mathematical Reasoning",
-          "link": "https://qwenlm.github.io/blog/qwen2.5-math-prm/",
-          "published": "2025-01-13T16:00:03Z",
-          "collected_via": "rss",
-          "evidence_url": "https://qwenlm.github.io/blog/index.xml"
+          "published": "2025-09-23T00:00:00Z",
+          "collected_via": "codex-html",
+          "evidence_url": "https://qwenlm.github.io/blog/qwen3guard/"
         }
       ],
       "errors": []
@@ -157,85 +24,30 @@
       "id": "deepseek",
       "name": "DeepSeek Official Blog",
       "homepage": "https://deepseek.ai/blog/",
-      "item_count": 0,
-      "items": [],
+      "item_count": 1,
+      "items": [
+        {
+          "title": "ブログがJavaScript依存でHTMLが空のため最新記事を取得できません",
+          "link": "https://deepseek.ai/blog/",
+          "published": "",
+          "collected_via": "codex-html",
+          "evidence_url": "https://deepseek.ai/blog/"
+        }
+      ],
       "errors": []
     },
     {
       "id": "sakana_ai",
       "name": "Sakana AI Official Blog",
       "homepage": "https://sakana.ai/blog/",
-      "item_count": 10,
+      "item_count": 1,
       "items": [
         {
-          "title": "Sakana AI、Googleとの戦略的パートナーシップ締結を発表",
-          "link": "https://sakana.ai/google/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "An Unofficial Guide to Prepare for a Research Position Application",
-          "link": "https://sakana.ai/unofficial-guide/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "RePo: Language Models with Context Re-Positioning",
-          "link": "https://sakana.ai/repo/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "Extending the Context of Pretrained LLMs by Dropping Their Positional Embeddings",
-          "link": "https://sakana.ai/drope/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "Digital Red Queen: Adversarial Program Evolution in Core War with LLMs",
-          "link": "https://sakana.ai/drq/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "Sakana AI Agent Wins AtCoder Heuristic Contest (First AI to Place 1st)",
-          "link": "https://sakana.ai/ahc058/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "AIエージェントが最適化プログラミングコンテストで初優勝",
-          "link": "https://sakana.ai/ahc-2025/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "AIを駆使してAI実装を加速する：Sakana AI、Software Engineerインタビュー",
-          "link": "https://sakana.ai/swe-interview-2025/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "Announcing Our Series B",
-          "link": "https://sakana.ai/series-b/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
-        },
-        {
-          "title": "Petri Dish Neural Cellular Automata",
-          "link": "https://sakana.ai/pd-nca/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://sakana.ai/blog/"
+          "title": "オフィス移転のお知らせ",
+          "link": "https://sakana.ai/azabudai-hills/",
+          "published": "2026-02-16T00:00:00Z",
+          "collected_via": "codex-html",
+          "evidence_url": "https://sakana.ai/azabudai-hills/"
         }
       ],
       "errors": []
@@ -244,147 +56,14 @@
       "id": "hugging_face",
       "name": "Hugging Face Official Blog",
       "homepage": "https://huggingface.co/blog/",
-      "item_count": 20,
+      "item_count": 1,
       "items": [
         {
-          "title": "OpenEnv in Practice: Evaluating Tool-Using Agents in Real-World Environments",
-          "link": "https://huggingface.co/blog/openenv-turing",
-          "published": "2026-02-12T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Transformers.js v4 Preview: Now Available on NPM!",
-          "link": "https://huggingface.co/blog/transformersjs-v4",
-          "published": "2026-02-09T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Introducing SyGra Studio",
-          "link": "https://huggingface.co/blog/ServiceNow-AI/sygra-studio",
-          "published": "2026-02-05T16:52:28Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Nemotron ColEmbed V2: Raising the Bar for Multimodal Retrieval with ViDoRe V3’s Top Model",
-          "link": "https://huggingface.co/blog/nvidia/nemotron-colembed-v2",
-          "published": "2026-02-04T15:00:40Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Community Evals: Because we're done trusting black-box leaderboards over the community",
-          "link": "https://huggingface.co/blog/community-evals",
-          "published": "2026-02-04T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "H Company's new Holo2 model takes the lead in UI Localization",
-          "link": "https://huggingface.co/blog/Hcompany/introducing-holo2-235b-a22b",
-          "published": "2026-02-03T17:40:14Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "The Future of the Global Open-Source AI Ecosystem: From DeepSeek to AI+",
-          "link": "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment-blog-3",
-          "published": "2026-02-03T15:03:19Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Training Design for Text-to-Image Models: Lessons from Ablations",
-          "link": "https://huggingface.co/blog/Photoroom/prx-part2",
-          "published": "2026-02-03T11:25:53Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Introducing Daggr: Chain apps programmatically, inspect visually",
-          "link": "https://huggingface.co/blog/daggr",
-          "published": "2026-01-29T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "We Got Claude to Build CUDA Kernels and teach open models!",
-          "link": "https://huggingface.co/blog/upskill",
-          "published": "2026-01-28T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Architectural Choices in China's Open-Source AI Ecosystem: Building Beyond DeepSeek",
-          "link": "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment-blog-2",
-          "published": "2026-01-27T15:01:45Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Alyah ⭐️: Toward Robust Evaluation of Emirati Dialect Capabilities in Arabic LLMs",
-          "link": "https://huggingface.co/blog/tiiuae/emirati-benchmarks",
-          "published": "2026-01-27T10:26:42Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Unlocking Agentic RL Training for GPT-OSS: A Practical Retrospective",
-          "link": "https://huggingface.co/blog/LinkedIn/gpt-oss-agentic-rl",
-          "published": "2026-01-27T01:53:15Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "AssetOpsBench: Bridging the Gap Between AI Agent Benchmarks and Industrial Reality",
-          "link": "https://huggingface.co/blog/ibm-research/assetopsbench-playground-on-hugging-face",
-          "published": "2026-01-21T06:25:31Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "One Year Since the “DeepSeek Moment”",
-          "link": "https://huggingface.co/blog/huggingface/one-year-since-the-deepseek-moment",
-          "published": "2026-01-20T15:02:10Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Differential Transformer V2",
-          "link": "https://huggingface.co/blog/microsoft/diff-attn-v2",
-          "published": "2026-01-20T03:20:57Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Introducing Waypoint-1: Real-time interactive video diffusion from Overworld",
-          "link": "https://huggingface.co/blog/waypoint-1",
-          "published": "2026-01-20T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Open Responses: What you need to know",
-          "link": "https://huggingface.co/blog/open-responses",
-          "published": "2026-01-15T00:00:00Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "NVIDIA Cosmos Reason 2 Brings Advanced Reasoning To Physical AI",
-          "link": "https://huggingface.co/blog/nvidia/nvidia-cosmos-reason-2-brings-advanced-reasoning",
-          "published": "2026-01-05T22:56:51Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
-        },
-        {
-          "title": "Introducing Falcon-H1-Arabic: Pushing the Boundaries of Arabic Language AI with Hybrid Architecture",
-          "link": "https://huggingface.co/blog/tiiuae/falcon-h1-arabic",
-          "published": "2026-01-05T09:16:51Z",
-          "collected_via": "rss",
-          "evidence_url": "https://huggingface.co/blog/feed.xml"
+          "title": "IBM and UC Berkeley Diagnose Why Enterprise Agents Fail Using IT-Bench and MAST",
+          "link": "https://huggingface.co/blog/ibm-research/itbenchandmast",
+          "published": "2026-02-18T00:00:00Z",
+          "collected_via": "codex-html",
+          "evidence_url": "https://huggingface.co/blog/ibm-research/itbenchandmast"
         }
       ],
       "errors": []
@@ -393,84 +72,14 @@
       "id": "openai_developers",
       "name": "OpenAI Developers Blog",
       "homepage": "https://developers.openai.com/blog/",
-      "item_count": 11,
+      "item_count": 1,
       "items": [
         {
-          "title": "Blog Learnings and experiences from developers",
-          "link": "https://developers.openai.com/blog",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "Testing Agent Skills Systematically with Evals",
-          "link": "https://developers.openai.com/blog/eval-skills",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "Supercharging Codex with JetBrains MCP at Skyscanner",
-          "link": "https://developers.openai.com/blog/skyscanner-codex-jetbrains-mcp",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "View all",
-          "link": "https://developers.openai.com/blog/topic/codex",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
           "title": "Shell + Skills + Compaction: Tips for long-running agents that do real work",
-          "link": "https://developers.openai.com/blog/skills-shell-tips",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "15 lessons learned building ChatGPT Apps",
-          "link": "https://developers.openai.com/blog/15-lessons-building-chatgpt-apps",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "OpenAI for Developers in 2025",
-          "link": "https://developers.openai.com/blog/openai-for-developers-2025",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "General",
-          "link": "https://developers.openai.com/blog/topic/general",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "API",
-          "link": "https://developers.openai.com/blog/topic/api",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "Apps SDK",
-          "link": "https://developers.openai.com/blog/topic/apps-sdk",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
-        },
-        {
-          "title": "Audio",
-          "link": "https://developers.openai.com/blog/topic/audio",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://developers.openai.com/blog/"
+          "link": "https://developers.openai.com/blog/shell-skills-compaction",
+          "published": "2026-02-11T00:00:00Z",
+          "collected_via": "codex-html",
+          "evidence_url": "https://developers.openai.com/blog/shell-skills-compaction"
         }
       ],
       "errors": []
@@ -479,140 +88,14 @@
       "id": "anthropic_engineering",
       "name": "Anthropic Engineering",
       "homepage": "https://www.anthropic.com/engineering/",
-      "item_count": 19,
+      "item_count": 1,
       "items": [
         {
-          "title": "Skip to main content",
-          "link": "https://www.anthropic.com/engineering/",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "FeaturedQuantifying infrastructure noise in agentic coding evalsInfrastructure configuration can swing agentic coding benchmarks by several percentage points—sometimes more than the leaderboard gap between top models.",
+          "title": "Quantifying infrastructure noise in agentic coding evals",
           "link": "https://www.anthropic.com/engineering/infrastructure-noise",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Building a C compiler with a team of parallel ClaudesFeb 05, 2026",
-          "link": "https://www.anthropic.com/engineering/building-c-compiler",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Designing AI-resistant technical evaluationsJan 21, 2026",
-          "link": "https://www.anthropic.com/engineering/AI-resistant-technical-evaluations",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Demystifying evals for AI agentsJan 09, 2026",
-          "link": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Effective harnesses for long-running agentsNov 26, 2025",
-          "link": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Introducing advanced tool use on the Claude Developer PlatformNov 24, 2025",
-          "link": "https://www.anthropic.com/engineering/advanced-tool-use",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Code execution with MCP: Building more efficient agentsNov 04, 2025",
-          "link": "https://www.anthropic.com/engineering/code-execution-with-mcp",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Beyond permission prompts: making Claude Code more secure and autonomousOct 20, 2025",
-          "link": "https://www.anthropic.com/engineering/claude-code-sandboxing",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Effective context engineering for AI agentsSep 29, 2025",
-          "link": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "A postmortem of three recent issuesSep 17, 2025",
-          "link": "https://www.anthropic.com/engineering/a-postmortem-of-three-recent-issues",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Writing effective tools for agents — with agentsSep 11, 2025",
-          "link": "https://www.anthropic.com/engineering/writing-tools-for-agents",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Desktop Extensions: One-click MCP server installation for Claude DesktopJun 26, 2025",
-          "link": "https://www.anthropic.com/engineering/desktop-extensions",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "How we built our multi-agent research systemJun 13, 2025",
-          "link": "https://www.anthropic.com/engineering/multi-agent-research-system",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Claude Code: Best practices for agentic codingApr 18, 2025",
-          "link": "https://www.anthropic.com/engineering/claude-code-best-practices",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "The \"think\" tool: Enabling Claude to stop and think in complex tool use situationsMar 20, 2025",
-          "link": "https://www.anthropic.com/engineering/claude-think-tool",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Raising the bar on SWE-bench Verified with Claude 3.5 SonnetJan 06, 2025",
-          "link": "https://www.anthropic.com/engineering/swe-bench-sonnet",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Building effective agentsDec 19, 2024",
-          "link": "https://www.anthropic.com/engineering/building-effective-agents",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
-        },
-        {
-          "title": "Introducing Contextual RetrievalSep 19, 2024",
-          "link": "https://www.anthropic.com/engineering/contextual-retrieval",
-          "published": "",
-          "collected_via": "html",
-          "evidence_url": "https://www.anthropic.com/engineering/"
+          "published": "2026-02-05T00:00:00Z",
+          "collected_via": "codex-html",
+          "evidence_url": "https://www.anthropic.com/engineering/infrastructure-noise"
         }
       ],
       "errors": []

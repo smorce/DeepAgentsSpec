@@ -63,6 +63,8 @@ uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py \
 
 - `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden` 失敗:
   - 対象文書の `TODO:` / `NEEDS CLARIFICATION` / `プレースホルダー` を除去する。
+  - `docs/agent-harness/autonomous-growth.md` が `harness/agent_radar/experiment_backlog.json` と同期しているか確認する。
+  - 必要なら `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode implement` で再生成する。
 
 - `uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py` 失敗:
   - `harness/worktree/runs/<RUN_ID>/logs/*.stderr.log` を確認する。
@@ -79,3 +81,4 @@ uv run --no-project --link-mode=copy python harness/worktree/worktree_ops.py \
 - 公式URL変更が必要な場合
 - 差し替え表現や状態スキーマの後方互換が壊れる場合
 - 黄金律に昇格するルール変更
+- 自律成長の取り込み方針（例: MCP/Skills 以外のテーマ拡張）を変更する場合

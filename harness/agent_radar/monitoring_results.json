@@ -1,8 +1,2018 @@
 {
   "version": 1,
-  "generated_at": "2026-02-13T00:00:00Z",
-  "loop": "bootstrap",
-  "pass_count": 0,
-  "total_targets": 0,
-  "evaluations": []
+  "generated_at": "2026-02-19T03:40:06Z",
+  "loop": "autogrow",
+  "pass_count": 287,
+  "total_targets": 287,
+  "evaluations": [
+    {
+      "id": "MON-EXP-001-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-001-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-002-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-002-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-002-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-003-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-003-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-003-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-004-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-004-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-004-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-004-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-005-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-005-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-005-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-005-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-006-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-006-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-006-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-007-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-007-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-007-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-008-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-008-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-008-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-009-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-009-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-009-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-010-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-010-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-010-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-011-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-011-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-011-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-012-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-012-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-012-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-013-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-013-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-013-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-014-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-014-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-014-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-015-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-015-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-015-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-016-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-016-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-016-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-016-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-017-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-017-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-017-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-017-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-018-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-018-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-018-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-019-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-019-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-019-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-020-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-020-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-020-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-021-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-021-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-022-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-022-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-023-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-023-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-023-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-024-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-024-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-024-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-025-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-025-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-026-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-026-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-027-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-027-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-028-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-028-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-029-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-029-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-030-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-030-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-030-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-031-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-031-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-031-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-031-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-031-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-032-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-032-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-032-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-033-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-033-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-033-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-034-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-034-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-034-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-034-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-034-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-035-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-035-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-035-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-035-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-036-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-036-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-036-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-037-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-037-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-037-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-038-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-038-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-038-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-039-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-039-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-039-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-040-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-040-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-040-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-041-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-041-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-041-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-042-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-042-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-042-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-042-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-043-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-043-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-043-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-044-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-044-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-044-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-044-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-045-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-045-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-045-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-046-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-046-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-046-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-047-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-047-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-047-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-048-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-048-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-048-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-049-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-049-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-049-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-050-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-050-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-050-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-051-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-051-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-051-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-051-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-052-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-052-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-052-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-053-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-053-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-053-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-054-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-054-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-054-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-055-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-055-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-055-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-056-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-056-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-056-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-057-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-057-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-057-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-058-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-058-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-058-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-059-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-059-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-059-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-060-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-060-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-061-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-061-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-061-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-061-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-062-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-062-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-062-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-063-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-063-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-063-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-064-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-064-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-065-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-065-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-066-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-066-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-067-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-067-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-067-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-068-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-068-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-068-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-069-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-069-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-069-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-070-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-070-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-071-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-071-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-072-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-072-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-073-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-073-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-074-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-074-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-075-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-075-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-075-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-076-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-076-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-077-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-077-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-077-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-077-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-078-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-079-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-080-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-081-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-082-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-MCP",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-SKILLS",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0",
+      "actual": 3.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-OBSERVABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-SCALABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-RELIABILITY",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-CONTEXT",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3",
+      "actual": 2.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-ENVIRONMENT",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-EVALS",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-SAFETY",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1",
+      "actual": 1.0,
+      "status": "pass"
+    },
+    {
+      "id": "MON-EXP-083-FEEDBACK",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95",
+      "actual": 1.0,
+      "status": "pass"
+    }
+  ]
 }

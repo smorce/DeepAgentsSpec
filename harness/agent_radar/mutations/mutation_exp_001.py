@@ -14,19 +14,14 @@ def mutate(new_item):
         if theme not in tags:
             tags.append(theme)
     item['harness_tags'] = tags
-    item['state_checkpoint_policy'] = [
-        'before_external_io',
-        'before_long_running_loop',
-        'before_quality_gate',
-    ]
-    item['conversation_replacements'] = [
-        '[[STATE_REF:<id>]]',
-        '[[PLAN_REF:<epic>/<feature>]]',
-        '[[EVAL_REF:<run>]]',
-    ]
-    if 'mcp' in THEMES or 'skills' in THEMES:
+    item['state_checkpoint_policy'] = ["before_external_io", "before_long_running_loop", "before_quality_gate"]
+    item['conversation_replacements'] = ["[[STATE_REF:<id>]]", "[[PLAN_REF:<epic>/<feature>]]", "[[EVAL_REF:<run>]]"]
+    high_priority_themes = set(["control", "evals", "feedback", "observability", "reliability", "safety"])
+    medium_priority_themes = set(["context", "environment", "maintainability", "mcp", "scalability", "skills"])
+    theme_set = {str(theme).strip().lower() for theme in THEMES}
+    if theme_set.intersection(high_priority_themes):
         item['innovation_priority'] = 'high'
-    elif 'observability' in THEMES or 'context' in THEMES:
+    elif theme_set.intersection(medium_priority_themes):
         item['innovation_priority'] = 'medium'
     else:
         item['innovation_priority'] = 'normal'

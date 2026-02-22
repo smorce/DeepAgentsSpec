@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-02-13T07:36:17Z",
+  "updated_at": "2026-02-19T03:40:03Z",
   "targets": [
     {
       "id": "MON-EXP-001-MCP",
@@ -17,6 +17,2286 @@
       "name": "EXP-001 skills health check",
       "query_hint": "radar.new_item_count",
       "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-002-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-002 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-002-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-002 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-002-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-002 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-003-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-003 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-003-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-003 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-003-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-003 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-004-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-004 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-004-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-004 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-004-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-004 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-004-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-004 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-005-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-005 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-005-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-005 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-005-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-005 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-005-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-005 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-006-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-006 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-006-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-006 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-006-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-006 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-007-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-007 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-007-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-007 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-007-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-007 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-008-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-008 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-008-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-008 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-008-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-008 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-009-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-009 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-009-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-009 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-009-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-009 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-010-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-010 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-010-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-010 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-010-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-010 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-011-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-011 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-011-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-011 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-011-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-011 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-012-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-012 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-012-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-012 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-012-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-012 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-013-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-013 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-013-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-013 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-013-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-013 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-014-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-014 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-014-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-014 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-014-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-014 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-015-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-015 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-015-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-015 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-015-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-015 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-016-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-016 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-016-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-016 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-016-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-016 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-016-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-016 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-017-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-017 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-017-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-017 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-017-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-017 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-017-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-017 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-018-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-018 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-018-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-018 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-018-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-018 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-019-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-019 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-019-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-019 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-019-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-019 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-020-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-020 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-020-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-020 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-020-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-020 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-021-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-021 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-021-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-021 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-022-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-022 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-022-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-022 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-023-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-023 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-023-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-023 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-023-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-023 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-024-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-024 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-024-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-024 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-024-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-024 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-025-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-025 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-025-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-025 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-026-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-026 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-026-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-026 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-027-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-027 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-027-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-027 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-028-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-028 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-028-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-028 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-029-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-029 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-029-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-029 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-030-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-030 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-030-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-030 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-030-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-030 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-031-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-031 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-031-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-031 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-031-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-031 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-031-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-031 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-031-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-031 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-032-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-032 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-032-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-032 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-032-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-032 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-033-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-033 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-033-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-033 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-033-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-033 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-034-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-034 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-034-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-034 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-034-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-034 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-034-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-034 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-034-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-034 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-035-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-035 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-035-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-035 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-035-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-035 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-035-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-035 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-036-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-036 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-036-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-036 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-036-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-036 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-037-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-037 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-037-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-037 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-037-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-037 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-038-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-038 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-038-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-038 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-038-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-038 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-039-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-039 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-039-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-039 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-039-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-039 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-040-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-040 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-040-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-040 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-040-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-040 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-041-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-041 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-041-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-041 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-041-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-041 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-042-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-042 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-042-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-042 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-042-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-042 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-042-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-042 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-043-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-043 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-043-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-043 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-043-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-043 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-044-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-044 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-044-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-044 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-044-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-044 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-044-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-044 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-045-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-045 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-045-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-045 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-045-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-045 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-046-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-046 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-046-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-046 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-046-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-046 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-047-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-047 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-047-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-047 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-047-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-047 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-048-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-048 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-048-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-048 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-048-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-048 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-049-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-049 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-049-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-049 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-049-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-049 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-050-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-050 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-050-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-050 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-050-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-050 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-051-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-051 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-051-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-051 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-051-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-051 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-051-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-051 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-052-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-052 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-052-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-052 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-052-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-052 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-053-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-053 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-053-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-053 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-053-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-053 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-054-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-054 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-054-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-054 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-054-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-054 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-055-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-055 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-055-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-055 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-055-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-055 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-056-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-056 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-056-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-056 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-056-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-056 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-057-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-057 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-057-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-057 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-057-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-057 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-058-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-058 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-058-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-058 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-058-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-058 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-059-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-059 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-059-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-059 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-059-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-059 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-060-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-060 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-060-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-060 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-061-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-061 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-061-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-061 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-061-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-061 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-061-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-061 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-062-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-062 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-062-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-062 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-062-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-062 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-063-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-063 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-063-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-063 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-063-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-063 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-064-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-064 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-064-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-064 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-065-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-065 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-065-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-065 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-066-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-066 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-066-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-066 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-067-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-067 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-067-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-067 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-067-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-067 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-068-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-068 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-068-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-068 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-068-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-068 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-069-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-069 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-069-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-069 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-069-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-069 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-070-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-070 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-070-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-070 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-071-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-071 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-071-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-071 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-072-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-072 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-072-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-072 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-073-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-073 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-073-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-073 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-074-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-074 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-074-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-074 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-075-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-075 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-075-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-075 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-075-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-075 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-076-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-076 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-076-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-076 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-077-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-077 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-077-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-077 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-077-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-077 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-077-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-077 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-078-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-078 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-078-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-078 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-078-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-078 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-078-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-078 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-078-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-078 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-078-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-078 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-078-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-078 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-078-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-078 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-078-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-078 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-078-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-078 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-079-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-079 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-079-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-079 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-079-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-079 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-079-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-079 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-079-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-079 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-079-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-079 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-079-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-079 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-079-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-079 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-079-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-079 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-079-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-079 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-080-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-080 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-080-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-080 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-080-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-080 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-080-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-080 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-080-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-080 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-080-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-080 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-080-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-080 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-080-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-080 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-080-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-080 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-080-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-080 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-081-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-081 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-081-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-081 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-081-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-081 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-081-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-081 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-081-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-081 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-081-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-081 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-081-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-081 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-081-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-081 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-081-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-081 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-081-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-081 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-082-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-082 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-082-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-082 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-082-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-082 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-082-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-082 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-082-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-082 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-082-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-082 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-082-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-082 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-082-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-082 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-082-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-082 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-082-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-082 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-083-MCP",
+      "theme": "mcp",
+      "owner": "agent-radar",
+      "name": "EXP-083 mcp health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-083-SKILLS",
+      "theme": "skills",
+      "owner": "agent-radar",
+      "name": "EXP-083 skills health check",
+      "query_hint": "radar.new_item_count",
+      "threshold": ">= 0"
+    },
+    {
+      "id": "MON-EXP-083-OBSERVABILITY",
+      "theme": "observability",
+      "owner": "agent-radar",
+      "name": "EXP-083 observability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-083-SCALABILITY",
+      "theme": "scalability",
+      "owner": "agent-radar",
+      "name": "EXP-083 scalability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-083-RELIABILITY",
+      "theme": "reliability",
+      "owner": "agent-radar",
+      "name": "EXP-083 reliability health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-083-CONTEXT",
+      "theme": "context",
+      "owner": "agent-radar",
+      "name": "EXP-083 context health check",
+      "query_hint": "autogrow.self_heal_actions",
+      "threshold": "<= 3"
+    },
+    {
+      "id": "MON-EXP-083-ENVIRONMENT",
+      "theme": "environment",
+      "owner": "agent-radar",
+      "name": "EXP-083 environment health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.9"
+    },
+    {
+      "id": "MON-EXP-083-EVALS",
+      "theme": "evals",
+      "owner": "agent-radar",
+      "name": "EXP-083 evals health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
+    },
+    {
+      "id": "MON-EXP-083-SAFETY",
+      "theme": "safety",
+      "owner": "agent-radar",
+      "name": "EXP-083 safety health check",
+      "query_hint": "autogrow.success",
+      "threshold": ">= 1"
+    },
+    {
+      "id": "MON-EXP-083-FEEDBACK",
+      "theme": "feedback",
+      "owner": "agent-radar",
+      "name": "EXP-083 feedback health check",
+      "query_hint": "autogrow.success_rate",
+      "threshold": ">= 0.95"
     }
   ]
 }

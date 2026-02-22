@@ -14,7 +14,7 @@
 3. `backlog`: `new-items.json` から実験バックログを自動起票
 4. `implement`: 実装成果物・黄金律・監視ターゲット・mutationコードを生成
 5. `validate`(再): 実装後の整合を再検証
-6. `garden`: 文書の placeholder を検出/修復
+6. `garden`: 文書の placeholder と SoR同期ズレ（古い文書）を検出/修復
 
 `autogrow` はこの流れを一括実行します。
 
@@ -62,7 +62,7 @@
 - `update` 失敗: `native` 収集へフォールバック
 - `validate` 失敗: 境界逸脱データのトリム、mutation index 補正、監視定義補正
 - `backlog`/`implement` 失敗: JSON 構造を正規化して再実行
-- `garden` 失敗: TODO/未確定記法を自動置換
+- `garden` 失敗: TODO/未確定記法を自動置換し、`autonomous-growth.md` を最新バックログへ同期
 
 修復履歴は `harness/agent_radar/self_heal_log.json` に永続化されます。
 
@@ -101,6 +101,7 @@ Spec/Plan/SoR/テストの品質ゲートを強制します。
 - `collector=auto` は運用推奨（失敗時 native へフォールバック）
 - 監視しきい値変更は `monitoring_targets.json` を編集し、`validate` 通過を必須とする
 - 自己修復ログの増加は、設計ドリフトの兆候として週次で確認する
+- MCP/Skills は取り込みテーマの一例であり、環境・フィードバックループ・制御システム改善へ横展開する
 - `monitoring_targets.json` が 1 件以上ある場合、`metrics/latest.json` と `monitoring_results.json` は
   鮮度（36時間以内）と件数整合を保つ必要がある
 - `harness/worktree/worktree_ops.py` は、再現→修正→証跡生成を 1 回で回す標準入口として扱う

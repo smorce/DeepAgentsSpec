@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "exp_id": "EXP-034",
+  "updated_at": "2026-02-15T07:31:35Z",
+  "checkpoint_policy": {
+    "when": [
+      "before_external_io",
+      "before_long_running_loop",
+      "before_quality_gate"
+    ],
+    "what": [
+      "task_summary",
+      "artifact_refs",
+      "next_action",
+      "failure_summary"
+    ],
+    "where": {
+      "hot": "harness/agent_radar/state.json",
+      "cold": "harness/agent_radar/archive/YYYY/MM/*.jsonl"
+    },
+    "conversation_replacement": [
+      "[[STATE_REF:<id>]]",
+      "[[PLAN_REF:<epic>/<feature>]]",
+      "[[EVAL_REF:<run>]]"
+    ]
+  }
+}

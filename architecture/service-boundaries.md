@@ -32,6 +32,7 @@
 
 責務:
 - SoR文書の劣化検知（TODO、未確定記法）
+- `experiment_backlog.json` と `docs/agent-harness/autonomous-growth.md` の同期維持
 
 非責務:
 - 新機能実装

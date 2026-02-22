@@ -35,6 +35,8 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - [x] (2026-02-13 18:55Z) `harness/feature_list.json` を system + services の全EPIC/F構成へ復元し、オンボーディング規約と整合させた。
 - [x] (2026-02-13 18:55Z) `validate` に bootstrap 24時間制限を追加し、初回成功時に `loop=autogrow` へ自動遷移する監視制御を実装した。
 - [x] (2026-02-13 18:55Z) `harness/worktree/worktree_ops.py` を追加し、再現→修正→検証→証跡生成を隔離 worktree で標準化した。
+- [x] (2026-02-14 23:34Z) `backlog/implement` に評価タスク化メタデータ（checkpoint/replacement/evaluation_task/growth_axes）を追加し、MCP/Skills を例示に留めたテーマ拡張を実装した。
+- [x] (2026-02-14 23:34Z) `garden` に `autonomous-growth.md` と `experiment_backlog.json` の同期検証/自己修復を追加し、古い文書の自動検知を有効化した。
 
 ## Surprises & Discoveries
 
@@ -88,6 +90,14 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - Decision: タスク実行は `harness/worktree/worktree_ops.py` を標準入口とし、隔離 worktree と証跡生成を必須化する。
   Rationale: 「再現→修正→証跡生成」を 1 回の実行フローで再実行可能にするため。
   Date/Author: 2026-02-13 / codex
+
+- Decision: 記事取り込み時のテーマ判定は MCP/Skills 固定ではなく、環境・フィードバックループ・制御システム・信頼性改善を含む拡張テーマ集合で扱う。
+  Rationale: 大規模かつ高信頼なソフトウェア開発を継続改善する目的に対し、特定ツール種別だけでは知見の取りこぼしが発生するため。
+  Date/Author: 2026-02-14 / codex
+
+- Decision: Doc gardening の品質ゲートに `autonomous-growth.md` の SoR 同期検証を組み込み、placeholder 検知だけでなく文書鮮度ドリフトを失敗扱いにする。
+  Rationale: 実装追加のたびに運用文書が古くなる問題を機械検知し、継続運用時の仕様不整合を減らすため。
+  Date/Author: 2026-02-14 / codex
 
 ## Outcomes & Retrospective
 
