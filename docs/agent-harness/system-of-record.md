@@ -46,9 +46,37 @@
 - ガーデナー (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden`): 文書劣化（TODO/未確定記法）と SoR同期ズレ（古い文書）の検出
 - 制御器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`): 収集から実装までを自律実行する入口
 
+## V2 パイプライン SoR
+
+V2では記事本文の分析、ギャップ分析、レビューループ、実際のコード改修を行う。
+
+- アイデア抽出: `harness/agent_radar/ideas/IDEA-*.json`
+- 不採用アイデア: `harness/agent_radar/ideas/rejected/IDEA-R*.json`
+- ギャップ分析: `harness/agent_radar/analysis/GAP-*.json`
+- レビュー記録: `harness/agent_radar/reviews/REV-*/`
+  - `plan.md` — 実行計画（レビューを経て洗練されたもの）
+  - `review-session-*.md` — 各セッションのレビュー結果
+  - `status.json` — レビューステータス
+- 実行記録: `harness/agent_radar/executions/EXEC-*/`
+  - `dir-structure.md` — ディレクトリ構造変更のSoR
+  - `change-script.py` — 変更スクリプト
+  - `rollback-script.py` — ロールバックスクリプト
+  - `result.json` — 実行結果
+- ナレッジベース: `harness/agent_radar/knowledge_base.json`
+- V2 設計書: `docs/agent-harness/harness-v2-design.md`
+
+### V2 データ更新責務
+
+- Radar (`--mode v2-radar`): 記事本文を読みアイデアを抽出
+- Analyze (`--mode v2-analyze`): ギャップ分析を実行
+- Pipeline (`--mode v2-pipeline`): Radar→Analyze→Review→Execute の全フェーズを実行
+- Autogrow V2 (`--mode autogrow-v2`): V1 autogrow + V2 pipeline を連続実行
+- レビューループスクリプト: `scripts/run_v2_review_loop.sh`
+
 ## 境界
 
-- 許可ソースは6ブログのみ。
-- 許可外ドメインのリンクは `RadarItem` として保存しない。
+- V1: 許可ソースは6ブログのみ。許可外ドメインのリンクは `RadarItem` として保存しない。
+- V2: 6ブログの記事本文を分析対象とし、補足としてZenn/Qiita/noteも参照する。
 - `latest_url` と `evidence_url` は source ごとの許可プレフィックスで検証する。
 - 収集失敗は許容するが、失敗イベントは進捗ログへ残す。
+- 不採用アイデアは理由付きで `ideas/rejected/` に永続化する。

@@ -95,7 +95,39 @@ GitHub Actions で日次実行されます。
 加えて、PR 時には `.github/workflows/quality-gates.yml` で
 Spec/Plan/SoR/テストの品質ゲートを強制します。
 
-## 7. 運用上の判断ポイント
+## 7. V2 パイプライン（自律的ハーネスエンジニアリング改良）
+
+V1が「タイトル/URL収集→タグ付けmutation生成」に留まっていたのに対し、
+V2は「記事本文分析→ギャップ分析→多段レビュー→実際のコード改修」を行う。
+
+### 7.1 パイプラインフロー
+
+1. **Radar**: 公式ブログ記事の本文をCodex CLIで読み、ハーネス改善アイデアを抽出
+2. **Analyze**: アイデアをコードベースと突き合わせてギャップ分析（現状→理想→差分）
+3. **Review Loop**: Codex CLI非対話モードの多段レビュー（最大5セッション）
+4. **Execute**: レビュー通過した計画に基づき、実際のコードベース改修を実行
+
+### 7.2 レビューループ
+
+- 各セッションは新しいCodexプロセスで実行（コンテキストリセット）
+- 5軸評価: ハーネス関連性/実現可能性/リスク/ROI/SoR整合性
+- 完了条件: 全スコア3以上、平均3.5以上
+- 不承認時は修正エージェントが計画を改善し次セッションへ
+
+### 7.3 実行コマンド
+
+```bash
+# V2パイプライン単独実行
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-pipeline
+
+# V1 autogrow + V2 pipeline 連続実行
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow-v2 --collector auto --self-heal-max-retries 2
+
+# レビューループ単独実行
+bash scripts/run_v2_review_loop.sh harness/agent_radar/reviews/REV-EXP-084
+```
+
+## 8. 運用上の判断ポイント
 
 - `collector=codex` は厳格収集モード（失敗時エラー終了）
 - `collector=auto` は運用推奨（失敗時 native へフォールバック）
@@ -105,3 +137,4 @@ Spec/Plan/SoR/テストの品質ゲートを強制します。
 - `monitoring_targets.json` が 1 件以上ある場合、`metrics/latest.json` と `monitoring_results.json` は
   鮮度（36時間以内）と件数整合を保つ必要がある
 - `harness/worktree/worktree_ops.py` は、再現→修正→証跡生成を 1 回で回す標準入口として扱う
+- V2の不採用アイデアは `ideas/rejected/` に理由付きで保存される（将来の再検討用）

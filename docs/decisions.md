@@ -145,3 +145,24 @@ Each entry should follow this format:
   Summary: Expand article-to-task conversion beyond MCP/Skills and enforce doc-gardening freshness checks against SoR backlog state.
   Details: See ExecPlan at:
     - plans/system/EPIC-SYS-001-harness-radar/exec-plan.md (Decision Log)
+
+- ID: DEC-2026-016
+  Date: 2026-02-22
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: Harness V2 パイプライン導入。V1のタイトル/URL収集+タグ付けmutationから、記事本文分析→ギャップ分析→多段レビューループ→実コード改修へ全面刷新。
+  Details: V1のmutation（83個）は全てテンプレ生成の純関数で実質的な改善を行っていなかった。V2では (1) Codex CLIで記事本文を読みアイデア抽出、(2) コードベースとのギャップ分析（現状→理想→差分をSoR化）、(3) Codex CLI非対話モードの多段レビュー（最大5セッション、5軸評価）、(4) レビュー通過後に実際のコードベース改修を実行する。不採用アイデアも理由付きで永続化する。設計書: docs/agent-harness/harness-v2-design.md
+
+- ID: DEC-2026-017
+  Date: 2026-02-22
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: レビューループにCodex CLI非対話モードのマルチセッション方式を採用。各セッションはコンテキストリセットされた状態で独立評価し、レビューコメントは共通ファイルに蓄積。
+  Details: scripts/run_v2_review_loop.sh でforループ実行。評価5軸（ハーネス関連性/実現可能性/リスク/ROI/SoR整合性）、全スコア3以上かつ平均3.5以上で承認。最大5セッション超過時はneeds_human_review。
+
+- ID: DEC-2026-018
+  Date: 2026-02-22
+  Scope: system
+  Related epics: EPIC-SYS-001-HARNESS-RADAR
+  Summary: ディレクトリ構造変更をSoR化する方式を採用。マークダウンのリスト形式で構造を定義→変更スクリプト生成→実行の三段階とし、ロールバックスクリプトも併せて生成する。
+  Details: harness/agent_radar/executions/EXEC-*/dir-structure.md にディレクトリ構造を記録、change-script.py で実行、rollback-script.py でロールバック可能とする。

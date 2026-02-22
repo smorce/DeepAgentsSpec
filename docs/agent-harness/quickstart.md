@@ -6,15 +6,29 @@
 - 実行環境: Python 3.11+ / `uv` 利用可能
 - 実行ディレクトリ: リポジトリルート
 
-## 1. 最短実行（推奨）
+## 1. 最短実行（推奨 — V1 + V2 統合）
+
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow-v2 --collector auto --self-heal-max-retries 2
+```
+
+V1（収集→検証→バックログ→実装→再検証→ガーデニング）に加え、V2（記事本文分析→ギャップ分析→レビューループ→コード改修）も実行します。
+
+### V1 のみ実行したい場合
 
 ```bash
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2
 ```
 
-この1コマンドで、収集→検証→バックログ化→実装→再検証→ガーデニング→監視評価まで実行します。
+### V2 のみ実行したい場合
+
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-pipeline
+```
 
 ## 2. ステップ別に実行したい場合
+
+### V1 ステップ
 
 ```bash
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode update --collector auto
@@ -24,7 +38,22 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode garden
 ```
 
+### V2 ステップ
+
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-radar
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-analyze
+```
+
+### V2 レビューループ単独実行
+
+```bash
+bash scripts/run_v2_review_loop.sh harness/agent_radar/reviews/REV-EXP-084
+```
+
 ## 3. 実行後に確認するファイル
+
+### V1 成果物
 
 - 差分/収集結果:
   - `harness/agent_radar/new-items.json`
@@ -37,6 +66,15 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
   - `harness/agent_radar/monitoring_results.json`
 - 自己修復:
   - `harness/agent_radar/self_heal_log.json`
+
+### V2 成果物
+
+- アイデア抽出: `harness/agent_radar/ideas/IDEA-*.json`
+- 不採用アイデア: `harness/agent_radar/ideas/rejected/IDEA-R*.json`
+- ギャップ分析: `harness/agent_radar/analysis/GAP-*.json`
+- レビュー記録: `harness/agent_radar/reviews/REV-*/status.json`
+- 実行結果: `harness/agent_radar/executions/EXEC-*/result.json`
+- ナレッジベース: `harness/agent_radar/knowledge_base.json`
 
 ## 4. タスク隔離実行（reproduce -> fix -> evidence）
 

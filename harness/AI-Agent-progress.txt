@@ -684,3 +684,6 @@ target: plans/services/user-service/EPIC-USER-001-onboarding/features/F-USER-002
 [2026-02-19 03:40Z] agent-radar: implement completed | implemented=2 rules_added=2 monitors_changed=2 mutations_added=2
 [2026-02-19 03:40Z] agent-radar: monitoring loop transitioned | from=bootstrap to=autogrow
 [2026-02-19 03:40Z] agent-radar: monitoring evaluated | loop=autogrow pass=287 total=287
+[2026-02-22 14:45Z] harness-v2: V2パイプライン実装完了 | radar_v2.py作成、radar_ops.pyにv2モード統合、レビューループスクリプト追加
+[2026-02-22 14:45Z] harness-v2: 設計判断 DEC-2026-016/017/018 を記録 | V2設計書をdocs/agent-harness/harness-v2-design.mdに配置
+[2026-02-22 14:45Z] harness-v2: 新SoRディレクトリ作成 | ideas/, analysis/, reviews/, executions/, knowledge_base.json

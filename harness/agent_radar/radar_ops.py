@@ -1414,7 +1414,7 @@ def run_update(collector_mode: str = "auto") -> int:
 def validate_source_boundary(official_sources: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     expected_homepages = {
-        "https://qwenlm.github.io/blog/",
+        "https://qwen.ai/research/",
         "https://deepseek.ai/blog/",
         "https://sakana.ai/blog/",
         "https://huggingface.co/blog/",
@@ -2618,8 +2618,19 @@ def render_autonomous_growth_doc(items: list[dict[str, Any]], updated_at: str) -
     lines.append("")
     lines.append("## Runbook")
     lines.append("")
+    lines.append("### V1 (SoR自律改善)")
+    lines.append("")
     lines.append(
         "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`"
+    )
+    lines.append("")
+    lines.append("### V2 (ハーネスエンジニアリング自律改良)")
+    lines.append("")
+    lines.append(
+        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow-v2 --collector auto --self-heal-max-retries 2`"
+    )
+    lines.append(
+        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-pipeline`"
     )
     lines.append("")
 
@@ -2919,12 +2930,37 @@ def run_cycle(collector_mode: str = "auto", self_heal_max_retries: int = 2) -> i
     )
 
 
+def run_v2_pipeline(collector_mode: str = "auto") -> int:
+    """V2パイプラインを実行する（記事本文分析 → ギャップ分析 → レビューループ → 実行）。"""
+    try:
+        from harness.agent_radar.radar_v2 import run_pipeline
+        return run_pipeline(collector_mode=collector_mode)
+    except ImportError as exc:
+        print(f"ERROR: V2 module not available: {exc}", file=sys.stderr)
+        return 1
+
+
+def run_autogrow_v2(collector_mode: str = "auto", self_heal_max_retries: int = 2) -> int:
+    """V1のautogrowを実行した後、V2パイプラインも実行する。"""
+    v1_rc = run_autogrow(collector_mode=collector_mode, self_heal_max_retries=self_heal_max_retries)
+    if v1_rc != 0:
+        append_progress("autogrow-v2 skipped v2 pipeline | v1 failed")
+        return v1_rc
+    v2_rc = run_v2_pipeline(collector_mode=collector_mode)
+    append_progress(f"autogrow-v2 completed | v1=0 v2={v2_rc}")
+    return v2_rc
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Agent radar operation entrypoint")
     parser.add_argument(
         "--mode",
         required=True,
-        choices=["update", "validate", "backlog", "implement", "garden", "cycle", "autogrow"],
+        choices=[
+            "update", "validate", "backlog", "implement", "garden",
+            "cycle", "autogrow",
+            "v2-radar", "v2-analyze", "v2-pipeline", "autogrow-v2",
+        ],
         help="operation mode",
     )
     parser.add_argument(
@@ -2961,6 +2997,21 @@ def main(argv: list[str]) -> int:
         )
     if mode == "autogrow":
         return run_autogrow(
+            collector_mode=collector_mode,
+            self_heal_max_retries=self_heal_max_retries,
+        )
+    if mode == "v2-radar":
+        from harness.agent_radar.radar_v2 import run_radar
+        run_radar()
+        return 0
+    if mode == "v2-analyze":
+        from harness.agent_radar.radar_v2 import run_analyze
+        run_analyze()
+        return 0
+    if mode == "v2-pipeline":
+        return run_v2_pipeline(collector_mode=collector_mode)
+    if mode == "autogrow-v2":
+        return run_autogrow_v2(
             collector_mode=collector_mode,
             self_heal_max_retries=self_heal_max_retries,
         )

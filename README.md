@@ -88,7 +88,7 @@ ExecPlan → design/index.md → 各 feature の impl-plan → tasks.md
 
 以下6ブログのみを収集対象にします。
 
-- https://qwenlm.github.io/blog/
+- https://qwen.ai/research/
 - https://deepseek.ai/blog/
 - https://sakana.ai/blog/
 - https://huggingface.co/blog/
