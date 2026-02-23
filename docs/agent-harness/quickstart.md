@@ -1,4 +1,4 @@
-以下を実行してみる。
+とりあえずできたので、以下を実行してみる。
 ```bash
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2
 ```
