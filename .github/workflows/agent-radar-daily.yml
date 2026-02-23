@@ -12,9 +12,10 @@ concurrency:
 jobs:
   run-cycle:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -36,15 +37,60 @@ jobs:
       - name: Run agent radar unified pipeline
         run: uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2
 
-      - name: Commit and push SoR updates
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Run unit test scripts
+        run: bash scripts/run_all_unit_tests.sh
 
-          if [[ -n "$(git status --porcelain -- harness/agent_radar docs/reports/source-radar docs/agent-harness harness/AI-Agent-progress.txt)" ]]; then
-            git add harness/agent_radar docs/reports/source-radar docs/agent-harness harness/AI-Agent-progress.txt
-            git commit -m "chore: Agent Radar自律成長の日次更新"
-            git push
-          else
-            echo "No changes to commit."
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Puppeteer
+        run: npm install --no-save puppeteer
+
+      - name: Run E2E tests
+        run: bash scripts/run_all_e2e_tests.sh
+
+      - name: Enforce SoR allowlist
+        run: |
+          CHANGED="$(git status --porcelain | awk '{print $2}')"
+          if [[ -z "${CHANGED}" ]]; then
+            echo "No changes detected."
+            exit 0
           fi
+          echo "Changed files:"
+          echo "${CHANGED}"
+          while IFS= read -r file; do
+            [[ -z "${file}" ]] && continue
+            case "${file}" in
+              harness/agent_radar/*|harness/worktree/*|docs/agent-harness/*|docs/reports/source-radar/*|harness/AI-Agent-progress.txt|scripts/*)
+                ;;
+              *)
+                echo "ERROR: out-of-scope change detected: ${file}" >&2
+                exit 1
+                ;;
+            esac
+          done <<< "${CHANGED}"
+
+      - name: Create PR for SoR updates
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: "bot/agent-radar-daily"
+          commit-message: "chore: Agent Radar自律成長の日次更新"
+          title: "chore: Agent Radar自律成長の日次更新"
+          body: |
+            日次の Agent Radar 実行結果を SoR 許可範囲内で更新しました。
+            - pipeline: 実行済み
+            - unit tests: 実行済み
+            - e2e tests: 実行済み
+            - allowlist: 検証済み
+          labels: |
+            automation
+            agent-radar
+          add-paths: |
+            harness/agent_radar/**
+            harness/worktree/**
+            docs/agent-harness/**
+            docs/reports/source-radar/**
+            harness/AI-Agent-progress.txt
+            scripts/**

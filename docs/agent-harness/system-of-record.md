@@ -24,6 +24,19 @@
 - タスク隔離実行器: `harness/worktree/worktree_ops.py`
 - タスク実行証跡: `harness/worktree/runs/`
 
+## 自動永続化の許可範囲（コミット境界）
+
+日次自律実行で永続化してよいパスは、次に限定する。
+
+- `harness/agent_radar/**`
+- `harness/worktree/**`
+- `docs/agent-harness/**`
+- `docs/reports/source-radar/**`
+- `harness/AI-Agent-progress.txt`
+- `scripts/**`
+
+上記以外の差分は、日次ジョブでは永続化しない（PR作成前にエラーで停止）。
+
 ## データ更新責務
 
 - 検証器 (`uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode validate`): 境界逸脱や構造崩れの検出

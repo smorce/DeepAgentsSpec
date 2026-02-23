@@ -751,138 +751,142 @@ def collect_source(source: dict[str, Any]) -> SourceResult:
     )
 
 
-def extract_json_object(text: str) -> dict[str, Any]:
-    trimmed = text.strip()
-    if not trimmed:
-        raise RuntimeError("codex output is empty")
-    try:
-        data = json.loads(trimmed)
-    except json.JSONDecodeError:
-        left = trimmed.find("{")
-        right = trimmed.rfind("}")
-        if left < 0 or right < 0 or right <= left:
-            raise RuntimeError("codex output does not contain a json object") from None
-        snippet = trimmed[left : right + 1]
-        try:
-            data = json.loads(snippet)
-        except json.JSONDecodeError as exc:  # noqa: PERF203
-            raise RuntimeError("codex output is not valid json") from exc
-
-    if not isinstance(data, dict):
-        raise RuntimeError("codex output root must be object")
-    return data
-
-
-def unique_file(path: Path) -> Path:
-    if not path.exists():
-        return path
-    stem = path.stem
-    suffix = path.suffix
-    for idx in range(1, 1000):
-        candidate = path.with_name(f"{stem}-{idx:03d}{suffix}")
-        if not candidate.exists():
-            return candidate
-    raise RuntimeError(f"failed to allocate unique path: {path}")
+# 未使用: V1 codex 収集廃止に伴い参照なし
+# def extract_json_object(text: str) -> dict[str, Any]:
+#     trimmed = text.strip()
+#     if not trimmed:
+#         raise RuntimeError("codex output is empty")
+#     try:
+#         data = json.loads(trimmed)
+#     except json.JSONDecodeError:
+#         left = trimmed.find("{")
+#         right = trimmed.rfind("}")
+#         if left < 0 or right < 0 or right <= left:
+#             raise RuntimeError("codex output does not contain a json object") from None
+#         snippet = trimmed[left : right + 1]
+#         try:
+#             data = json.loads(snippet)
+#         except json.JSONDecodeError as exc:  # noqa: PERF203
+#             raise RuntimeError("codex output is not valid json") from exc
+#
+#     if not isinstance(data, dict):
+#         raise RuntimeError("codex output root must be object")
+#     return data
 
 
-def write_codex_audit(stdout_text: str, stderr_text: str, return_code: int) -> Path:
-    CODEX_AUDIT_DIR.mkdir(parents=True, exist_ok=True)
-    base = CODEX_AUDIT_DIR / f"{utc_now().strftime('%Y%m%dT%H%M%SZ')}.md"
-    path = unique_file(base)
-    lines = [
-        "# Codex Exec Audit",
-        "",
-        f"- generated_at: `{iso_now()}`",
-        f"- return_code: `{return_code}`",
-        "",
-        "## STDERR",
-        "",
-        "```text",
-        stderr_text.rstrip(),
-        "```",
-        "",
-        "## STDOUT",
-        "",
-        "```text",
-        stdout_text.rstrip(),
-        "```",
-        "",
-    ]
-    path.write_text("\n".join(lines), encoding="utf-8")
-    return path
+# 未使用: write_codex_audit 専用のため codex 廃止で未使用
+# def unique_file(path: Path) -> Path:
+#     if not path.exists():
+#         return path
+#     stem = path.stem
+#     suffix = path.suffix
+#     for idx in range(1, 1000):
+#         candidate = path.with_name(f"{stem}-{idx:03d}{suffix}")
+#         if not candidate.exists():
+#             return candidate
+#     raise RuntimeError(f"failed to allocate unique path: {path}")
+
+
+# 未使用: V1 codex 実行廃止に伴い参照なし
+# def write_codex_audit(stdout_text: str, stderr_text: str, return_code: int) -> Path:
+#     CODEX_AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+#     base = CODEX_AUDIT_DIR / f"{utc_now().strftime('%Y%m%dT%H%M%SZ')}.md"
+#     path = unique_file(base)
+#     lines = [
+#         "# Codex Exec Audit",
+#         "",
+#         f"- generated_at: `{iso_now()}`",
+#         f"- return_code: `{return_code}`",
+#         "",
+#         "## STDERR",
+#         "",
+#         "```text",
+#         stderr_text.rstrip(),
+#         "```",
+#         "",
+#         "## STDOUT",
+#         "",
+#         "```text",
+#         stdout_text.rstrip(),
+#         "```",
+#         "",
+#     ]
+#     path.write_text("\n".join(lines), encoding="utf-8")
+#     return path
 
 
 def emit_runtime_info(summary: str) -> None:
     print(f"INFO: {summary}", file=sys.stderr, flush=True)
     append_progress(summary)
 
+# 未使用: V1 codex 実行廃止に伴い _run_codex_exec_once 内でのみ参照
 # #region agent log
-def _agent_debug_log(*, run_id: str, hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
-    try:
-        payload = {
-            "sessionId": "9f3ad0",
-            "runId": run_id,
-            "hypothesisId": hypothesis_id,
-            "location": location,
-            "message": message,
-            "data": data,
-            "timestamp": int(time.time() * 1000),
-        }
-        with (ROOT / "debug-9f3ad0.log").open("a", encoding="utf-8") as f:
-            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-    except Exception:
-        pass
-
-
-def _agent_summarize_config(path: Path) -> dict[str, Any]:
-    info: dict[str, Any] = {"path": str(path), "exists": path.exists()}
-    if not path.exists():
-        return info
-    try:
-        raw = path.read_text(encoding="utf-8", errors="replace")
-        info["size"] = len(raw)
-        info["sha256"] = hashlib.sha256(raw.encode("utf-8", errors="replace")).hexdigest()
-        low = raw.lower()
-        info["has_model"] = "model" in low
-        info["has_sandbox_mode"] = "sandbox_mode" in low
-        info["has_web_search"] = "web_search" in low
-        info["has_mcp_servers"] = "mcp_servers" in low
-        info["mentions_smorcepie"] = "smorcepie" in low
-        info["mentions_chrome_devtools"] = "chrome-devtools" in low
-    except Exception as exc:
-        info["error"] = str(exc)[:200]
-    return info
-
-
-def _agent_read_project_codex_kv(path: Path) -> dict[str, str]:
-    """
-    `.codex/config.toml` から必要最小限のトップレベル設定だけを抽出する。
-    依存追加なし・壊れにくさ優先で、厳密な TOML パースは行わない。
-    """
-    if not path.exists():
-        return {}
-    try:
-        raw = path.read_text(encoding="utf-8", errors="replace")
-    except Exception:
-        return {}
-
-    kv: dict[str, str] = {}
-    for line in raw.splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if "=" not in stripped:
-            continue
-        key, value = stripped.split("=", 1)
-        key = key.strip()
-        value = value.strip()
-        if not key:
-            continue
-        # inline comment を落とす（"..." 内の # は考慮しない、簡易実装）
-        if "#" in value:
-            value = value.split("#", 1)[0].strip()
-        kv[key] = value
-    return kv
+# def _agent_debug_log(*, run_id: str, hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
+#     try:
+#         payload = {
+#             "sessionId": "9f3ad0",
+#             "runId": run_id,
+#             "hypothesisId": hypothesis_id,
+#             "location": location,
+#             "message": message,
+#             "data": data,
+#             "timestamp": int(time.time() * 1000),
+#         }
+#         with (ROOT / "debug-9f3ad0.log").open("a", encoding="utf-8") as f:
+#             f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+#     except Exception:
+#         pass
+#
+#
+# def _agent_summarize_config(path: Path) -> dict[str, Any]:
+#     info: dict[str, Any] = {"path": str(path), "exists": path.exists()}
+#     if not path.exists():
+#         return info
+#     try:
+#         raw = path.read_text(encoding="utf-8", errors="replace")
+#         info["size"] = len(raw)
+#         info["sha256"] = hashlib.sha256(raw.encode("utf-8", errors="replace")).hexdigest()
+#         low = raw.lower()
+#         info["has_model"] = "model" in low
+#         info["has_sandbox_mode"] = "sandbox_mode" in low
+#         info["has_web_search"] = "web_search" in low
+#         info["has_mcp_servers"] = "mcp_servers" in low
+#         info["mentions_smorcepie"] = "smorcepie" in low
+#         info["mentions_chrome_devtools"] = "chrome-devtools" in low
+#     except Exception as exc:
+#         info["error"] = str(exc)[:200]
+#     return info
+#
+#
+# def _agent_read_project_codex_kv(path: Path) -> dict[str, str]:
+#     """
+#     `.codex/config.toml` から必要最小限のトップレベル設定だけを抽出する。
+#     依存追加なし・壊れにくさ優先で、厳密な TOML パースは行わない。
+#     """
+#     if not path.exists():
+#         return {}
+#     try:
+#         raw = path.read_text(encoding="utf-8", errors="replace")
+#     except Exception:
+#         return {}
+#
+#     kv: dict[str, str] = {}
+#     for line in raw.splitlines():
+#         stripped = line.strip()
+#         if not stripped or stripped.startswith("#"):
+#             continue
+#         if "=" not in stripped:
+#             continue
+#         key, value = stripped.split("=", 1)
+#         key = key.strip()
+#         value = value.strip()
+#         if not key:
+#             continue
+#         # inline comment を落とす（"..." 内の # は考慮しない、簡易実装）
+#         if "#" in value:
+#             value = value.split("#", 1)[0].strip()
+#         kv[key] = value
+#     return kv
 # #endregion
 
 
@@ -904,347 +908,112 @@ def evidence_prefixes_for_source(source: dict[str, Any]) -> list[str]:
     return deduped
 
 
-def codex_unavailable_title(reason: str) -> str:
-    return f"取得不可: 公式サイトから最新記事情報を確定できません ({reason})"
+# 未使用: V1 codex 収集廃止に伴い参照なし
+# def codex_unavailable_title(reason: str) -> str:
+#     return f"取得不可: 公式サイトから最新記事情報を確定できません ({reason})"
 
 
-def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
-    source_lines = []
-    for src in sources:
-        source_lines.append(f"- {src['homepage']}")
+# 使っていない古いプロンプト
+# def build_codex_latest_prompt(sources: list[dict[str, Any]]) -> str:
+#     source_lines = []
+#     for src in sources:
+#         source_lines.append(f"- {src['homepage']}")
 
-    return "\n".join(
-        [
-            "あなたはローカル環境で実行中です。次の6ブログだけを確認し、各ブログの最新記事を1件返してください。",
-            "",
-            "【許可されたブログ（これ以外はアクセス禁止）】",
-            *source_lines,
-            "",
-            "【要件】",
-            "- 推測禁止。不明時に null は返さないこと",
-            "- 各ブログについて latest_title / latest_url / latest_date / method / evidence_url を1件返すこと",
-            "- method は rss / atom / html のいずれか",
-            "- possibleなら RSS/Atom を優先。なければ HTML 推定",
-            "- latest_url と evidence_url は必ず許可されたブログ配下のURLのみ",
-            "- 取得不能な場合は method='html' とし、latest_title に取得不能理由の短文を入れる",
-            "- 取得不能な場合は latest_url/evidence_url に site と同じURLを入れる（null禁止）",
-            "- 出力は JSON のみ。説明文や Markdown 禁止",
-            "- 許可外URLを1件でも使った場合は {\"error\":\"OUT_OF_SCOPE\"} のみを返す",
-            "",
-            "【出力JSON】",
-            "{",
-            '  "checked_at": "<UTC ISO8601>",',
-            '  "results": [',
-            "    {",
-            '      "site": "<homepage>",',
-            '      "latest_title": "<string>",',
-            '      "latest_url": "<string>",',
-            '      "latest_date": "<string|null>",',
-            '      "method": "<rss|atom|html>",',
-            '      "evidence_url": "<string>"',
-            "    }",
-            "  ]",
-            "}",
-        ]
-    )
-
-
-def run_codex_exec(prompt: str, timeout_sec: int = 600) -> tuple[str, Path]:
-    """
-    Codex CLI を実行する（リトライ対応版）。
-    .codex/config.toml の設定を適用するため、リポジトリルートを cwd に指定する。
-    """
-    retry_handler = RetryHandler(log_func=emit_runtime_info)
-    
-    for attempt in range(retry_handler.max_retries + 1):
-        try:
-            if attempt > 0:
-                delay = retry_handler.get_delay(attempt - 1)
-                emit_runtime_info(f"codex exec retry | attempt={attempt + 1}/{retry_handler.max_retries + 1} delay={delay:.1f}s")
-                time.sleep(delay)
-            
-            return _run_codex_exec_once(prompt, timeout_sec, attempt)
-            
-        except Exception as exc:
-            # #region agent log
-            try:
-                _agent_debug_log(
-                    run_id="post-fix",
-                    hypothesis_id="E",
-                    location="radar_ops.py:run_codex_exec",
-                    message="codex exec raised exception",
-                    data={"attempt": attempt, "error": str(exc)[:400]},
-                )
-            except Exception:
-                pass
-            # #endregion
-            if not retry_handler.should_retry(exc, attempt):
-                raise
-            
-            emit_runtime_info(f"codex exec retryable error | attempt={attempt + 1} error={str(exc)[:200]}")
-            
-            if attempt >= retry_handler.max_retries:
-                emit_runtime_info(f"codex exec max retries exceeded | attempts={attempt + 1}")
-                raise
-    
-    raise RuntimeError("codex exec failed: unexpected retry loop exit")
+#     return "\n".join(
+#         [
+#             "あなたはローカル環境で実行中です。次の6ブログだけを確認し、各ブログの最新記事を1件返してください。",
+#             "",
+#             "【許可されたブログ（これ以外はアクセス禁止）】",
+#             *source_lines,
+#             "",
+#             "【要件】",
+#             "- 推測禁止。不明時に null は返さないこと",
+#             "- 各ブログについて latest_title / latest_url / latest_date / method / evidence_url を1件返すこと",
+#             "- method は rss / atom / html のいずれか",
+#             "- possibleなら RSS/Atom を優先。なければ HTML 推定",
+#             "- latest_url と evidence_url は必ず許可されたブログ配下のURLのみ",
+#             "- 取得不能な場合は method='html' とし、latest_title に取得不能理由の短文を入れる",
+#             "- 取得不能な場合は latest_url/evidence_url に site と同じURLを入れる（null禁止）",
+#             "- 出力は JSON のみ。説明文や Markdown 禁止",
+#             "- 許可外URLを1件でも使った場合は {\"error\":\"OUT_OF_SCOPE\"} のみを返す",
+#             "",
+#             "【出力JSON】",
+#             "{",
+#             '  "checked_at": "<UTC ISO8601>",',
+#             '  "results": [',
+#             "    {",
+#             '      "site": "<homepage>",',
+#             '      "latest_title": "<string>",',
+#             '      "latest_url": "<string>",',
+#             '      "latest_date": "<string|null>",',
+#             '      "method": "<rss|atom|html>",',
+#             '      "evidence_url": "<string>"',
+#             "    }",
+#             "  ]",
+#             "}",
+#         ]
+#     )
 
 
-def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[str, Path]:
-    """
-    Codex CLI を1回実行する。
-    .codex/config.toml を読み込むため、リポジトリルートを cwd に指定する。
-    """
-    local_config_path = ROOT / ".codex" / "config.toml"
-
-    project_cfg = _agent_read_project_codex_kv(local_config_path)
-    cfg_model = project_cfg.get("model")
-    cfg_reasoning = project_cfg.get("model_reasoning_effort")
-    cfg_approval = project_cfg.get("approval_policy")
-    cfg_sandbox = project_cfg.get("sandbox_mode")
-    cfg_web_search = project_cfg.get("web_search")
-
-    codex_exe = shutil.which("codex")
-    if not codex_exe:
-        raise RuntimeError(
-            "codex command is not available in PATH. "
-            "Install it (e.g. pip install codex-cli) and ensure it's in your PATH."
-        )
-    cmd: list[str] = [codex_exe, "exec"]
-    # `.codex/config.toml` を Codex に「渡す」: CLI オプション/override に展開する
-    if cfg_model:
-        cmd += ["-m", cfg_model.strip().strip('"').strip("'")]
-    if cfg_sandbox:
-        cmd += ["-s", cfg_sandbox.strip().strip('"').strip("'")]
-    if cfg_reasoning:
-        cmd += ["-c", f"model_reasoning_effort={cfg_reasoning}"]
-    if cfg_approval:
-        cmd += ["-c", f"approval_policy={cfg_approval}"]
-    if cfg_web_search:
-        cmd += ["-c", f"web_search={cfg_web_search}"]
-    cmd.append(prompt)
-    heartbeat_sec = 15.0
-    start_mono = time.monotonic()
-    deadline = start_mono + float(timeout_sec)
-    next_heartbeat = start_mono + heartbeat_sec
-    
-    if attempt == 0:
-        emit_runtime_info(f"codex exec started | timeout_sec={timeout_sec} config={local_config_path}")
-    
-    env = os.environ.copy()
-    user_home = str(Path.home())
-    if 'USERPROFILE' not in env:
-        env['USERPROFILE'] = user_home
-    if 'HOME' not in env:
-        env['HOME'] = user_home
-    env['CODEX_HOME'] = str(Path.home() / ".codex")
-
-    # #region agent log
-    try:
-        codex_home_value = env.get("CODEX_HOME") or ""
-        codex_home_config = Path(codex_home_value) / "config.toml" if codex_home_value else None
-        _agent_debug_log(
-            run_id="post-fix",
-            hypothesis_id="A",
-            location="radar_ops.py:_run_codex_exec_once",
-            message="codex exec env/cfg snapshot",
-            data={
-                "platform": sys.platform,
-                "which_codex": shutil.which("codex"),
-                "cwd": str(ROOT),
-                "home": str(Path.home()),
-                "env_CODEX_HOME": env.get("CODEX_HOME"),
-                "env_HOME": env.get("HOME"),
-                "env_USERPROFILE": env.get("USERPROFILE"),
-                "project_cfg_keys": sorted(project_cfg.keys()),
-                "project_cfg_selected": {
-                    "model": cfg_model,
-                    "model_reasoning_effort": cfg_reasoning,
-                    "approval_policy": cfg_approval,
-                    "sandbox_mode": cfg_sandbox,
-                    "web_search": cfg_web_search,
-                },
-                "cmd_head": cmd[:12],
-                "project_config": _agent_summarize_config(local_config_path),
-                "codex_home_config": _agent_summarize_config(codex_home_config) if codex_home_config else {"path": "", "exists": False},
-            },
-        )
-    except Exception:
-        pass
-    # #endregion
-    
-    proc = subprocess.Popen(
-        cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        env=env,
-        cwd=str(ROOT),
-    )
-
-    while proc.poll() is None:
-        now = time.monotonic()
-        elapsed = int(now - start_mono)
-        if now >= next_heartbeat:
-            emit_runtime_info(
-                f"codex exec running | elapsed_sec={elapsed} timeout_sec={timeout_sec}"
-            )
-            next_heartbeat += heartbeat_sec
-        if now >= deadline:
-            proc.kill()
-            stdout_text, stderr_text = proc.communicate()
-            stdout_text = stdout_text or ""
-            stderr_text = stderr_text or ""
-            audit_path = write_codex_audit(stdout_text, stderr_text, return_code=124)
-            emit_runtime_info(
-                f"codex exec timeout | elapsed_sec={elapsed} audit={audit_path.relative_to(ROOT)}"
-            )
-            raise RuntimeError(
-                f"codex exec timed out after {timeout_sec}s (audit={audit_path})"
-            )
-        time.sleep(1.0)
-
-    result_stdout, result_stderr = proc.communicate()
-    result_stdout = result_stdout or ""
-    result_stderr = result_stderr or ""
-    elapsed_done = int(time.monotonic() - start_mono)
-    audit_path = write_codex_audit(result_stdout, result_stderr, return_code=proc.returncode or 0)
-
-    # #region agent log
-    try:
-        stderr_head = "\n".join((result_stderr or "").splitlines()[:30])
-        _agent_debug_log(
-            run_id="post-fix",
-            hypothesis_id="B",
-            location="radar_ops.py:_run_codex_exec_once",
-            message="codex exec completed (captured stderr head)",
-            data={"return_code": proc.returncode, "audit": str(audit_path), "stderr_head": stderr_head[:1200]},
-        )
-    except Exception:
-        pass
-    # #endregion
-    if proc.returncode != 0:
-        emit_runtime_info(
-            f"codex exec failed | code={proc.returncode} elapsed_sec={elapsed_done} audit={audit_path.relative_to(ROOT)}"
-        )
-        raise RuntimeError(
-            f"codex exec failed with code={proc.returncode} (audit={audit_path})"
-        )
-
-    emit_runtime_info(
-        f"codex exec completed | elapsed_sec={elapsed_done} audit={audit_path.relative_to(ROOT)}"
-    )
-    return result_stdout.strip(), audit_path
+# 未使用: V1 codex 収集廃止のため collect_sources_with_codex_exec からしか呼ばれず、当該呼び出しも廃止済み
+# def run_codex_exec(prompt: str, timeout_sec: int = 600) -> tuple[str, Path]:
+#     """
+#     Codex CLI を実行する（リトライ対応版）。
+#     .codex/config.toml の設定を適用するため、リポジトリルートを cwd に指定する。
+#     """
+#     retry_handler = RetryHandler(log_func=emit_runtime_info)
+#
+#     for attempt in range(retry_handler.max_retries + 1):
+#         try:
+#             if attempt > 0:
+#                 delay = retry_handler.get_delay(attempt - 1)
+#                 emit_runtime_info(f"codex exec retry | attempt={attempt + 1}/{retry_handler.max_retries + 1} delay={delay:.1f}s")
+#                 time.sleep(delay)
+#
+#             return _run_codex_exec_once(prompt, timeout_sec, attempt)
+#
+#         except Exception as exc:
+#             # #region agent log
+#             try:
+#                 _agent_debug_log(
+#                     run_id="post-fix",
+#                     hypothesis_id="E",
+#                     location="radar_ops.py:run_codex_exec",
+#                     message="codex exec raised exception",
+#                     data={"attempt": attempt, "error": str(exc)[:400]},
+#                 )
+#             except Exception:
+#                 pass
+#             # #endregion
+#             if not retry_handler.should_retry(exc, attempt):
+#                 raise
+#
+#             emit_runtime_info(f"codex exec retryable error | attempt={attempt + 1} error={str(exc)[:200]}")
+#
+#             if attempt >= retry_handler.max_retries:
+#                 emit_runtime_info(f"codex exec max retries exceeded | attempts={attempt + 1}")
+#                 raise
+#
+#     raise RuntimeError("codex exec failed: unexpected retry loop exit")
+#
+#
+# def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[str, Path]:
+#     """
+#     Codex CLI を1回実行する。
+#     .codex/config.toml を読み込むため、リポジトリルートを cwd に指定する。
+#     """
+#     local_config_path = ROOT / ".codex" / "config.toml"
+#
+#     project_cfg = _agent_read_project_codex_kv(local_config_path)
+#     ... (省略: codex 実行・監査ログ・リトライは V2 で別実装)
+#     return result_stdout.strip(), audit_path
 
 
-def collect_sources_with_codex_exec(sources: list[dict[str, Any]]) -> tuple[list[SourceResult], Path]:
-    if shutil.which("codex") is None:
-        raise RuntimeError("codex command is not available")
-
-    prompt = build_codex_latest_prompt(sources)
-    stdout_text, audit_path = run_codex_exec(prompt)
-    payload = extract_json_object(stdout_text)
-
-    if payload.get("error") == "OUT_OF_SCOPE":
-        raise RuntimeError(f"codex returned OUT_OF_SCOPE (audit={audit_path})")
-
-    raw_results = payload.get("results")
-    if not isinstance(raw_results, list):
-        raise RuntimeError(f"codex output results must be list (audit={audit_path})")
-    if len(raw_results) != len(sources):
-        raise RuntimeError(
-            f"codex output results count mismatch: expected={len(sources)} got={len(raw_results)} (audit={audit_path})"
-        )
-
-    source_by_homepage: dict[str, dict[str, Any]] = {}
-    for source in sources:
-        source_by_homepage[normalize_prefix(str(source.get("homepage", "")))] = source
-
-    seen_homepages: set[str] = set()
-    result_by_id: dict[str, SourceResult] = {}
-    for entry in raw_results:
-        if not isinstance(entry, dict):
-            raise RuntimeError(f"codex result item must be object (audit={audit_path})")
-
-        homepage_key = normalize_prefix(str(entry.get("site", "")))
-        if not homepage_key:
-            raise RuntimeError(f"codex result has invalid site url (audit={audit_path})")
-        if homepage_key in seen_homepages:
-            raise RuntimeError(f"codex result has duplicate site: {homepage_key} (audit={audit_path})")
-
-        source = source_by_homepage.get(homepage_key)
-        if source is None:
-            raise RuntimeError(f"codex result site is out of allowed scope: {homepage_key} (audit={audit_path})")
-
-        seen_homepages.add(homepage_key)
-
-        latest_title = normalize_space(str(entry.get("latest_title", "") or ""))
-        latest_url = str(entry.get("latest_url", "") or "").strip()
-        latest_date = str(entry.get("latest_date", "") or "").strip()
-        method = normalize_space(str(entry.get("method", "") or "")).lower()
-        evidence_url = str(entry.get("evidence_url", "") or "").strip()
-        source_id = str(source.get("id", ""))
-        source_homepage = str(source.get("homepage", "")).strip()
-
-        if method not in {"rss", "atom", "html"}:
-            repaired_method = "html"
-            emit_runtime_info(
-                f"codex method repaired | source={source_id} from={method or 'empty'} to={repaired_method}"
-            )
-            method = repaired_method
-
-        if not latest_title or not latest_url:
-            missing_fields: list[str] = []
-            if not latest_title:
-                missing_fields.append("latest_title")
-            if not latest_url:
-                missing_fields.append("latest_url")
-
-            reason = ",".join(missing_fields)
-            if not latest_title:
-                latest_title = codex_unavailable_title(reason)
-            if not latest_url:
-                latest_url = source_homepage
-            if not evidence_url:
-                evidence_url = source_homepage
-            emit_runtime_info(
-                f"codex fields repaired | source={source_id} missing={reason} strategy=unavailable-message"
-            )
-
-        if not evidence_url:
-            evidence_url = latest_url
-
-        if not has_allowed_prefix(latest_url, source.get("allowed_entry_prefixes", [])):
-            raise RuntimeError(f"codex latest_url out of boundary: {latest_url} (audit={audit_path})")
-
-        if evidence_url and not has_allowed_prefix(evidence_url, evidence_prefixes_for_source(source)):
-            raise RuntimeError(f"codex evidence_url out of boundary: {evidence_url} (audit={audit_path})")
-
-        item = RadarItem(
-            title=latest_title,
-            link=latest_url,
-            published=normalize_published(latest_date),
-            collected_via=f"codex-{method}",
-            evidence_url=evidence_url,
-        )
-
-        source_id = str(source.get("id", ""))
-        result_by_id[source_id] = SourceResult(
-            source_id=source_id,
-            name=str(source.get("name", "")),
-            homepage=str(source.get("homepage", "")),
-            items=[item],
-            errors=[],
-        )
-
-    missing_source_ids = [str(source.get("id", "")) for source in sources if str(source.get("id", "")) not in result_by_id]
-    if missing_source_ids:
-        raise RuntimeError(f"codex result missing sources: {', '.join(missing_source_ids)} (audit={audit_path})")
-
-    ordered = [result_by_id[str(source.get("id", ""))] for source in sources]
-    return ordered, audit_path
+# 未使用: V1 codex 収集廃止のため呼び出しなし（V2 pipeline 利用）
+# def collect_sources_with_codex_exec(sources: list[dict[str, Any]]) -> tuple[list[SourceResult], Path]:
+#     raise RuntimeError(
+#         "V1 codex collector is removed. Use harness/agent_radar/radar_v2.py (mode pipeline)."
+#     )
 
 
 def append_progress(summary: str) -> None:
@@ -1320,29 +1089,18 @@ def run_update(collector_mode: str = "auto") -> int:
     results: list[SourceResult] = []
     mutation_modules = load_mutation_modules()
 
-    if collector_mode in {"auto", "codex"}:
-        emit_runtime_info(
-            f"update collector attempt | requested={collector_mode} phase=codex"
+    if collector_mode == "codex":
+        print(
+            "ERROR: collector=codex for V1 update is removed. Use --mode pipeline (V2).",
+            file=sys.stderr,
         )
-        try:
-            results, audit_path = collect_sources_with_codex_exec(sources)
-            collector_used = "codex"
-            append_progress(f"codex collector used | audit={audit_path.relative_to(ROOT)}")
-        except RuntimeError as exc:
-            if collector_mode == "codex":
-                print(f"ERROR: {exc}", file=sys.stderr)
-                return 1
-            emit_runtime_info(
-                f"update collector fallback | from=codex to=native reason={normalize_space(str(exc))}"
-            )
-            collector_warnings.append(str(exc))
+        return 1
 
-    if not results:
-        emit_runtime_info(
-            f"update collector attempt | requested={collector_mode} phase=native"
-        )
-        results = [collect_source(source) for source in sources]
-        collector_used = "native"
+    emit_runtime_info(
+        f"update collector attempt | requested={collector_mode} phase=native"
+    )
+    results = [collect_source(source) for source in sources]
+    collector_used = "native"
 
     for result in results:
         source_links = [item.link for item in result.items]

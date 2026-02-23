@@ -1,3 +1,10 @@
+以下を実行してみる。
+```bash
+uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2
+```
+
+
+
 # Agent Harness Quickstart
 
 ## 前提
@@ -90,7 +97,8 @@ Codex が chrome-devtools MCP を使うには、プロジェクトを `codex tru
 ## 6. 日次運用
 
 - GitHub Actions: `.github/workflows/agent-radar-daily.yml`
-- 日次ジョブが `--mode pipeline` を実行し、SoR 更新差分を自動コミットします。
+- 日次ジョブが `--mode pipeline` を実行し、SoR 更新差分を自動PR化します（直pushしません）。
+- 日次ジョブは PR 作成前に unit/e2e を実行します。
 
 ## 7. PR品質ゲート
 

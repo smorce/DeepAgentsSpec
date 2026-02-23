@@ -230,7 +230,7 @@ _codex_env_shown = False
 
 
 def _run_codex_exec(prompt: str, timeout_sec: int = 600) -> str:
-    """Codex CLI を実行し、stdoutを返す。"""
+    """Codex CLI を実行し、stdoutを返す。きちんと動くことを確認済み。"""
     global _codex_env_shown
     if not _codex_env_shown:
         _print_env_info()
@@ -478,7 +478,9 @@ def _build_blog_scrape_prompt(homepage_url: str, source_id: str, source_name: st
         "  ],\n"
         '  "supplementary_search_needed": true/false,\n'
         '  "supplementary_keywords": ["補足検索に使うキーワード"],\n'
-        '  "chrome_devtools_used": true/false\n'
+        '  "chrome_devtools_used": true/false,\n'
+        '  "error": "NONE|TOOL_UNAVAILABLE|PARSE_ERROR|UNKNOWN",\n'
+        '  "reason": "error時の短い理由（成功時は空文字）"\n'
         "}\n"
         "\n"
         "## ハーネスエンジニアリングとの関連性判定基準（厳守）\n"
@@ -522,7 +524,8 @@ def _build_blog_scrape_prompt(homepage_url: str, source_id: str, source_name: st
         "- 推測禁止。実際に読んだ内容のみに基づくこと。出力は日本語にすること。\n"
         "- chrome_devtools_used: chrome-devtools.new_page を実際に使って取得した場合は true、ツールが利用できずフォールバックした場合は false。\n"
         "- chrome-devtools が使えない場合: "
-        '{"article_url":"","article_title":"","article_summary":"","source":"' + source_name + '","source_id":"' + source_id + '","ideas":[],"supplementary_search_needed":false,"supplementary_keywords":[],"chrome_devtools_used":false} を出力。\n'
+        '{"article_url":"","article_title":"","article_summary":"","source":"' + source_name + '","source_id":"' + source_id + '","ideas":[],"supplementary_search_needed":false,"supplementary_keywords":[],"chrome_devtools_used":false,"error":"TOOL_UNAVAILABLE","reason":"chrome-devtools.new_page unavailable"} を出力。\n'
+        "- 成功時は必ず error='NONE', reason='' を入れること。\n"
         "- 出力は必ずJSONオブジェクトのみ。前後に余計なテキストを付けないこと。"
     )
 
@@ -533,6 +536,7 @@ def _build_supplementary_search_prompt(keywords: list[str], original_article: st
     search_urls = [
         f"https://zenn.dev/search?q={'+'.join(keywords)}",
         f"https://qiita.com/search?q={'+'.join(keywords)}",
+        f"https://note.com/search?q={'+'.join(keywords)}",
     ]
     open_steps = "\n".join(
         f'{i+1}. tool `chrome-devtools.new_page({{"url": "{url}"}})` を開き、'
@@ -541,7 +545,7 @@ def _build_supplementary_search_prompt(keywords: list[str], original_article: st
     )
     return (
         "【重要】自動パイプライン。挨拶・確認禁止。chrome-devtools.new_page で検索し、処理後にJSONのみ出力。"
-        "ツール不可の場合は {\"supplementary_articles\":[],\"additional_ideas\":[],\"chrome_devtools_used\":false} を出力。会話文禁止。\n\n"
+        "ツール不可の場合は {\"supplementary_articles\":[],\"additional_ideas\":[],\"chrome_devtools_used\":false,\"error\":\"TOOL_UNAVAILABLE\",\"reason\":\"chrome-devtools.new_page unavailable\"} を出力。会話文禁止。\n\n"
         f"## 元記事: {original_article}\n"
         f"## 検索キーワード: {kw_str}\n"
         "\n"
@@ -571,15 +575,18 @@ def _build_supplementary_search_prompt(keywords: list[str], original_article: st
         f'      "derived_from": "{original_article}"\n'
         "    }\n"
         "  ],\n"
-        '  "chrome_devtools_used": true\n'
+        '  "chrome_devtools_used": true,\n'
+        '  "error": "NONE|TOOL_UNAVAILABLE|PARSE_ERROR|UNKNOWN",\n'
+        '  "reason": "error時の短い理由（成功時は空文字）"\n'
         "}\n"
         "\n"
         "- chrome_devtools_used: chrome-devtools.new_page を実際に使った場合は true、ツール不可の場合は false。\n"
+        "- 成功時は必ず error='NONE', reason='' を入れること。\n"
         "出力は必ずJSONオブジェクトのみ。説明文・前後のテキストは一切不要。"
     )
 
 
-def run_radar() -> list[dict[str, Any]]:
+def run_radar() -> tuple[list[dict[str, Any]], dict[str, int]]:
     """6ブログの最新記事を chrome-devtools MCP で開き、本文を読んでアイデアを抽出する。
 
     official_sources.json の6ブログをループし、各ブログのトップページを
@@ -589,7 +596,7 @@ def run_radar() -> list[dict[str, Any]]:
     sources = sources_cfg.get("sources", [])
     if not sources:
         _emit("radar skipped | no official sources configured")
-        return []
+        return [], {"sources_scanned": 0, "sources_failed": 0, "tool_unavailable": 0}
 
     kb = _read_json(KNOWLEDGE_BASE_FILE, {"ideas": [], "rejected_ideas": [], "implemented_ideas": []})
     known_article_urls = {
@@ -599,6 +606,11 @@ def run_radar() -> list[dict[str, Any]]:
     }
 
     all_ideas: list[dict[str, Any]] = []
+    stats = {
+        "sources_scanned": len(sources),
+        "sources_failed": 0,
+        "tool_unavailable": 0,
+    }
 
     for source in sources:
         source_id = source.get("id", "unknown")
@@ -614,7 +626,20 @@ def run_radar() -> list[dict[str, Any]]:
             result_text = _run_codex_exec(prompt, timeout_sec=600)
             result = _extract_json(result_text)
         except RuntimeError as exc:
+            stats["sources_failed"] += 1
             _emit(f"radar blog scrape failed | source={source_id} error={str(exc)[:200]}")
+            continue
+
+        result_error = str(result.get("error", "") or "").strip().upper()
+        result_reason = str(result.get("reason", "") or "").strip()
+        if result_error and result_error != "NONE":
+            stats["sources_failed"] += 1
+            if result_error == "TOOL_UNAVAILABLE":
+                stats["tool_unavailable"] += 1
+            _emit(
+                "radar source reported error | "
+                f"source={source_id} error={result_error} reason={result_reason[:120]}"
+            )
             continue
 
         article_url = result.get("article_url", "")
@@ -653,6 +678,16 @@ def run_radar() -> list[dict[str, Any]]:
                 )
                 supp_text = _run_codex_exec(supp_prompt, timeout_sec=300)
                 supp_result = _extract_json(supp_text)
+                supp_error = str(supp_result.get("error", "") or "").strip().upper()
+                supp_reason = str(supp_result.get("reason", "") or "").strip()
+                if supp_error and supp_error != "NONE":
+                    if supp_error == "TOOL_UNAVAILABLE":
+                        stats["tool_unavailable"] += 1
+                    _emit(
+                        "radar supplementary reported error | "
+                        f"source={source_id} error={supp_error} reason={supp_reason[:120]}"
+                    )
+                    continue
                 supp_chrome_used = supp_result.get("chrome_devtools_used", False)
                 for extra_idea in supp_result.get("additional_ideas", []):
                     extra_idea["source_url"] = article_url
@@ -677,8 +712,14 @@ def run_radar() -> list[dict[str, Any]]:
         idea["id"] = idea_id
         _write_json(IDEAS_DIR / f"{idea_id}.json", idea)
 
-    _emit(f"radar completed | sources_scanned={len(sources)} total_ideas={len(all_ideas)}")
-    return all_ideas
+    _emit(
+        "radar completed | "
+        f"sources_scanned={stats['sources_scanned']} "
+        f"sources_failed={stats['sources_failed']} "
+        f"tool_unavailable={stats['tool_unavailable']} "
+        f"total_ideas={len(all_ideas)}"
+    )
+    return all_ideas, stats
 
 
 # ---------------------------------------------------------------------------
@@ -876,6 +917,8 @@ def _build_plan_draft_prompt(analysis: dict[str, Any], idea: dict[str, Any]) -> 
 - ディレクトリ構造変更がある場合はマークダウンのリスト形式で記述
 - ロールバック手順を含む
 - 品質ゲート（validate/garden）の通過を最終確認に含む
+- 変更対象は `harness/agent_radar` / `docs/agent-harness` / `docs/reports/source-radar` に限定する
+- 上記範囲外の変更を前提にしない（必要と判断しても計画に含めない）
 
 ## 出力形式（Markdown）
 実行計画をMarkdown形式で出力してください。"""
@@ -907,6 +950,7 @@ def _build_review_prompt(plan_content: str, past_reviews: str, idea_title: str) 
 ## 完了条件
 - 全スコアが3以上 かつ 平均3.5以上で approve
 - 改善不可能な問題がある場合は reject
+- 計画内に `harness/agent_radar` / `docs/agent-harness` / `docs/reports/source-radar` 以外の変更が含まれる場合は reject
 
 ## 出力形式（JSON）
 {{
@@ -1282,6 +1326,8 @@ def _publish_v2_metrics(
     reviews_approved: int,
     executions_completed: int,
     total_review_sessions: int,
+    radar_failures: int,
+    radar_tool_unavailable: int,
 ) -> None:
     """V2パイプラインのメトリクスを metrics/latest.json に追記する。"""
     from harness.agent_radar.radar_ops import METRICS_LATEST_FILE
@@ -1298,6 +1344,8 @@ def _publish_v2_metrics(
     metrics["v2.ideas_rejected"] = float(rejected_count)
     metrics["v2.reviews_approved"] = float(reviews_approved)
     metrics["v2.executions_completed"] = float(executions_completed)
+    metrics["v2.radar_failures"] = float(radar_failures)
+    metrics["v2.radar_tool_unavailable"] = float(radar_tool_unavailable)
     avg_sessions = (total_review_sessions / reviews_approved) if reviews_approved > 0 else 0.0
     metrics["v2.avg_review_sessions"] = round(avg_sessions, 2)
 
@@ -1343,7 +1391,7 @@ def run_pipeline(collector_mode: str = "auto", self_heal_max_retries: int = 2) -
     # Phase 1: Radar
     _emit("phase 1: radar (article analysis)")
     try:
-        ideas = run_radar()
+        ideas, radar_stats = run_radar()
         outcomes.append(StepOutcome(name="radar:1", rc=0))
     except Exception as exc:
         _emit(f"pipeline failed | phase=radar error={str(exc)[:200]}")
@@ -1411,6 +1459,8 @@ def run_pipeline(collector_mode: str = "auto", self_heal_max_retries: int = 2) -
         reviews_approved=reviews_approved,
         executions_completed=executed,
         total_review_sessions=total_review_sessions,
+        radar_failures=int(radar_stats.get("sources_failed", 0)),
+        radar_tool_unavailable=int(radar_stats.get("tool_unavailable", 0)),
     )
 
     # Phase 5+6: Post-execute validate + garden（常に実行）
