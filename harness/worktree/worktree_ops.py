@@ -129,6 +129,63 @@ def execute_phase(
     )
 
 
+def execute_codex_prompt_phase(
+    name: str,
+    prompt_text: str,
+    cwd: Path,
+    timeout_sec: int,
+    logs_dir: Path,
+) -> PhaseResult:
+    safe_name = slugify(name)
+    stdout_file = logs_dir / f"{safe_name}.stdout.log"
+    stderr_file = logs_dir / f"{safe_name}.stderr.log"
+    started_at = iso_now()
+
+    started = time.monotonic()
+    try:
+        proc = subprocess.run(
+            ["codex", "exec"],
+            cwd=str(cwd),
+            check=False,
+            capture_output=True,
+            text=True,
+            input=prompt_text,
+            timeout=timeout_sec,
+            env=os.environ.copy(),
+        )
+        actual_exit = proc.returncode
+        duration = time.monotonic() - started
+        stdout = proc.stdout
+        stderr = proc.stderr
+    except subprocess.TimeoutExpired:
+        actual_exit = 124
+        duration = float(timeout_sec)
+        stdout = ""
+        stderr = (
+            f"Command timed out after {timeout_sec}s while running phase '{name}'.\n"
+            "Command: codex exec (stdin prompt)\n"
+        )
+
+    stdout_file.parent.mkdir(parents=True, exist_ok=True)
+    stdout_file.write_text(stdout, encoding="utf-8")
+    stderr_file.parent.mkdir(parents=True, exist_ok=True)
+    stderr_file.write_text(stderr, encoding="utf-8")
+
+    finished_at = iso_now()
+    return PhaseResult(
+        name=name,
+        command="codex exec <prompt_from_file_or_arg>",
+        expected_exit=0,
+        actual_exit=actual_exit,
+        ok=(actual_exit == 0),
+        started_at=started_at,
+        finished_at=finished_at,
+        duration_sec=round(duration, 3),
+        stdout_path=str(stdout_file.relative_to(ROOT)),
+        stderr_path=str(stderr_file.relative_to(ROOT)),
+    )
+
+
 def run_git_capture(worktree_dir: Path, artifacts_dir: Path) -> None:
     commands = {
         "git-status.txt": ["git", "-C", str(worktree_dir), "status", "--short"],
@@ -333,6 +390,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--fix-prompt",
         help="prompt for codex exec; converted to `codex exec <prompt>`",
     )
+    fix_group.add_argument(
+        "--fix-prompt-file",
+        help="UTF-8 text file path used as codex exec prompt via stdin",
+    )
 
     parser.add_argument("--verify-cmd", required=True, help="verification command")
     parser.add_argument(
@@ -440,16 +501,51 @@ def main(argv: list[str]) -> int:
             phases.append(reproduce_phase)
 
             fix_command: str | None = None
+            fix_prompt_text: str | None = None
             if args.fix_cmd:
                 fix_command = args.fix_cmd
             elif args.fix_prompt:
-                fix_command = f"codex exec {shlex.quote(args.fix_prompt)}"
+                fix_prompt_text = args.fix_prompt
+            elif args.fix_prompt_file:
+                prompt_file_path = Path(args.fix_prompt_file)
+                if not prompt_file_path.is_absolute():
+                    prompt_file_path = (ROOT / prompt_file_path).resolve()
+                if not prompt_file_path.exists() or not prompt_file_path.is_file():
+                    (logs_dir / "fix.stderr.log").write_text(
+                        f"fix prompt file not found: {prompt_file_path}\n",
+                        encoding="utf-8",
+                    )
+                    fix_phase = PhaseResult(
+                        name="fix",
+                        command=f"codex exec < {prompt_file_path}",
+                        expected_exit=0,
+                        actual_exit=1,
+                        ok=False,
+                        started_at=iso_now(),
+                        finished_at=iso_now(),
+                        duration_sec=0.0,
+                        stdout_path=str((logs_dir / "fix.stdout.log").relative_to(ROOT)),
+                        stderr_path=str((logs_dir / "fix.stderr.log").relative_to(ROOT)),
+                    )
+                    phases.append(fix_phase)
+                    fix_prompt_text = None
+                else:
+                    fix_prompt_text = prompt_file_path.read_text(encoding="utf-8")
 
             if fix_command is not None:
                 fix_phase = execute_phase(
                     name="fix",
                     command=fix_command,
                     expected_exit=0,
+                    cwd=worktree_dir,
+                    timeout_sec=args.timeout_sec,
+                    logs_dir=logs_dir,
+                )
+                phases.append(fix_phase)
+            elif fix_prompt_text is not None:
+                fix_phase = execute_codex_prompt_phase(
+                    name="fix",
+                    prompt_text=fix_prompt_text,
                     cwd=worktree_dir,
                     timeout_sec=args.timeout_sec,
                     logs_dir=logs_dir,
@@ -488,6 +584,11 @@ def main(argv: list[str]) -> int:
             replay_fix_command = args.fix_cmd
         elif args.fix_prompt:
             replay_fix_command = f"codex exec {shlex.quote(args.fix_prompt)}"
+        elif args.fix_prompt_file:
+            prompt_file_path = Path(args.fix_prompt_file)
+            if not prompt_file_path.is_absolute():
+                prompt_file_path = (ROOT / prompt_file_path).resolve()
+            replay_fix_command = f"codex exec < {shlex.quote(str(prompt_file_path))}"
 
         replay_script = artifacts_dir / "replay.sh"
         build_replay_script(

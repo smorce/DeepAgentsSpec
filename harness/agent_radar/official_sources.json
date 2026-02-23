@@ -5,15 +5,15 @@
     {
       "id": "qwen",
       "name": "Qwen Official Blog",
-      "homepage": "https://qwenlm.github.io/blog/",
+      "homepage": "https://qwen.ai/research/",
       "feeds": [
-        "https://qwenlm.github.io/blog/index.xml"
+        "https://qwen.ai/research/index.xml"
       ],
       "allowed_entry_prefixes": [
-        "https://qwenlm.github.io/blog/"
+        "https://qwen.ai/research/"
       ],
       "html_entry_prefixes": [
-        "https://qwenlm.github.io/blog/"
+        "https://qwen.ai/research/"
       ],
       "max_items": 20
     },

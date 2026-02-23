@@ -52,6 +52,14 @@
     "radar.new_item_count": 3.0,
     "radar.backlog_total": 83.0,
     "radar.implemented_total": 83.0,
-    "radar.monitor_target_count": 287.0
-  }
+    "radar.monitor_target_count": 287.0,
+    "v2.ideas_extracted": 0.0,
+    "v2.analyses_completed": 0.0,
+    "v2.ideas_adopted": 0.0,
+    "v2.ideas_rejected": 0.0,
+    "v2.reviews_approved": 0.0,
+    "v2.executions_completed": 0.0,
+    "v2.avg_review_sessions": 0.0
+  },
+  "v2_updated_at": "2026-02-22T16:30:34Z"
 }

@@ -26,6 +26,10 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+# uv run --no-project 等で実行時、harness パッケージをインポートできるようプロジェクトルートを sys.path に追加
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 AGENT_RADAR_DIR = ROOT / "harness" / "agent_radar"
 OFFICIAL_SOURCES = AGENT_RADAR_DIR / "official_sources.json"
 STATE_FILE = AGENT_RADAR_DIR / "state.json"
@@ -1000,7 +1004,13 @@ def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[s
     cfg_sandbox = project_cfg.get("sandbox_mode")
     cfg_web_search = project_cfg.get("web_search")
 
-    cmd: list[str] = ["codex", "exec"]
+    codex_exe = shutil.which("codex")
+    if not codex_exe:
+        raise RuntimeError(
+            "codex command is not available in PATH. "
+            "Install it (e.g. pip install codex-cli) and ensure it's in your PATH."
+        )
+    cmd: list[str] = [codex_exe, "exec"]
     # `.codex/config.toml` を Codex に「渡す」: CLI オプション/override に展開する
     if cfg_model:
         cmd += ["-m", cfg_model.strip().strip('"').strip("'")]
@@ -1068,6 +1078,8 @@ def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[s
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         env=env,
         cwd=str(ROOT),
     )
@@ -1083,6 +1095,8 @@ def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[s
         if now >= deadline:
             proc.kill()
             stdout_text, stderr_text = proc.communicate()
+            stdout_text = stdout_text or ""
+            stderr_text = stderr_text or ""
             audit_path = write_codex_audit(stdout_text, stderr_text, return_code=124)
             emit_runtime_info(
                 f"codex exec timeout | elapsed_sec={elapsed} audit={audit_path.relative_to(ROOT)}"
@@ -1093,6 +1107,8 @@ def _run_codex_exec_once(prompt: str, timeout_sec: int, attempt: int) -> tuple[s
         time.sleep(1.0)
 
     result_stdout, result_stderr = proc.communicate()
+    result_stdout = result_stdout or ""
+    result_stderr = result_stderr or ""
     elapsed_done = int(time.monotonic() - start_mono)
     audit_path = write_codex_audit(result_stdout, result_stderr, return_code=proc.returncode or 0)
 
@@ -1589,68 +1605,31 @@ def validate_monitoring_artifacts() -> list[str]:
     return errors
 
 
+def validate_v2_artifacts() -> list[str]:
+    errors: list[str] = []
+    ideas_dir = AGENT_RADAR_DIR / "ideas"
+    analysis_dir = AGENT_RADAR_DIR / "analysis"
+    reviews_dir = AGENT_RADAR_DIR / "reviews"
+    executions_dir = AGENT_RADAR_DIR / "executions"
+    knowledge_base = AGENT_RADAR_DIR / "knowledge_base.json"
+
+    for required_dir in [ideas_dir, analysis_dir, reviews_dir, executions_dir]:
+        if required_dir.exists() and not required_dir.is_dir():
+            errors.append(f"v2 artifact path is not directory: {required_dir.relative_to(ROOT)}")
+    if knowledge_base.exists() and not knowledge_base.is_file():
+        errors.append("v2 knowledge_base.json path is invalid")
+    return errors
+
+
 def run_validate() -> int:
     cfg = read_json(OFFICIAL_SOURCES, default={})
     sources = cfg.get("sources", [])
-    state = read_json(STATE_FILE, default={})
-    snapshot = read_json(SNAPSHOT_FILE, default={})
-    new_items_doc = read_json(NEW_ITEMS_FILE, default={})
 
     errors: list[str] = []
     errors.extend(validate_source_boundary(sources))
-    errors.extend(validate_mutation_index())
     errors.extend(validate_monitoring_targets_schema())
     errors.extend(validate_monitoring_artifacts())
-
-    src_map = {src["id"]: src for src in sources if "id" in src}
-    expected_ids = set(src_map.keys())
-
-    state_ids = set((state.get("sources") or {}).keys())
-    snapshot_ids = {src.get("id", "") for src in snapshot.get("sources", [])}
-
-    if expected_ids != state_ids:
-        errors.append("state source ids do not match official source ids")
-    if expected_ids != snapshot_ids:
-        errors.append("snapshot source ids do not match official source ids")
-
-    for sid, source_state in (state.get("sources") or {}).items():
-        source_cfg = src_map.get(sid)
-        if not source_cfg:
-            continue
-        allowed = source_cfg.get("allowed_entry_prefixes", [])
-        for link in source_state.get("links", []):
-            if not has_allowed_prefix(link, allowed):
-                errors.append(f"state link out of boundary: {sid} {link}")
-
-    for source_snap in snapshot.get("sources", []):
-        sid = source_snap.get("id", "")
-        source_cfg = src_map.get(sid)
-        if not source_cfg:
-            continue
-        allowed = source_cfg.get("allowed_entry_prefixes", [])
-        evidence_allowed = evidence_prefixes_for_source(source_cfg)
-        for item in source_snap.get("items", []):
-            link = str(item.get("link", ""))
-            if not has_allowed_prefix(link, allowed):
-                errors.append(f"snapshot link out of boundary: {sid} {link}")
-            evidence_url = str(item.get("evidence_url", ""))
-            if evidence_url and not has_allowed_prefix(evidence_url, evidence_allowed):
-                errors.append(f"snapshot evidence_url out of boundary: {sid} {evidence_url}")
-
-    for item in new_items_doc.get("new_items", []):
-        sid = item.get("source_id", "")
-        source_cfg = src_map.get(sid)
-        link = str(item.get("link", ""))
-        if not source_cfg:
-            errors.append(f"new item has unknown source id: {sid}")
-            continue
-        allowed = source_cfg.get("allowed_entry_prefixes", [])
-        evidence_allowed = evidence_prefixes_for_source(source_cfg)
-        if not has_allowed_prefix(link, allowed):
-            errors.append(f"new item link out of boundary: {sid} {link}")
-        evidence_url = str(item.get("evidence_url", ""))
-        if evidence_url and not has_allowed_prefix(evidence_url, evidence_allowed):
-            errors.append(f"new item evidence_url out of boundary: {sid} {evidence_url}")
+    errors.extend(validate_v2_artifacts())
 
     if errors:
         for err in errors:
@@ -1689,23 +1668,9 @@ def run_garden() -> int:
                     issues.append(f"{rel}:{lineno}: {line.strip()}")
                     break
 
-    expected_growth_doc = expected_autonomous_growth_doc_from_backlog()
-    actual_growth_doc = (
-        AUTONOMOUS_GROWTH_DOC.read_text(encoding="utf-8")
-        if AUTONOMOUS_GROWTH_DOC.exists()
-        else ""
-    )
-    if actual_growth_doc.strip() != expected_growth_doc.strip():
-        issues.append(
-            "docs/agent-harness/autonomous-growth.md is stale against harness/agent_radar/experiment_backlog.json"
-        )
-
     if issues:
         for issue in issues:
-            if issue.startswith("docs/agent-harness/autonomous-growth.md"):
-                print(f"ERROR: stale doc: {issue}", file=sys.stderr)
-            else:
-                print(f"ERROR: unresolved placeholder: {issue}", file=sys.stderr)
+            print(f"ERROR: unresolved placeholder: {issue}", file=sys.stderr)
         return 1
 
     print("OK: garden completed")
@@ -2069,17 +2034,8 @@ def repair_garden_placeholders() -> list[str]:
 
 
 def repair_autonomous_growth_doc_currency() -> list[str]:
-    expected = expected_autonomous_growth_doc_from_backlog()
-    current = (
-        AUTONOMOUS_GROWTH_DOC.read_text(encoding="utf-8")
-        if AUTONOMOUS_GROWTH_DOC.exists()
-        else ""
-    )
-    if current.strip() == expected.strip():
-        return []
-    AUTONOMOUS_GROWTH_DOC.parent.mkdir(parents=True, exist_ok=True)
-    AUTONOMOUS_GROWTH_DOC.write_text(expected, encoding="utf-8")
-    return [f"refresh:{AUTONOMOUS_GROWTH_DOC.relative_to(ROOT)}"]
+    # V2移行後は experiment_backlog ベースの文書再生成を行わない。
+    return []
 
 
 def parse_threshold_expression(expr: str) -> tuple[str, float] | None:
@@ -2134,14 +2090,17 @@ def publish_monitoring_artifacts(
         "autogrow" if previous_bootstrap_mode and loop_success else loop_name
     )
 
-    backlog = read_json(EXPERIMENT_BACKLOG_FILE, default={"items": []})
-    backlog_items = backlog.get("items") if isinstance(backlog, dict) else []
-    if not isinstance(backlog_items, list):
-        backlog_items = []
-
-    new_items_doc = read_json(NEW_ITEMS_FILE, default={"new_item_count": 0})
-    new_item_count_raw = new_items_doc.get("new_item_count") if isinstance(new_items_doc, dict) else 0
-    new_item_count = int(new_item_count_raw) if isinstance(new_item_count_raw, int | float) else 0
+    ideas_dir = AGENT_RADAR_DIR / "ideas"
+    analysis_dir = AGENT_RADAR_DIR / "analysis"
+    executions_dir = AGENT_RADAR_DIR / "executions"
+    new_item_count = len(list(ideas_dir.glob("IDEA-*.json"))) if ideas_dir.exists() else 0
+    backlog_total = len(list(analysis_dir.glob("GAP-*.json"))) if analysis_dir.exists() else 0
+    implemented_total = 0
+    if executions_dir.exists():
+        for result_path in executions_dir.glob("EXEC-*/result.json"):
+            result = read_json(result_path, default={})
+            if isinstance(result, dict) and str(result.get("status", "")).lower() == "completed":
+                implemented_total += 1
 
     target_doc = read_json(MONITORING_TARGETS_FILE, default={"targets": []})
     targets = target_doc.get("targets") if isinstance(target_doc, dict) else []
@@ -2159,10 +2118,8 @@ def publish_monitoring_artifacts(
         "autogrow.recovered_steps": float(recovered_steps),
         "autogrow.self_heal_actions": float(self_heal_actions),
         "radar.new_item_count": float(new_item_count),
-        "radar.backlog_total": float(len(backlog_items)),
-        "radar.implemented_total": float(
-            sum(1 for item in backlog_items if isinstance(item, dict) and str(item.get("status", "")).lower() == "implemented")
-        ),
+        "radar.backlog_total": float(backlog_total),
+        "radar.implemented_total": float(implemented_total),
         "radar.monitor_target_count": float(len(targets)),
     }
 
@@ -2273,9 +2230,9 @@ def build_evaluation_task(exp_id: str, axes: list[str]) -> dict[str, Any]:
             "複雑で信頼性の高いソフトウェアを大規模に構築・維持するため、"
             f"環境/フィードバックループ/制御システム（{axis_summary}）の改善効果を検証する。"
         ),
-        "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow",
+        "verification": "uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2",
         "expected_signals": [
-            "autogrow.success == 1",
+            "pipeline loop completed",
             "validate step passed",
             "garden step passed",
             "monitoring_results refreshed",
@@ -2618,19 +2575,10 @@ def render_autonomous_growth_doc(items: list[dict[str, Any]], updated_at: str) -
     lines.append("")
     lines.append("## Runbook")
     lines.append("")
-    lines.append("### V1 (SoR自律改善)")
+    lines.append("### Pipeline (V2統合)")
     lines.append("")
     lines.append(
-        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow --collector auto --self-heal-max-retries 2`"
-    )
-    lines.append("")
-    lines.append("### V2 (ハーネスエンジニアリング自律改良)")
-    lines.append("")
-    lines.append(
-        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode autogrow-v2 --collector auto --self-heal-max-retries 2`"
-    )
-    lines.append(
-        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode v2-pipeline`"
+        "- `uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2`"
     )
     lines.append("")
 
@@ -2930,25 +2878,17 @@ def run_cycle(collector_mode: str = "auto", self_heal_max_retries: int = 2) -> i
     )
 
 
-def run_v2_pipeline(collector_mode: str = "auto") -> int:
-    """V2パイプラインを実行する（記事本文分析 → ギャップ分析 → レビューループ → 実行）。"""
+def run_v2_pipeline(collector_mode: str = "auto", self_heal_max_retries: int = 2) -> int:
+    """V2パイプラインを実行する（記事本文分析 → ギャップ分析 → レビュー → worktree改修 → 再検証 → ガーデン）。"""
     try:
         from harness.agent_radar.radar_v2 import run_pipeline
-        return run_pipeline(collector_mode=collector_mode)
+        return run_pipeline(
+            collector_mode=collector_mode,
+            self_heal_max_retries=self_heal_max_retries,
+        )
     except ImportError as exc:
         print(f"ERROR: V2 module not available: {exc}", file=sys.stderr)
         return 1
-
-
-def run_autogrow_v2(collector_mode: str = "auto", self_heal_max_retries: int = 2) -> int:
-    """V1のautogrowを実行した後、V2パイプラインも実行する。"""
-    v1_rc = run_autogrow(collector_mode=collector_mode, self_heal_max_retries=self_heal_max_retries)
-    if v1_rc != 0:
-        append_progress("autogrow-v2 skipped v2 pipeline | v1 failed")
-        return v1_rc
-    v2_rc = run_v2_pipeline(collector_mode=collector_mode)
-    append_progress(f"autogrow-v2 completed | v1=0 v2={v2_rc}")
-    return v2_rc
 
 
 def main(argv: list[str]) -> int:
@@ -2957,49 +2897,32 @@ def main(argv: list[str]) -> int:
         "--mode",
         required=True,
         choices=[
-            "update", "validate", "backlog", "implement", "garden",
-            "cycle", "autogrow",
-            "v2-radar", "v2-analyze", "v2-pipeline", "autogrow-v2",
+            "validate", "garden",
+            "v2-radar", "v2-analyze", "pipeline",
         ],
         help="operation mode",
     )
     parser.add_argument(
         "--collector",
         default="auto",
-        choices=["auto", "native", "codex"],
-        help="collector mode for update/cycle/autogrow",
+        choices=["auto", "codex"],
+        help="collector mode for v2 pipeline",
     )
     parser.add_argument(
         "--self-heal-max-retries",
         type=int,
         default=2,
-        help="max retry count for autonomous self-heal in cycle/autogrow",
+        help="max retry count for autonomous self-heal in pipeline",
     )
     args = parser.parse_args(argv)
 
     mode = args.mode
     collector_mode = args.collector
     self_heal_max_retries = args.self_heal_max_retries
-    if mode == "update":
-        return run_update(collector_mode=collector_mode)
     if mode == "validate":
         return run_validate()
     if mode == "garden":
         return run_garden()
-    if mode == "backlog":
-        return run_backlog()
-    if mode == "implement":
-        return run_implement()
-    if mode == "cycle":
-        return run_cycle(
-            collector_mode=collector_mode,
-            self_heal_max_retries=self_heal_max_retries,
-        )
-    if mode == "autogrow":
-        return run_autogrow(
-            collector_mode=collector_mode,
-            self_heal_max_retries=self_heal_max_retries,
-        )
     if mode == "v2-radar":
         from harness.agent_radar.radar_v2 import run_radar
         run_radar()
@@ -3008,10 +2931,8 @@ def main(argv: list[str]) -> int:
         from harness.agent_radar.radar_v2 import run_analyze
         run_analyze()
         return 0
-    if mode == "v2-pipeline":
-        return run_v2_pipeline(collector_mode=collector_mode)
-    if mode == "autogrow-v2":
-        return run_autogrow_v2(
+    if mode == "pipeline":
+        return run_v2_pipeline(
             collector_mode=collector_mode,
             self_heal_max_retries=self_heal_max_retries,
         )
