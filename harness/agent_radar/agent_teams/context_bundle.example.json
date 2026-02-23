@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "run_id": "AT-20260223-001",
+  "objective": "ハーネスエンジニアリング改善案を複数のimprovement_familyで並列評価し、既存成功パターンへの収斂を回避する。",
+  "constraints": [
+    "最終比較はLeadのみが実施する",
+    "各teammateは割り当てfamily外の最適化を行わない",
+    "各teammateはworktree隔離で実行する"
+  ],
+  "shared_context": {
+    "allowed_inputs": [
+      "現行ハーネス構成の要約",
+      "既存SoRアーティファクト一覧（概要）",
+      "共通評価契約（ただしfamily別成功条件は別）"
+    ],
+    "forbidden_context": [
+      "既存成功実装の詳細な実装手順",
+      "既存成功実装の細粒度ログをそのまま再利用すること",
+      "『既存成功例より良いか』を一次判定に使うこと"
+    ],
+    "common_success_criteria": [
+      "再現可能な実行ログが存在する",
+      "失敗時は理由と証跡を残す",
+      "成果物をSoRへ保存する"
+    ]
+  },
+  "teammates": [
+    {
+      "id": "team_a",
+      "role": "generator",
+      "strategy_family": "control_system",
+      "task_objective": "制御ループ改善に関する仮説を1つ生成し、検証計画を作成する。",
+      "family_specific_success": [
+        "失敗時の観測可能性が向上する",
+        "後方互換フォールバック無しで運用可能である"
+      ],
+      "inputs_for_teammate": [
+        "docs/agent-harness/guide.md",
+        "harness/agent_radar/metrics/latest.json"
+      ],
+      "isolation": "worktree",
+      "expected_artifacts": [
+        "evidence/summary.md",
+        "artifacts/replay.sh",
+        "logs/*.log",
+        "metrics/run-metrics.json"
+      ]
+    },
+    {
+      "id": "team_b",
+      "role": "generator",
+      "strategy_family": "observability",
+      "task_objective": "監視・メトリクス改善に関する仮説を1つ生成し、検証計画を作成する。",
+      "family_specific_success": [
+        "monitoring_resultsの説明可能性が向上する",
+        "異常時の追跡可能性が向上する"
+      ],
+      "inputs_for_teammate": [
+        "harness/agent_radar/monitoring_targets.json",
+        "harness/agent_radar/monitoring_results.json"
+      ],
+      "isolation": "worktree",
+      "expected_artifacts": [
+        "evidence/summary.md",
+        "artifacts/replay.sh",
+        "logs/*.log",
+        "metrics/run-metrics.json"
+      ]
+    }
+  ],
+  "evaluation_policy": {
+    "no_best_strategy_reference_during_generation": true,
+    "cross_family_coverage_required": true,
+    "final_selection_by_lead_only": true
+  }
+}

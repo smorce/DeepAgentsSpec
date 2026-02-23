@@ -103,3 +103,15 @@ Codex が chrome-devtools MCP を使うには、プロジェクトを `codex tru
   - `scripts/garden_agent_docs.sh`
   - `scripts/run_all_unit_tests.sh`
   - `scripts/run_all_e2e_tests.sh`
+
+## 8. Agent Teams相当テンプレート
+
+過去成功例への収斂を避けるための `worktree隔離 + 役割別プロンプト + コンテキストバンドル` テンプレートを追加しています。
+
+- テンプレート配置:
+  - `harness/agent_radar/agent_teams/input_schema.json`
+  - `harness/agent_radar/agent_teams/context_bundle.example.json`
+  - `harness/agent_radar/agent_teams/prompts/generator.md`
+  - `harness/agent_radar/agent_teams/prompts/evaluator.md`
+  - `harness/agent_radar/agent_teams/prompts/lead.md`
+  - `harness/agent_radar/agent_teams/README.md`

@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deepagentsspec.local/harness/agent_radar/agent_teams/input_schema.json",
+  "title": "AgentTeamsInput",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "objective",
+    "constraints",
+    "shared_context",
+    "teammates",
+    "evaluation_policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 10
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "shared_context": {
+      "type": "object",
+      "required": [
+        "allowed_inputs",
+        "forbidden_context",
+        "common_success_criteria"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "allowed_inputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "forbidden_context": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "common_success_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        }
+      }
+    },
+    "teammates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "role",
+          "strategy_family",
+          "task_objective",
+          "family_specific_success",
+          "inputs_for_teammate",
+          "isolation",
+          "expected_artifacts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]{2,40}$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "generator",
+              "evaluator",
+              "specialist"
+            ]
+          },
+          "strategy_family": {
+            "type": "string",
+            "minLength": 3
+          },
+          "task_objective": {
+            "type": "string",
+            "minLength": 10
+          },
+          "family_specific_success": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 3
+            }
+          },
+          "inputs_for_teammate": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 3
+            }
+          },
+          "isolation": {
+            "type": "string",
+            "enum": [
+              "worktree"
+            ]
+          },
+          "expected_artifacts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 3
+            }
+          }
+        }
+      }
+    },
+    "evaluation_policy": {
+      "type": "object",
+      "required": [
+        "no_best_strategy_reference_during_generation",
+        "cross_family_coverage_required",
+        "final_selection_by_lead_only"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "no_best_strategy_reference_during_generation": {
+          "type": "boolean"
+        },
+        "cross_family_coverage_required": {
+          "type": "boolean"
+        },
+        "final_selection_by_lead_only": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

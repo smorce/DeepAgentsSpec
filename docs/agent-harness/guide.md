@@ -102,3 +102,15 @@ bash scripts/run_v2_review_loop.sh harness/agent_radar/reviews/REV-EXP-084
   鮮度（36時間以内）と件数整合を保つ必要がある
 - `harness/worktree/worktree_ops.py` は、再現→修正→証跡生成を 1 回で回す標準入口として扱う
 - V2の不採用アイデアは `ideas/rejected/` に理由付きで保存される（将来の再検討用）
+
+## 8. Agent Teams相当の実装テンプレート
+
+単一セッションでの成功バイアスを抑えるため、以下をテンプレート化した。
+
+- 入力JSONスキーマ: `harness/agent_radar/agent_teams/input_schema.json`
+- コンテキストバンドル例: `harness/agent_radar/agent_teams/context_bundle.example.json`
+- 役割別プロンプト:
+  - Generator: `harness/agent_radar/agent_teams/prompts/generator.md`
+  - Evaluator: `harness/agent_radar/agent_teams/prompts/evaluator.md`
+  - Lead: `harness/agent_radar/agent_teams/prompts/lead.md`
+- 運用手順: `harness/agent_radar/agent_teams/README.md`
