@@ -5,6 +5,20 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 
 
 
+つまり、
+1. **守るべきルールを定義し (Feedforward)**
+2. **AIエージェントが開発し**
+3. **ルールが守られていたかを安全に検証・テストする (Feedback)**
+4. **分析と改善を回す**
+	1. テストに落ちたら修正させる
+	2. 型が通らなければやり直させる
+	3. Skillの呼び出しに失敗したら改善させる
+	4. うまくいっていたらナレッジ化する
+の4点。4番の「分析と改善を回す仕組み」が長期的な価値を築く。
+
+
+
+
 # Agent Harness Quickstart
 
 ## 前提
