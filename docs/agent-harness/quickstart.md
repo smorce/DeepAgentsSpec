@@ -1,10 +1,26 @@
+# 成長するハーネス
 とりあえずできたので、以下を実行してみる。
 ```bash
 uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --mode pipeline --collector auto --self-heal-max-retries 2
 ```
 
 
+SPECA のパイプラインの考え方は参考になりそう。
+使えるアイデアをいくつか考えさせてから、使えないアイデアを落として、残ったものを昇格させる。そして、それを実装する。
+- 新着ブログを読む段階
+- プロパティ(=使えそうなアイデア)を作る段階
+- そのプロパティがコードベースのどこに関係するか探す段階
+- 実際に監査する段階
+- アイデアをフィルタする段階
+エージェントに全部を読ませて頑張らせるのではなく、各段階で必要な情報だけを渡して、迷わず作業できるようにする。
+> 各フェーズに、必要な入力だけを渡す。  
+> 各フェーズは、決められた形式の出力だけを返す。  
+> 次のフェーズは、その出力を契約として読む。  
+> 昇格ゲートは、上げる理由が明確なものから順に通す。
 
+
+
+きのぴーさん:
 つまり、
 1. **守るべきルールを定義し (Feedforward)**
 2. **AIエージェントが開発し**
@@ -15,6 +31,8 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 	3. Skillの呼び出しに失敗したら改善させる
 	4. うまくいっていたらナレッジ化する
 の4点。4番の「分析と改善を回す仕組み」が長期的な価値を築く。
+
+
 
 
 # AIコーディングで気をつけるべき観点
@@ -30,6 +48,9 @@ uv run --no-project --link-mode=copy python harness/agent_radar/radar_ops.py --m
 - 最初の移行前のデータモデルの耐久性
 - 最初の100万行までの性能の現実性
 - 先例に依拠する (既存のライブラリ、事後分析、実績のあるパターン)
+→ ヘルメスエージェントの karpathy-guidelines Skill に加えた
+
+
 
 
 # Agent Harness Quickstart
